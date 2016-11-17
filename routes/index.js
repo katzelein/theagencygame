@@ -6,6 +6,24 @@ var router = express.Router();
 // var Place = require('../models/place');
 // var Promise = require('bluebird');
 
+
+router.get('/', function (req, res, next) {
+  console.log('You found my GET!')
+})
+
+
+var twilio = require('twilio');
+
+// var app = require('../app')
+
+router.post('/sms', function(req, res) {
+  var twilio = require('twilio');
+  var twiml = new twilio.TwimlResponse();
+  twiml.message('The Robots are coming! Head for the hills!');
+  res.writeHead(200, {'Content-Type': 'text/xml'});
+  res.end(twiml.toString());
+});
+
 // router.get('/', function(req, res, next) {
 
 //   var findingHotels = Hotel.findAll({
