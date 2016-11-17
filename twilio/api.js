@@ -3,7 +3,7 @@ var twilioAPI = require('express').Router()
 
 twilioAPI.get('/')
 
-twilioAPI.post('/twilio/messages', function(req, res, next){
+twilioAPI.post('/messages', function(req, res, next){
   console.log("Hey this is a message")
   var twiml = new twilio.TwimlResponse();
     twiml.message(function() {
