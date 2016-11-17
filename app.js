@@ -12,10 +12,6 @@ var db = require('./models');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/', function (req, res, next) {
-  res.send("I'm working!")
-})
-
 app.use('/', routes);
 
 app.use(function (err, req, res, next) {
@@ -26,7 +22,7 @@ app.use(function (err, req, res, next) {
 module.exports = app;
 
 // listen on a port
-var port = process.env.PORT || 3000; // potentially use process.env.PORT
+var port = process.env.PORT || 3000; // needs to be used whenever you're not in development
 app.listen(port, function () {
   console.log('The server is listening closely on port', port);
   db.sync()
