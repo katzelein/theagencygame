@@ -1,0 +1,19 @@
+{
+  "name": "theagency3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "nodemon": "^1.11.0",
+    "sequelize": "^3.25.1",
+    "twilio": "^2.11.1",
+    "volleyball": "^1.4.1"
+  }
+}
