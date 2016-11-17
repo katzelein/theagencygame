@@ -1,5 +1,7 @@
 var twilioAPI = require('express').Router
-var twilio = require('twilio')
+// var twilio = require('twilio')
+
+twilioAPI.get('/')
 
 twilioAPI.post('/twilio/messages', function(req, res, next){
   console.log("Hey this is a message")
