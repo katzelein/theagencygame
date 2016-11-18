@@ -1,0 +1,26 @@
+geo tag on pictures???
+cell tower via twilio??
+
+hash file to check if file exists already
+
+
+
+    // Twilio Credentials
+    var accountSid = '<AccountSid>';
+    var authToken = '<AuthToken>';
+
+    //require the Twilio module and create a REST client
+    var client = require('twilio')(accountSid, authToken);
+
+    client.messages.create({
+        to: '<ToNumber>',
+        from: '<FromNumber>',
+        body: '<BodyText>',
+    }, function (err, message) {
+        console.log(message.sid);
+    });
+
+redux store
+	table of actions
+	run store thru actions to reach current state
+	cache state ????
