@@ -3,7 +3,7 @@ var router = express.Router();
 var twilio = require('twilio');
 
 router.get('/', function (req, res, next) {
-  res.send("I'm working on Rachael's machine!!!")
+  res.send("I'm working!")
 })
 
 router.use('/twilio', require('../twilio/api'))
