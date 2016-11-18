@@ -21,7 +21,7 @@ twilioAPI.get('/', function(req, res, next){
 twilioAPI.post('/messages', function(req, res, next){
   //console.log("Hey this is a message")
   console.log("REQ BODY: ", req.body)
-  console.log("MEDIA URL: ", req.body.MediaUrl[0])
+  console.log("MEDIA URL: ", req.body.MediaUrl0)
   if (req.body.MediaUrl0){
     analyzePhoto(req.body.MediaUrl0)
   } else {
