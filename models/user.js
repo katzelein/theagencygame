@@ -4,7 +4,7 @@ const Sequelize = require('sequelize')
 const db = require('./_db')
 
 const User = db.define('users', {
-  name: Sequelize.STRING,
+  username: Sequelize.STRING,
   phoneNumber: Sequelize.STRING, 
   status: Sequelize.ENUM('active', 'hiatus', 'retired'),
   currentMission: Sequelize.INTEGER,

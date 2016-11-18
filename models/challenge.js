@@ -5,7 +5,7 @@ const db = require('./_db')
 
 const Challenge = db.define('challenges', {
   objective: Sequelize.STRING,
-  summary: Sequelize.STRING,
+  summary: Sequelize.TEXT,
   latitude: {
     type: Sequelize.INTEGER,
     allowNull: true,
@@ -20,7 +20,8 @@ const Challenge = db.define('challenges', {
   },
   targetTags: Sequelize.ARRAY(Sequelize.STRING),
   targetText: Sequelize.TEXT,
-  conclusion: Sequelize.TEXT
+  conclusion: Sequelize.TEXT,
+  type: Sequelize.ENUM('text', 'image', 'voice')
 })
 
 module.exports = Challenge
