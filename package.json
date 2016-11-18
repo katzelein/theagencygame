@@ -11,12 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
+    "clarifai": "^2.0.16",
     "express": "^4.14.0",
     "nodemon": "^1.11.0",
+    "pg": "^6.1.0",
+    "pg-hstore": "^2.3.2",
     "sequelize": "^3.25.1",
     "twilio": "^2.11.1",
-    "volleyball": "^1.4.1"
   }
 }
