@@ -6,15 +6,30 @@ var lookup = require('./lookup')
 twilioAPI.get('/')
 
 twilioAPI.post('/messages', function(req, res, next){
-	console.log(req.body.Body)
+  //console.log("Hey this is a message")
+  console.log("REQ BODY: ", req.body)
+  console.log("MEDIA URL: ", req.body.MediaUrl)
+  var twiml = new twilio.TwimlResponse();
+    twiml.message(function() {
+      this.body('The Robots are coming! Head for the hills!');
+    });
+    res.writeHead(200, {'Content-Type': 'text/xml'})
+    res.end(twiml.toString())
+});
 
-	var answer = lookup(req.body.From, req.body.Body);
-	var twiml = new twilio.TwimlResponse();
-	twiml.message(function() {
-		this.body('The Robots are coming! Head for the hills!');
-	});
-	res.writeHead(200, {'Content-Type': 'text/xml'})
-	res.end(twiml.toString())
+
+twilioAPI.post('/game', function(req, res, next){
+  //console.log("Hey this is a message")
+  console.log("REQ BODY: ", req.body)
+  console.log("MEDIA URL: ", req.body.MediaUrl)
+  var answer = lookup(req.body.From, req.body.Body)
+
+  var twiml = new twilio.TwimlResponse();
+  twiml.message(function() {
+    this.body(answer);
+  });
+  res.writeHead(200, {'Content-Type': 'text/xml'})
+  res.end(twiml.toString())
 });
 
 module.exports = twilioAPI

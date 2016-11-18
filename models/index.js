@@ -13,4 +13,5 @@ Challenge.belongsToMany(User, {through: 'UserChallenges'})
 Mission.belongsToMany(Challenge, {through: 'MissionChallenges'})
 Challenge.belongsToMany(Mission, {through: 'MissionChallenges'})
 
+
 module.exports = db;

@@ -18,9 +18,12 @@ const Challenge = db.define('challenges', {
     defaultValue: null,
     validate: { min: -180, max: 180 }
   },
-  borough: Sequelize.ENUM('Manhattan', 'Brooklyn', 'Bronx', 'Queens', 'Staten Island'),
-  imgTagsExpected: Sequelize.ARRAY(Sequelize.TEXT),
-  textExpected: Sequelize.TEXT
+  targetImgTags: Sequelize.ARRAY(Sequelize.TEXT),
+  targetText: Sequelize.TEXT,
+  conclusion: Sequelize.TEXT
 })
 
 module.exports = Challenge
+
+
+

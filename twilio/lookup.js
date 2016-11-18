@@ -1,9 +1,8 @@
 module.exports = function(userNum, userInput) {
 	// lookup userNum in userStatus table for currentState
-	switch (userInput) {
-		case 'hiatus':
-		case 
-	}
+	
+	return "Hello Agent"+userInput
+
 	let currentState = {};
 	// lookup currentState and userInput in stateTransition table for nextState
 	let nextState = {};
