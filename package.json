@@ -13,6 +13,8 @@
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "nodemon": "^1.11.0",
+    "request": "^2.78.0",
+    "request-promise": "^4.1.1",
     "sequelize": "^3.25.1",
     "twilio": "^2.11.1",
     "volleyball": "^1.4.1"
