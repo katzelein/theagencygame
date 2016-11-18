@@ -8,7 +8,8 @@ const seedUsers = () => db.Promise.map([
 
 const seedMissions = () => db.Promise.map([
   { title: 'Intrigue on Wall Street', description: 'One of our agents disappeared somewhere into the depths of the Trump Building on Wall Street. We need you to investigate his disappearance, which may be ever more dire with the upcoming inauguration.'},
-  { title: 'The Dark Underbelly of Broadway\'s Bright Lights', description: 'Agent Natasha Klimikov was a rising star in the 1950s during Rodgers and Hammerstein\'s golden age. You\'ll be heading towards 42nd Street to retrace Natasha\'s steps and to see if her mission remains active.'}
+  { title: 'The Dark Underbelly of Broadway\'s Bright Lights', description: 'Agent Natasha Klimikov was a rising star in the 1950s during Rodgers and Hammerstein\'s golden age. You\'ll be heading towards 42nd Street to retrace Natasha\'s steps and to see if her mission remains active.'},
+  { title: ''}
 ], mission => db.model('missions').create(mission))
 
 const seedChallenges = () => db.Promise.map([

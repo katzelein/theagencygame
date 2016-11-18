@@ -24,3 +24,27 @@ redux store
 	table of actions
 	run store thru actions to reach current state
 	cache state ????
+
+"First things first! Ensure your phone camera is fully functional (I would suggest taking a few selfies). Send us a picture of yourself (or a patch of grass or 
+
+
+{ ToCountry: 'US',
+  ToState: 'NJ',
+  SmsMessageSid: 'SM1457450ecc453e71c7e4bfeb99e6e2a8',
+  NumMedia: '0',
+  ToCity: 'FAIRFIELD',
+  FromZip: '07416',
+  SmsSid: 'SM1457450ecc453e71c7e4bfeb99e6e2a8',
+  FromState: 'NJ',
+  SmsStatus: 'received',
+  FromCity: 'FRANKLIN',
+  Body: 'Join',
+  FromCountry: 'US',
+  To: '+19738745304',
+  MessagingServiceSid: 'MG2575ddfed9822f7d1e8d73e0dd9a4771',
+  ToZip: '07004',
+  NumSegments: '1',
+  MessageSid: 'SM1457450ecc453e71c7e4bfeb99e6e2a8',
+  AccountSid: 'ACc41e6487bcf3da0f8bdde627b28740d2',
+  From: '+19739975239',
+  ApiVersion: '2010-04-01' }
