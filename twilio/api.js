@@ -2,6 +2,7 @@ var twilioAPI = require('express').Router()
 var twilio = require('twilio')
 var rp = require('request-promise');
 const credentials = require('../key')
+var geocoder = require('geocoder');
 
 twilioAPI.get('/')
 
@@ -41,9 +42,9 @@ twilioAPI.post('/messages', function(req, res, next){
   
   	console.log("looking for location!!")
   	console.log("key: ", credentials.private_key_id)
-  	var googleMapsClient = require('@google/maps').createClient({
-  		key: credentials.private_key_id
-	});
+ //  	var googleMapsClient = require('@google/maps').createClient({
+ //  		key: credentials.private_key_id
+	// });
 
   	var urlString = req.body.Body.replace(/["']/g, "")
   	var urlArray = urlString.split(/\r?\n/)
@@ -54,12 +55,12 @@ twilioAPI.post('/messages', function(req, res, next){
   	}
   	//console.log("google key: ", googleKey)
   	console.log("ADDRESS: ", address)
-  	rp("https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + credentials.private_key_id)
-  	.then(function(htmlString){
-  		console.log("location from API: ", htmlString)
-  	})
+  	// rp("https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + credentials.private_key_id)
+  	// .then(function(htmlString){
+  	// 	console.log("location from API: ", htmlString)
+  	// })
 
-  	console.log("google client: ", googleMapsClient.geocode)
+  	//console.log("google client: ", googleMapsClient.geocode)
 
  //  	googleMapsClient.geocode({
  //  		address: '1600 Amphitheatre Parkway, Mountain View, CA'
@@ -71,6 +72,31 @@ twilioAPI.post('/messages', function(req, res, next){
  //    		console.log("GOOGLE RES: ", response.json.results);
  //  		}
 	// });
+
+	// googleMapsClient.directions({
+	// 	origin: "75 9th Ave, New York, NY",
+	// 	destination: "MetLife Stadium Dr East Rutherford, NJ 07073",
+	// 	mode: "driving"
+	// }, function(err, response) {
+	// 	console.log("TESTING")
+	// 	if(err) console.log("ERR: ", err)
+ //  		if (!err) {
+ //  			console.log("GOOGLE RESP: ", response.json)
+ //    		console.log("GOOGLE RES: ", response.json.results);
+ //    	}
+ //  		})
+ 	var LL;
+ 	geocoder.geocode(address, function ( err, data ) {
+  // do something with data 
+  		LL = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
+  		console.log("DATA: ", data)
+  		console.log("RES: ", data.results)
+  		console.log("RES TYPE: ", typeof data.results)
+  		console.log("GEOM: ", data.results[0].geometry.location)
+  		console.log("COMP: ", data.results[0])
+  		console.log("LL: ", LL)
+  		console.log("data type: ", typeof data)
+	});
 
   	// address = address.replace(/\s/g, "+")
   	// address = address.replace(/,/g, "")
