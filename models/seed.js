@@ -1,4 +1,5 @@
 const db = require('./_db')
+
 const Promise = require('bluebird');
 const User = require('./user')
 const Challenge = require('./challenge')
@@ -100,3 +101,4 @@ db.sync({force: true})
 //   .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
 //   .catch(error => console.error(error))
 //   .finally(() => db.close())
+
