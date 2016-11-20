@@ -106,21 +106,39 @@ const whichMessage = {
 	},
 
 	TUTORIAL_MISSION_2: (user, message) => {
-		var coordinates = getLocation(message)
-		console.log("res from getLocation: ", coordinates)
-		if(typeof coordinates === "array"){
-			return user.update({
-				messageState: 'TUTORIAL_MISSION_3',
-				latitude: coordinates[0],
-				longitude: coordinates[1]
-			})
-			.then(user => {
-				return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
-			})
-		}
-		else{
-			return coordinates
-		}
+		var coordinatesPromise = getLocation(message)
+		console.log("coordinatesPromise: ", coordinatesPromise)
+		return user.update({
+					messageState: 'TUTORIAL_MISSION_3'
+					// latitude: coordinates[0],
+					// longitude: coordinates[1]
+				})
+				.then(user => {
+					console.log("found coordinates, .then")
+					return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
+				})
+
+		// return coordinatesPromise
+		// .then(coordinates => {
+		// 	console.log("res from getLocation: ", coordinates)
+		// 	console.log("type of coordinates: ", typeof coordinates)
+		// 	if(typeof coordinates === "object"){
+		// 		console.log("coordinates is an array")
+		// 		return user.update({
+		// 			messageState: 'TUTORIAL_MISSION_3',
+		// 			latitude: coordinates[0],
+		// 			longitude: coordinates[1]
+		// 		})
+		// 		.then(user => {
+		// 			console.log("found coordinates, .then")
+		// 			return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
+		// 		})
+		// 	}
+		// 	else{
+		// 		console.log("coordinates is not an array")
+		// 		return coordinates
+		// 	}
+		// })
 		
 	},
 

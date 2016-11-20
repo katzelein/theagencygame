@@ -46,12 +46,13 @@ twilioAPI.post('/messages', function(req, res, next){
 
   console.log("From", req.body.From, "Body", req.body.Body)
 
-  
+
   
   var answer = lookup(req.body.From, req.body)
-
+  console.log("ANSWER: ", answer)
   answer
   .then(message => {
+    console.log("answer message: ", message)
     var twiml = new twilio.TwimlResponse();
     twiml.message(function() {
       this.body(message);
