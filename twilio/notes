@@ -48,3 +48,5 @@ redux store
   AccountSid: 'ACc41e6487bcf3da0f8bdde627b28740d2',
   From: '+19739975239',
   ApiVersion: '2010-04-01' }
+
+curl -H "Content-Type: application/json" -X POST -d '{"Body":"Evnissyn", "From": "+19739975239"}' http://f7f6b390.ngrok.io/twilio/testing

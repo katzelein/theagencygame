@@ -1,5 +1,7 @@
 const User = require('../models/user')
 
+const {chooseMission} = require('./chooser')
+
 module.exports = function(phoneNumber, userInput) {
 	return User.findOne({where: {phoneNumber}})
 	.then(user => {
@@ -20,7 +22,7 @@ module.exports = function(phoneNumber, userInput) {
 const fetchMessage = (user, userInput) => {
 	
 	const simpleInput = userInput.toLowerCase();
-	switch(userInput) {
+	switch(simpleInput) {
 		case 'help':
 		case 'options':
 			return "You have reached the Agency\'s automated help menu! Text 'tutorial' to redo the training mission.  Text 'quit' to quit any ongoing mission.  Text 'skip' to skip any particular challenge in a mission. Text 'resign' to retire from the Agency."
@@ -37,11 +39,12 @@ const fetchMessage = (user, userInput) => {
 
 	switch(user.messageState) {
 		case 'NEED_USERNAME':
-		case 'TUTORIAL_MISSION_1':
 			str = whichMessage[user.messageState] (user, userInput);
 			break;
+		case 'TUTORIAL_MISSION_1':
 		default:
-			str = "Sorry!"
+			// str = "Sorry!"
+			str = whichMessage[user.messageState] (user, simpleInput)
 			break;
 	}
 
@@ -58,7 +61,10 @@ const whichMessage = {
 		    console.log("Invalid username");
 		}
 	
-		user.update({username: userInput, messageState: 'TUTORIAL_MISSION_1'})
+		user.update({
+			username: userInput, 
+			messageState: 'TUTORIAL_MISSION_1'
+		})
 		
 		return "Welcome to the Agency, Agent "+userInput+"! Would you like to participate in a training mission?"
 	},
@@ -74,7 +80,50 @@ const whichMessage = {
 		}
 	},
 
-	TUTORIAL_MISSION_0: () => {return ""}
+	TUTORIAL_MISSION_0: (user, userInput) => {
+		user.update({messageState: 'TUTORIAL_MISSION_1'});
+		return "Ready for your training mission, Trainee "+user.username+"?"
+	},
+
+	TUTORIAL_MISSION_2: (user) => {
+		// somehow extract location
+		user.update({messageState: 'TUTORIAL_MISSION_3'});
+		return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to the Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
+	},
+
+	TUTORIAL_MISSION_3: (user) => {
+		// assuming they sent in a picture
+		user.update({messageState: 'STANDBY'})
+		return "Congratulations, Trainee "+user.username+", you have completed your training mission!  Your name has been added to our list of active field agents.  Text in 'new mission' whenever you have the time to request your first mission!"
+	},
+
+	STANDBY: (user, userInput) => {
+		if (userInput == 'no') {
+			user.update({messageState: 'QUERY_HIATUS'})
+			return "Agent "+user.username+", you are currently between missions. Do you wish to take a hiatus from missions?"
+		} else if (userInput == 'new' || userInput == 'new mission') {
+			user.update({messageState: 'QUERY_MISSION'})
+			return "Ah, Agent "+user.username+", good of you to call in! Before we assign you a new mission, please send in your location."
+		}
+	},
+
+	QUERY_MISSION: (user, userInput) => {
+		// assume we were able to access and process location
+		return chooseMission()
+		.then(newMission => {
+			user.update({
+				messageState: 'MISSION_1', 
+				currentMission: newMission
+			});
+			return mission.title+": "+mission.summary+" Do you accept this mission, Agent "+user.username+"?";
+		})
+	},
+
+	MISSION_1: (user, userInput) => {
+
+	},
+
+	QUERY_HIATUS: () =>{return ""}
 
 }
 
