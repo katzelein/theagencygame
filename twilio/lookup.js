@@ -108,15 +108,51 @@ const whichMessage = {
 	TUTORIAL_MISSION_2: (user, message) => {
 		var coordinatesPromise = getLocation(message)
 		console.log("coordinatesPromise: ", coordinatesPromise)
-		return user.update({
-					messageState: 'TUTORIAL_MISSION_3'
-					// latitude: coordinates[0],
-					// longitude: coordinates[1]
+		return coordinatesPromise
+		.then(coordinates => {
+			if(typeof coordinates === 'object'){
+				return user.update({
+						messageState: 'TUTORIAL_MISSION_3',
+						latitude: coordinates[0],
+						longitude: coordinates[1]
 				})
 				.then(user => {
 					console.log("found coordinates, .then")
 					return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
 				})
+			}
+			else{
+				console.log("coordinates is not an array")
+				return user.update({})
+				.then(user => {
+					return coordinates
+				})
+			}
+
+		})
+
+
+		// THIS WORKS FOR APPLE AND GOOGLE PHONES WHEN THERE IS A RESULT
+		// console.log("coordinates: ", coordinates)
+		// 	if(typeof coordinates === 'object'){
+		// 		return user.update({
+		// 				messageState: 'TUTORIAL_MISSION_3',
+		// 				latitude: coordinates[0],
+		// 				longitude: coordinates[1]
+		// 		})
+		// 		.then(user => {
+		// 			console.log("found coordinates, .then")
+		// 			return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
+		// 		})
+		// 	}
+		// 	else{
+		// 		console.log("coordinates is not an array")
+		// 		return user.update({})
+		// 		.then(user => {
+		// 			return coordinates
+		// 		})
+		// 	}
+
 
 		// return coordinatesPromise
 		// .then(coordinates => {

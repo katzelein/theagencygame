@@ -6,7 +6,9 @@ const locationFailure = "We were unable to pinpoint your location, please try ag
 
 function getLocation(message){
   var locationRes;
-
+console.log("message inside getLocation: ", message)
+console.log("message keys: ", Object.keys(message))
+console.log("message body inside getLocation: ", message.Body)
   // *********** SENT WITH IPHONE *************
   if(message.MediaContentType0 === 'text/x-vcard'){
 
@@ -30,80 +32,117 @@ function getLocation(message){
         console.log("ERR: ", err)
     });
   }
-
  // ********** SENT WITH PHONE USING GOOGLE MAPS (ie google phone or android) **********
-//   else if(message.Body.indexOf("maps.google.com") !== -1){
+  else if(message.Body.indexOf("maps.google.com") !== -1){
   
-//   	console.log("looking for location!!")
-//   	var urlString = message.Body.replace(/["']/g, "")
-//   	var urlArray = urlString.split(/\r?\n/)
-//   	console.log("urlArray: ", urlArray)
-//   	var address = urlArray[2]
-//   	if(address.indexOf("http") !== -1){
-//   		address=address.slice(0, address.indexOf("http"))
-//   	}
-//   	console.log("ADDRESS: ", address)
+  	console.log("looking for location!!")
+  	var urlString = message.Body.replace(/["']/g, "")
+  	//var urlArray = urlString.split(/\r?\n/)
+    var urlArray = urlString.split("HELLO")
+  	console.log("urlArray: ", urlArray)
+  	var address = urlArray[2]
+    console.log
+  	if(address.indexOf("http") !== -1){
+  		address=address.slice(0, address.indexOf("http"))
+  	}
+  	console.log("ADDRESS: ", address)
 
-//  	  var LL;
-//  	/*return*/ geocoder.geocode(address, function ( err, data ) {
-//     if(err || data.status === 'ZERO_RESULTS'){
-//       console.log("ERR: ", err)
-//       locationRes = locationFailure
-//     }
-//   // do something with data 
-//   		LL = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
-//   		console.log("DATA: ", data)
-//   		console.log("RES: ", data.results)
-//   		console.log("RES TYPE: ", typeof data.results)
-//   		console.log("GEOM: ", data.results[0].geometry.location)
-//   		console.log("COMP: ", data.results[0])
-//   		console.log("LL: ", LL)
-//   		console.log("data type: ", typeof data)
-//       //return LL
-//       locationRes = LL
-// 	});	
-//   }
+ 	  var LL;
+
+    return new Promise(function(resolve, reject) {
+      geocoder.geocode(address, function (err, data) {
+         if(err) reject(err);
+         resolve(data);
+      })
+    })
+    .then(data => {
+      console.log("DATA STATUS: ", data.status)
+      if(data.status === 'ZERO_RESULTS'){
+        console.log("data status zero")
+        return locationFailure
+      }
+  // do something with data 
+      else{
+        LL = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
+        console.log("DATA: ", data)
+        console.log("RES: ", data.results)
+        console.log("RES TYPE: ", typeof data.results)
+        console.log("GEOM: ", data.results[0].geometry.location)
+        console.log("COMP: ", data.results[0])
+        console.log("LL: ", LL)
+        console.log("data type: ", typeof data)
+        return LL
+      //locationRes = LL
+      }
+
+    })
+    .catch(err => console.log(err))
 
 
-//   // ********** ADDRESS SENT DIRECTLY IN TEXT) **********
-//   else if(message.Body){
-//     locationRes = geocoder.geocode(message.Body, function ( err, data ) {
-//       console.log("DATA: ", data.status)
-//       console.log("status type: ", typeof data.status)
-//       console.log("status length: ", data.status.length)
-//       console.log("1: ", data.status === 'ZERO_RESULTS')
-//       if(err || (data.status === 'ZERO_RESULTS')){
-//         console.log("ERR: ", err)
-//         return locationFailure
-//         //locationRes = locationFailure
-//       }
+ // 	/*return*/ geocoder.geocode(address, function ( err, data ) {
+ //    console.log("DATA STATUS: ", data.status)
+ //    if(err || data.status === 'ZERO_RESULTS'){
+ //      console.log("ERR: ", err)
+ //      return locationFailure
+ //    }
+ //  // do something with data 
+ //  else{
+ //  		LL = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
+ //  		console.log("DATA: ", data)
+ //  		console.log("RES: ", data.results)
+ //  		console.log("RES TYPE: ", typeof data.results)
+ //  		console.log("GEOM: ", data.results[0].geometry.location)
+ //  		console.log("COMP: ", data.results[0])
+ //  		console.log("LL: ", LL)
+ //  		console.log("data type: ", typeof data)
+ //      return LL
+ //      //locationRes = LL
+ //    }
+	// });	
+  }
 
-//       else{
-//         LL = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
-//         console.log("DATA: ", data)
-//         console.log("RES: ", data.results)
-//         console.log("RES TYPE: ", typeof data.results)
-//         console.log("GEOM: ", data.results[0].geometry.location)
-//         console.log("COMP: ", data.results[0])
-//         console.log("LL: ", LL)
-//         console.log("data type: ", typeof data)
-//         return LL
-//         //locationRes = LL
-//       }
-//       console.log("still in geocoder")
-  
-//     })
-//     console.log("outside geocoder in else if statement")    
-//   }
 
-// // ************ NO MESSAGE BODY OR V-CARD SENT
-//   else {
-//     //return locationFailure
-//     locationRes = locationFailure 
-//   }
+// ********** ADDRESS SENT DIRECTLY IN TEXT) **********
+   else if(message.Body){
+    return new Promise(function(resolve, reject) {
+        geocoder.geocode(address, function (err, data) {
+          if(err) reject(err);
+          resolve(data);
+        })
+    })
+    .then(data => {
+      console.log("DATA STATUS: ", data.status)
+        if(data.status === 'ZERO_RESULTS'){
+          console.log("data status zero")
+          return locationFailure
+        }
+      // do something with data 
+        else{
+          LL = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
+          console.log("DATA: ", data)
+          console.log("RES: ", data.results)
+          console.log("RES TYPE: ", typeof data.results)
+          console.log("GEOM: ", data.results[0].geometry.location)
+          console.log("COMP: ", data.results[0])
+          console.log("LL: ", LL)
+          console.log("data type: ", typeof data)
+          return LL
+      //locationRes = LL
+        } 
+    })
+    .catch(err => console.log(err))
+  }
 
-//   //console.log("LOCATION RES: ", locationRes) 
-//   //return locationRes
+// ************ NO MESSAGE BODY OR V-CARD SENT
+  else {
+    return new Promise(function(resolve, reject){
+      resolve(locationFailure)
+    })
+    .then(locationFailure => locationFailure)
+  }
+
+  //console.log("LOCATION RES: ", locationRes) 
+  //return locationRes
 }
 
 module.exports = {getLocation}
