@@ -102,10 +102,10 @@ console.log("message body inside getLocation: ", message.Body)
   }
 
 
-// ********** ADDRESS SENT DIRECTLY IN TEXT) **********
+// ********** ADDRESS SENT DIRECTLY IN TEXT **********
    else if(message.Body){
     return new Promise(function(resolve, reject) {
-        geocoder.geocode(address, function (err, data) {
+        geocoder.geocode(message.Body, function (err, data) {
           if(err) reject(err);
           resolve(data);
         })
