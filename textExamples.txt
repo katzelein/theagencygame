@@ -1,0 +1,53 @@
+{ ToCountry: 'US',
+MediaContentType0: 'text/x-vcard',
+ToState: 'District Of Columbia',
+SmsSid: 'MM7c9a6a399c39cd8c92147475b61115c5',
+SmsMessageSid: 'MM7c9a6a399c39cd8c92147475b61115c5',
+NumMedia: '1',
+FromState: 'NY',
+ToCity: '',
+FromZip: '10588',
+Body: '',
+SmsStatus: 'received',
+FromCity: 'YONKERS',
+FromCountry: 'US',
+To: '+12027593387',
+ToZip: '',
+NumSegments: '1',
+MessageSid: 'MM7c9a6a399c39cd8c92147475b61115c5',
+AccountSid: 'AC8b6aeccc3229dc3db665208f22c1e3c7',
+From: '+19146469702',
+MediaUrl0: 'https://api.twilio.com/2010-04-01/Accounts/AC8b6aeccc3229dc3db665208f22c1e3c7/Messages/MM7c9a6a399c39cd8c92147475b61115c5/Media/MEceda61786a02687157b6be4a83f8b1f1',
+ApiVersion: '2010-04-01' }
+
+******** ALLY LOCATION **********
+
+curl -H "Content-Type: application/json" -X POST -d '{"ToCountry": "US", "MediaContentType0": "text/x-vcard", "ToState": "District Of Columbia", "SmsSid": "MM7c9a6a399c39cd8c92147475b61115c5", "SmsMessageSid": "MM7c9a6a399c39cd8c92147475b61115c5", "NumMedia": "1", "FromState": "NY", "ToCity": "", "FromZip": "10588", "Body": "", "SmsStatus": "received", "FromCity": "YONKERS", "FromCountry": "US", "To": "+12027593387", "ToZip": "", "NumSegments": "1", "MessageSid": "MM7c9a6a399c39cd8c92147475b61115c5", "AccountSid": "AC8b6aeccc3229dc3db665208f22c1e3c7", "From": "+19146469702", "MediaUrl0": "https://api.twilio.com/2010-04-01/Accounts/AC8b6aeccc3229dc3db665208f22c1e3c7/Messages/MM7c9a6a399c39cd8c92147475b61115c5/Media/MEceda61786a02687157b6be4a83f8b1f1", "ApiVersion": "2010-04-01" }' https://787c5eb0.ngrok.io/twilio/messages
+
+*********** JOIN TEXT ***************
+curl -H "Content-Type: application/json" -X POST -d '{"ToCountry": "US", "MediaContentType0": "text", "ToState": "District Of Columbia", "SmsSid": "MM7c9a6a399c39cd8c92147475b61115c5", "SmsMessageSid": "MM7c9a6a399c39cd8c92147475b61115c5", "NumMedia": "0", "FromState": "NY", "ToCity": "", "FromZip": "10588", "Body": "join", "SmsStatus": "received", "FromCity": "YONKERS", "FromCountry": "US", "To": "+12027593387", "ToZip": "", "NumSegments": "1", "MessageSid": "MM7c9a6a399c39cd8c92147475b61115c5", "AccountSid": "AC8b6aeccc3229dc3db665208f22c1e3c7", "From": "+19146469702", "MediaUrl0": "", "ApiVersion": "2010-04-01" }' https://787c5eb0.ngrok.io/twilio/messages
+
+******** KAT LOCATION **************
+
+curl -H "Content-Type: application/json" -X POST -d '{"ToCountry": "US","ToState": "District Of Columbia","SmsMessageSid": "SMce26ad33ff4a8c6fdb20a7249a38edea","NumMedia": "0","ToCity": "","FromZip": "06120","SmsSid": "SMce26ad33ff4a8c6fdb20a7249a38edea","FromState": "CT","SmsStatus": "received","FromCity": "HARTFORD","Body": "https://maps.google.com/maps?q=40.7053875,-74.0090352\n40°42\'19.4"N 74°00\'32.5"W\n6 Hanover St, New York, NY 10005, USA   https://maps.google.com/maps?q=40.705387499999965,-74.00903515625","FromCountry": "US","To": "+12027593387","ToZip": "","NumSegments": "3", "MessageSid": "SMce26ad33ff4a8c6fdb20a7249a38edea", "AccountSid": "AC8b6aeccc3229dc3db665208f22c1e3c7","From": "+18607485586","ApiVersion": "2010-04-01"}' https://787c5eb0.ngrok.io/twilio/messages
+
+********* KARIN LOCATION **************
+
+curl -H "Content-Type: application/json" -X POST -d '{"ToCountry": "US", "MediaContentType0": "text/x-vcard", "ToState": "District Of Columbia", "SmsMessageSid": "MM2e77278950af6f29468b07b9b0006999", "NumMedia": "1", "ToCity": "", "FromZip": "07416", "SmsSid": "MM2e77278950af6f29468b07b9b0006999", "FromState": "NJ", "SmsStatus": "received", "FromCity": "FRANKLIN", "Body": "", "FromCountry": "US", "To": "+12027593387", "ToZip": "","NumSegments": "1","MessageSid": "MM2e77278950af6f29468b07b9b0006999","AccountSid": "AC8b6aeccc3229dc3db665208f22c1e3c7", "From": "+19739975239", "MediaUrl0": "https://api.twilio.com/2010-04-01/Accounts/AC8b6aeccc3229dc3db665208f22c1e3c7/Messages/MM2e77278950af6f29468b07b9b0006999/Media/MEfc72747f37c6ac53d5dba6d571ef5fa5", "ApiVersion": "2010-04-01"}' https://787c5eb0.ngrok.io/twilio/messages
+
+
+********* RACHAEL LOCATION ***********
+
+curl -H "Content-Type: application/json" -X POST -d '{"ToCountry": "US","MediaContentType0": "image/jpeg","ToState": "District Of Columbia","SmsMessageSid": "MMb38d5a7fb1a496b918ef19c86ebe3cdc","NumMedia": "1","ToCity": "","FromZip": "27511","SmsSid": "MMb38d5a7fb1a496b918ef19c86ebe3cdc","FromState": "NC","SmsStatus": "received","FromCity": "MORRISVILLE","Body": "6 Hanover St\nhttps://maps.google.com/maps?ftid=0x89c25a1661468d21:0x98c424a94440260e\n6 Hanover St, New York, NY 10005, USA","FromCountry": "US","To": "+12027593387","ToZip": "","NumSegments": "1","MessageSid": "MMb38d5a7fb1a496b918ef19c86ebe3cdc","AccountSid": "AC8b6aeccc3229dc3db665208f22c1e3c7","From": "+19196105358","MediaUrl0": "https://api.twilio.com/2010-04-01/Accounts/AC8b6aeccc3229dc3db665208f22c1e3c7/Messages/MMb38d5a7fb1a496b918ef19c86ebe3cdc/Media/ME55897bd9265346003b635bf75a83ef3f","ApiVersion": "2010-04-01" }' https://787c5eb0.ngrok.io/twilio/messages
+
+***********************
+
+curl -H "Content-Type: application/json" -X POST -d '{"Body": "https://maps.google.com/maps?q=40.7053875,-74.0090352\n404219.4N 740032.5W\n6 Hanover St, New York, NY 10005, USA   https://maps.google.com/maps?q=40.705387499999965,-74.00903515625","FromCountry": "US","To": "+12027593387","ToZip": "","NumSegments": "3", "MessageSid": "SMce26ad33ff4a8c6fdb20a7249a38edea", "AccountSid": "AC8b6aeccc3229dc3db665208f22c1e3c7","From": "+18607485586","ApiVersion": "2010-04-01"}' https://787c5eb0.ngrok.io/twilio/messages
+
+
+curl "http://sandbox-api.authy.com/protected/json/phones/verification/start?api_key=2n5KdAo02ydCbdvfgU6aUjqD0IP1HmN9" \
+-d via="sms" \
+-d phone_number="914-646-9702" \
+-d country_code="1"
+
+

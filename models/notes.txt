@@ -1,0 +1,42 @@
+notes
+
+// one website for admin and user
+	- login with phone number
+	- send verification code
+	- check if user is admin
+	- admin page will have option to post
+	- view missions (edit)
+	- add challenge to mission
+
+
+	user
+	- show previous active mission
+	- show current mission
+	- show
+
+
+// missions should have lat and long for central location
+
+// basic sign up 
+
+1. send message to twilio
+2. check database for number
+3. if no number, add user to database
+4. if number analyze message " hello + username + are you ready for a mission?" (so that is is not the same message every time, we can have 3 that rotate), keep most recent message sent in the DB
+
+
+user texts for the first time
+existing user texts join
+new user texts join
+user has joined and provided a user name
+user has joined and not provided a user name
+
+watson tone analyzer to see if positive or negative response
+
+pull out all instances of creating a twiml respnose and write a function that takes a string
+
+
+Most recent text title
+mission request
+join
+name

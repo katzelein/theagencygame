@@ -5,7 +5,8 @@ const db = require('./_db')
 
 const User = db.define('users', {
   name: Sequelize.STRING,
-  phoneNumber: Sequelize.STRING
+  phoneNumber: Sequelize.STRING,
+  lastMessage: Sequelize.STRING
 })
 
 module.exports = User

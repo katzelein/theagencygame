@@ -1,8 +1,10 @@
 var twilioAPI = require('express').Router()
 var twilio = require('twilio')
 var rp = require('request-promise');
-const credentials = require('../key')
+//const credentials = require('../key')
 var geocoder = require('geocoder');
+var db = require('../models');
+var User = require('../models/user');
 
 twilioAPI.get('/')
 
@@ -11,6 +13,122 @@ twilioAPI.post('/messages', function(req, res, next){
   console.log("REQ BODY: ", req.body)
   console.log("MEDIA TYPE: ", req.body.MediaContentType0)
   console.log("MEDIA URL: ", req.body.MediaUrl0)
+
+  User.findOne({
+  	where: {
+  		phoneNumber: req.body.From
+  	}
+  })
+  .then(user => {
+  	console.log("found user: ", user)
+  	if(user){
+  		console.log("first res: ", res)
+  		if(user.lastMessage === "join"){
+  			console.log("last message what join")
+  			if((/(join)/i).test(req.body.Body)){
+  				console.log("IT FOUND JOIN")
+  				user.update({
+					lastMessage: "name"
+				})
+				.then(user => {
+					console.log("user updated: ", user)
+					var twiml = new twilio.TwimlResponse();
+    				twiml.message(function() {
+						this.body('Welcome to The Agency, new recruit. This is a trial run, you will have to prove yourself. For now though, what shall we call you?');
+					});
+					res.writeHead(200, {'Content-Type': 'text/xml'})
+					res.end(twiml.toString())
+				})	
+  			}
+		}
+		else if(user.lastMessage === "name"){
+			// have a timeout in case they do not respond and then text a day later and forgot they were supposed to provide their name
+			// maybe get message ssid before it is sent
+			user.update({
+				name: req.body.Body,
+				lastMessage: "confirmName"
+			})
+			.then(user => {
+					console.log("user updated: ", user)
+					var twiml = new twilio.TwimlResponse();
+    				twiml.message(function() {
+						this.body('Alright, you are now in our system as ' + req.body.Body);
+					});
+					res.writeHead(200, {'Content-Type': 'text/xml'})
+					res.end(twiml.toString())
+			})
+		}
+  
+
+ 
+  
+  		// if(user.name){
+  		// 	var twiml = new twilio.TwimlResponse();
+    // 		twiml.message(function() {
+    //   			this.body("Welcome back, " + user.name + ". Are you ready for your next mission?");
+    // 		});
+    // 		res.writeHead(200, {'Content-Type': 'text/xml'})
+    // 		res.end(twiml.toString())
+
+    // 		//confirm this sent and then add it to database
+  		// }
+  		// else{
+  		// 	var twiml = new twilio.TwimlResponse();
+    // 		twiml.message(function() {
+    //   			this.body("Welcome back, stranger. You have chosen to remain anonymous so far, but we cannot send you on any missions until you provide an agent name. What shall we call you?");
+    // 		});
+    // 		User.update({
+    // 			lastMessage: "name"
+    // 		})
+    // 		.then(user => {
+    // 			res.writeHead(200, {'Content-Type': 'text/xml'})
+    // 			res.end(twiml.toString())
+    // 		})
+    // 		// res.writeHead(200, {'Content-Type': 'text/xml'})
+    // 		// res.end(twiml.toString())
+  		// }
+  	}
+  	else{
+  		User.create({
+  			phoneNumber: req.body.From,
+  			lastMessage: "join"
+  		})
+  		.then(user => {
+	  		var twiml = new twilio.TwimlResponse();
+	    	twiml.message(function() {
+	      		this.body("The Agency has no record of you in our system. Would you like to join our forces? If so, text 'join' ");
+	    	});
+	    	res.writeHead(200, {'Content-Type': 'text/xml'})
+	    	res.end(twiml.toString())
+	    })
+  	}
+  	})
+
+ //  if((/(join)/i).test(req.body.Body)){
+ //  	console.log("IT FOUND JOIN")
+ //  	User.findOrCreate({
+ //  		where: {
+ //  			phoneNumber: req.body.From
+ //  		}
+ //  	})
+ //  	.spread(function(user, created) {
+ //  		console.log("USER: ", user)
+ //  		console.log("User name: ", user.name)
+ //  		console.log("User data name: ", user.dataValues.name)
+
+ //  		if(created){
+ //  			var twiml = new twilio.TwimlResponse();
+ //    		twiml.message(function() {
+	// 			this.body('Welcome to The Agency, new recruit. What shall we call you?');
+	// 		});
+	// 		res.writeHead(200, {'Content-Type': 'text/xml'})
+	// 		res.end(twiml.toString())
+	// 		// add last text to database
+	// 	}
+	// })
+  
+
+ //  }
 
   // looking for location send from iPhone
   if(req.body.MediaContentType0 === 'text/x-vcard'){
@@ -102,12 +220,12 @@ twilioAPI.post('/messages', function(req, res, next){
   	// address = address.replace(/,/g, "")
   	// console.log("ADDRESS REPLACE: ", address)
   }
-  	var twiml = new twilio.TwimlResponse();
-    twiml.message(function() {
-      this.body('The Robots are coming! Head for the hills!');
-    });
-    res.writeHead(200, {'Content-Type': 'text/xml'})
-    res.end(twiml.toString())
+  	// var twiml = new twilio.TwimlResponse();
+   //  twiml.message(function() {
+   //    this.body('The Robots are coming! Head for the hills!');
+   //  });
+   //  res.writeHead(200, {'Content-Type': 'text/xml'})
+   //  res.end(twiml.toString())
 });
 
 module.exports = twilioAPI
