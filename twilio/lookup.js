@@ -1,27 +1,29 @@
 const User = require('../models/user')
 
 const {chooseMission} = require('./chooser')
+const {getLocation} = require('./location')
 
-module.exports = function(phoneNumber, userInput) {
+module.exports = function(phoneNumber, message) {
 	return User.findOne({where: {phoneNumber}})
 	.then(user => {
-		if (user) return fetchMessage(user, userInput);
+		if (user) return fetchMessage(user, message);
 		else {
 			console.log("Did not find user")
 			return User.create({
 				phoneNumber,
-				messageState: 'NEED_USERNAME'
+				messageState: 'CONFIRM_JOIN'
 			})
 			.then (newUser => {
-				return "Ah, it's seems the agency has a new recruit! And what is your name, trainee?  Feel free to use an alias, we respect the secrets of our agents."
+				return "The Agency has no record of you in our system. Would you like to join our forces? If so, text 'join'"
+
 			})
 		}
 	})
 }
 
-const fetchMessage = (user, userInput) => {
+const fetchMessage = (user, message) => {
 	
-	const simpleInput = userInput.toLowerCase();
+	const simpleInput = message.Body.toLowerCase();
 	switch(simpleInput) {
 		case 'help':
 		case 'options':
@@ -39,12 +41,12 @@ const fetchMessage = (user, userInput) => {
 
 	switch(user.messageState) {
 		case 'NEED_USERNAME':
-			str = whichMessage[user.messageState] (user, userInput);
+			str = whichMessage[user.messageState] (user, message);
 			break;
 		case 'TUTORIAL_MISSION_1':
 		default:
 			// str = "Sorry!"
-			str = whichMessage[user.messageState] (user, simpleInput)
+			str = whichMessage[user.messageState] (user, message);
 			break;
 	}
 
@@ -53,24 +55,40 @@ const fetchMessage = (user, userInput) => {
 
 
 const whichMessage = {
-	NEED_USERNAME: (user, userInput) => {
+	NEED_USERNAME: (user, message) => {
 		let re = new RegExp("^[A-Za-z0-9]+$");
-		if (re.test(userInput)) {
+		if (re.test(message.Body)) {
 		    console.log("Valid username");
 		} else {
 		    console.log("Invalid username");
 		}
 	
-		user.update({
-			username: userInput, 
+		return user.update({
+			username: message.Body, 
 			messageState: 'TUTORIAL_MISSION_1'
 		})
+		.then(user => {
+			return "Welcome to the Agency, Agent "+message.Body+"! Would you like to participate in a training mission?"
+		})
 		
-		return "Welcome to the Agency, Agent "+userInput+"! Would you like to participate in a training mission?"
 	},
 
-	TUTORIAL_MISSION_1: (user, userInput) => {
-		userInput = userInput.toLowerCase()
+	CONFIRM_JOIN: (user, message) => {
+		if((/(join)/i).test(message.Body)){
+  			console.log("IT FOUND JOIN")
+  			console.log("USER IN JOIN: ", user)
+  			return user.update({
+				messageState: 'NEED_USERNAME'
+			})
+			.then(user => {
+				console.log("in .then()")
+				return "Ah, it's seems the agency has a new recruit! And what is your name, trainee?  Feel free to use an alias, we respect the secrets of our agents."
+			})
+	}},
+
+	TUTORIAL_MISSION_1: (user, message) => {
+		//can't expect just a yes or no
+		var userInput = message.Body.toLowerCase()
 		if(userInput == 'no') {
 			user.update({messageState: 'TUTORIAL_MISSION_0'});
 			return "A little busy at the moment? We understand, no need to blow your cover.  Well, whenever you have a free hour, just text us ‘mission’ and we can get started."
@@ -80,15 +98,30 @@ const whichMessage = {
 		}
 	},
 
-	TUTORIAL_MISSION_0: (user, userInput) => {
-		user.update({messageState: 'TUTORIAL_MISSION_1'});
-		return "Ready for your training mission, Trainee "+user.username+"?"
+	TUTORIAL_MISSION_0: (user, message) => {
+		user.update({messageState: 'TUTORIAL_MISSION_1'})
+		.then(user => {
+			return "Ready for your training mission, Trainee "+user.username+"?"
+		})	
 	},
 
-	TUTORIAL_MISSION_2: (user) => {
-		// somehow extract location
-		user.update({messageState: 'TUTORIAL_MISSION_3'});
-		return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to the Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
+	TUTORIAL_MISSION_2: (user, message) => {
+		var coordinates = getLocation(message)
+		console.log("res from getLocation: ", coordinates)
+		if(typeof coordinates === "array"){
+			return user.update({
+				messageState: 'TUTORIAL_MISSION_3',
+				latitude: coordinates[0],
+				longitude: coordinates[1]
+			})
+			.then(user => {
+				return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
+			})
+		}
+		else{
+			return coordinates
+		}
+		
 	},
 
 	TUTORIAL_MISSION_3: (user) => {
