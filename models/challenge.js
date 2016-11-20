@@ -8,14 +8,12 @@ const Challenge = db.define('challenges', {
   summary: Sequelize.TEXT,
   latitude: {
     type: Sequelize.INTEGER,
-    allowNull: true,
-    defaultValue: null,
+    defaultValue: 0,
     validate: { min: -90, max: 90 }
   },
   longitude: {
     type: Sequelize.INTEGER,
-    allowNull: true,
-    defaultValue: null,
+    defaultValue: 0,
     validate: { min: -180, max: 180 }
   },
   targetTags: Sequelize.ARRAY(Sequelize.STRING),
@@ -25,3 +23,6 @@ const Challenge = db.define('challenges', {
 })
 
 module.exports = Challenge
+
+
+
