@@ -1,6 +1,7 @@
 const User = require('../models/user')
 
 const {chooseMission} = require('./chooser')
+const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
 
 module.exports = function(phoneNumber, message) {
@@ -43,7 +44,11 @@ const fetchMessage = (user, message) => {
 		case 'NEED_USERNAME':
 			str = whichMessage[user.messageState] (user, message.Body);
 			break;
-		case 'TUTORIAL_MISSION_1':
+		case 'TUTORIAL_MISSION_2': // need location
+		case 'QUERY_MISSION': // need location
+			// for those that need images or locations
+			str = whichMessage[user.messageState] (user, message);
+			break;
 		default:
 			// str = "Sorry!"
 			str = whichMessage[user.messageState] (user, simpleInput);
@@ -55,26 +60,26 @@ const fetchMessage = (user, message) => {
 
 
 const whichMessage = {
-	NEED_USERNAME: (user, message) => {
+	NEED_USERNAME: (user, userInput) => {
 		let re = new RegExp("^[A-Za-z0-9]+$");
-		if (re.test(message.Body)) {
+		if (re.test(userInput)) {
 		    console.log("Valid username");
 		} else {
 		    console.log("Invalid username");
 		}
 	
 		return user.update({
-			username: message.Body, 
+			username: userInput, 
 			messageState: 'TUTORIAL_MISSION_1'
 		})
 		.then(user => {
-			return "Welcome to the Agency, Agent "+message.Body+"! Would you like to participate in a training mission?"
+			return "Welcome to the Agency, Agent "+userInput+"! Would you like to participate in a training mission?"
 		})
 		
 	},
 
-	CONFIRM_JOIN: (user, message) => {
-		if((/(join)/i).test(message.Body)){
+	CONFIRM_JOIN: (user, userInput) => {
+		if((/(join)/i).test(userInput)){
   			console.log("IT FOUND JOIN")
   			console.log("USER IN JOIN: ", user)
   			return user.update({
@@ -86,9 +91,9 @@ const whichMessage = {
 			})
 	}},
 
-	TUTORIAL_MISSION_1: (user, message) => {
+	TUTORIAL_MISSION_1: (user, userInput) => {
 		//can't expect just a yes or no
-		var userInput = message.Body.toLowerCase()
+		// var userInput = message.Body.toLowerCase()
 		if(userInput == 'no') {
 			user.update({messageState: 'TUTORIAL_MISSION_0'});
 			return "A little busy at the moment? We understand, no need to blow your cover.  Well, whenever you have a free hour, just text us ‘mission’ and we can get started."
@@ -181,16 +186,23 @@ const whichMessage = {
 	TUTORIAL_MISSION_3: (user) => {
 		// assuming they sent in a picture
 		user.update({messageState: 'STANDBY'})
-		return "Congratulations, Trainee "+user.username+", you have completed your training mission!  Your name has been added to our list of active field agents.  Text in 'new mission' whenever you have the time to request your first mission!"
+		.then(user => {
+			return "Congratulations, Trainee "+user.username+", you have completed your training mission!  Your name has been added to our list of active field agents.  Text in 'new mission' whenever you have the time to request your first mission!"
+		})
 	},
 
 	STANDBY: (user, userInput) => {
 		if (userInput == 'no') {
 			user.update({messageState: 'QUERY_HIATUS'})
-			return "Agent "+user.username+", you are currently between missions. Do you wish to take a hiatus from missions?"
+			.then(user => {
+				return "Agent "+user.username+", you are currently between missions. Do you wish to take a hiatus from missions?"
+			})
 		} else if (userInput == 'new' || userInput == 'new mission') {
 			user.update({messageState: 'QUERY_MISSION'})
-			return "Ah, Agent "+user.username+", good of you to call in! Before we assign you a new mission, please send in your location."
+			.then(user => {
+				return "Ah, Agent "+user.username+", good of you to call in! Before we assign you a new mission, please send in your location."
+
+			})
 		}
 	},
 
