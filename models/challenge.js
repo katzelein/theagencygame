@@ -6,20 +6,21 @@ const db = require('./_db')
 const Challenge = db.define('challenges', {
   objective: Sequelize.STRING,
   summary: Sequelize.TEXT,
-  latitude: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0,
-    validate: { min: -90, max: 90 }
-  },
-  longitude: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0,
-    validate: { min: -180, max: 180 }
-  },
+  // latitude: {
+  //   type: Sequelize.FLOAT,
+  //   defaultValue: 0,
+  //   validate: { min: -90, max: 90 }
+  // },
+  // longitude: {
+  //   type: Sequelize.FLOAT,
+  //   defaultValue: 0,
+  //   validate: { min: -180, max: 180 }
+  // },
   targetTags: Sequelize.ARRAY(Sequelize.STRING),
   targetText: Sequelize.TEXT,
   conclusion: Sequelize.TEXT,
-  type: Sequelize.ENUM('text', 'image', 'voice')
+  type: Sequelize.ENUM('text', 'image', 'voice'),
+  order: Sequelize.INTEGER
 })
 
 module.exports = Challenge
