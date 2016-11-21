@@ -83,6 +83,38 @@ twilioAPI.post('/testing', function(req, res, next){
   })
 });
 
+// FOR PHONE CALLS
+
+twilioAPI.post('/voice', function (req, res, next) {
+  let city = req.body.FromCity;
+  let twiml = new twilio.TwimlResponse();
+  twiml.say('Go ahead.', { 
+    voice: 'woman' 
+  })
+    .record({
+      maxLength: 15,
+      action: '/recording'
+    })
+  // res.type('text/xml')
+  res.send(twiml.toString())
+});
+
+
+
+twilioAPI.post('/twilio/recording', function (req, res, next) {
+  console.log(req)
+
+  // Message.create({
+  //   sid: request.params.CallSid,
+  //   type: 'call',
+  //   recordingUrl: request.params.RecordingUrl,
+  //   recordingDuration: Number(request.params.RecordingDuration) // also include a phoneNumberId
+  // })
+})
+
+
+// END OF PHONE CALLS
+
 /*
 * Handle making requests to Clarifai
 */
