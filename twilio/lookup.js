@@ -41,12 +41,12 @@ const fetchMessage = (user, message) => {
 
 	switch(user.messageState) {
 		case 'NEED_USERNAME':
-			str = whichMessage[user.messageState] (user, message);
+			str = whichMessage[user.messageState] (user, message.Body);
 			break;
 		case 'TUTORIAL_MISSION_1':
 		default:
 			// str = "Sorry!"
-			str = whichMessage[user.messageState] (user, message);
+			str = whichMessage[user.messageState] (user, simpleInput);
 			break;
 	}
 
@@ -98,7 +98,7 @@ const whichMessage = {
 		}
 	},
 
-	TUTORIAL_MISSION_0: (user, message) => {
+	TUTORIAL_MISSION_0: (user) => {
 		user.update({messageState: 'TUTORIAL_MISSION_1'})
 		.then(user => {
 			return "Ready for your training mission, Trainee "+user.username+"?"
@@ -194,20 +194,37 @@ const whichMessage = {
 		}
 	},
 
-	QUERY_MISSION: (user, userInput) => {
+	QUERY_MISSION: (user, message) => {
 		// assume we were able to access and process location
-		return chooseMission()
-		.then(newMission => {
-			user.update({
-				messageState: 'MISSION_1', 
-				currentMission: newMission
-			});
-			return mission.title+": "+mission.summary+" Do you accept this mission, Agent "+user.username+"?";
+		var coordinatesPromise = getLocation(message)
+		console.log("coordinatesPromise: ", coordinatesPromise)
+		return coordinatesPromise
+		.then(coordinates => {
+			if(typeof coordinates === 'object'){
+				return chooseMission()
+				.then(newMission => {
+					user.update({
+						messageState: 'MISSION_1', 
+						currentMission: newMission
+					});
+					return mission.title+": "+mission.summary+" Do you accept this mission, Agent "+user.username+"?";
+				})
+			}
+			else{
+				console.log("coordinates is not an array")
+				return user.update({})
+				.then(user => {
+					return coordinates
+				})
+			}
+
 		})
+
+		
 	},
 
 	MISSION_1: (user, userInput) => {
-
+		
 	},
 
 	QUERY_HIATUS: () =>{return ""}
