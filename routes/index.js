@@ -7,5 +7,6 @@ var twilio = require('twilio');
 // })
 
 router.use('/twilio', require('../twilio/api'))
+router.use('/authy', require('./authy'))
 
 module.exports = router;

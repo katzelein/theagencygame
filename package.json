@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "authy-client": "^1.0.7",
+    "axios": "^0.15.2",
     "babel": "^6.5.2",
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",
@@ -20,7 +22,9 @@
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
     "clarifai": "^2.0.16",
+    "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
+    "express-session": "^1.14.2",
     "nodemon": "^1.11.0",
     "path": "^0.12.7",
     "pg": "^6.1.0",

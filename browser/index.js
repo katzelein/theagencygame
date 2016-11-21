@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 // import AllPuppiesContainer from './components/all-puppies/AllPuppiesContainer';
 // import SinglePuppyContainer from './components/single-puppy/SinglePuppyContainer';
 import AppContainer from './containers/AppContainer';
+import VerificationContainer from './containers/VerificationContainer';
 
 import store from './store';
 import { Provider } from 'react-redux';
@@ -30,6 +31,7 @@ ReactDOM.render(
         <Router history={browserHistory}>
           <Route path="/">
             <Route path="login" component={AppContainer} />
+            <Route path="verification" component={VerificationContainer} />
             <IndexRoute component={AppContainer}/>
           </Route>
         </Router>

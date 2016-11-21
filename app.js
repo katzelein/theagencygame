@@ -2,6 +2,13 @@
 const express = require('express');
 const app = express();
 const volleyball = require('volleyball');
+const Client = require('authy-client').Client;
+const authyKey = require('./constants').authyKey
+const secret = require('./constants').secret
+
+const client = new Client({ key: authyKey });
+var cookieParser = require('cookie-parser');
+var expressSession = require('express-session');
 
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -12,6 +19,8 @@ const {resolve} = require('path')
 
 app.use(volleyball);
 
+app.use(cookieParser());
+app.use(expressSession({'secret': secret}));
 // app.use(express.static(path.join(__dirname, './public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
