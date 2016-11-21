@@ -29,6 +29,7 @@ twilioAPI.post('/messages', function(req, res, next){
   } else {
     console.log('There was no media in this message')
   }
+
   var twiml = new twilio.TwimlResponse();
   twiml.message(function() {
     this.body('The Robots are coming! Head for the hills!');
