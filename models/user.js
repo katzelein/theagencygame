@@ -11,8 +11,8 @@ const User = db.define('users', {
   currentChallenge: Sequelize.INTEGER,
   messageState: Sequelize.STRING,
   latitude: Sequelize.FLOAT,
-  longitude: Sequelize.FLOAT
-
+  longitude: Sequelize.FLOAT,
+  lastMessageAt: Sequelize.STRING
 })
 
 module.exports = User
