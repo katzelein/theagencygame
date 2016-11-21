@@ -57,6 +57,8 @@ const data = {
     {missionId: 3, challengeId: 3}, 
     {missionId: 3, challengeId: 4}, 
     {missionId: 3, challengeId: 5},
+    {missionId: 3, challengeId: 6},
+    {missionId: 3, challengeId: 7},
   ],
   userMission: [
     {userId: 1, missionId: 1}, 
@@ -67,9 +69,13 @@ const data = {
   userChallenge: [
     {userId: 1, challengeId: 1}, 
     {userId: 1, challengeId: 2},
+    {userId: 2, challengeId: 1},
+    {userId: 2, challengeId: 2},
     {userId: 2, challengeId: 3},
     {userId: 2, challengeId: 4}, 
-    {userId: 2, challengeId: 5}
+    {userId: 2, challengeId: 5},
+    {userId: 2, challengeId: 6},
+    {userId: 2, challengeId: 7}
   ]
 };
 
