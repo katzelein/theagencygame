@@ -5,21 +5,36 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js",
+    "build": "webpack",
+    "start": "node_modules/.bin/webpack & nodemon app.js",
     "seed": "node models/seed.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
     "clarifai": "^2.0.16",
     "express": "^4.14.0",
     "nodemon": "^1.11.0",
+    "path": "^0.12.7",
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.8.1",
+    "redux": "^3.6.0",
+    "redux-logger": "^2.7.0",
+    "redux-thunk": "^2.1.0",
     "sequelize": "^3.25.1",
     "twilio": "^2.11.1",
-    "volleyball": "^1.4.1"
+    "volleyball": "^1.3.0",
+    "webpack": "^1.13.2"
   }
 }
