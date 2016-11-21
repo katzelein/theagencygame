@@ -48,7 +48,7 @@ twilioAPI.post('/messages', function(req, res, next){
 
 
   
-  var answer = lookup(req.body.From, req.body)
+  var answer = lookup(req.body.From, req.body) // must return a promise
   console.log("ANSWER: ", answer)
   answer
   .then(message => {
