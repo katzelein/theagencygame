@@ -9,7 +9,9 @@ const User = db.define('users', {
   status: Sequelize.ENUM('active', 'hiatus', 'retired'),
   currentMission: Sequelize.INTEGER,	
   currentChallenge: Sequelize.INTEGER,
-  messageState: Sequelize.STRING
+  messageState: Sequelize.STRING,
+  latitude: Sequelize.FLOAT,
+  longitude: Sequelize.FLOAT
 
 })
 
