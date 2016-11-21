@@ -28,7 +28,7 @@ const fetchMessage = (user, message) => {
 	switch(simpleInput) {
 		case 'help':
 		case 'options':
-			return "You have reached the Agency\'s automated help menu! Text 'tutorial' to redo the training mission.  Text 'quit' to quit any ongoing mission.  Text 'skip' to skip any particular challenge in a mission. Text 'resign' to retire from the Agency."
+			return "You have reached The Agency\'s automated help menu! Text 'tutorial' to redo the training mission.  Text 'quit' to quit any ongoing mission.  Text 'skip' to skip any particular challenge in a mission. Text 'resign' to retire from The Agency."
 		case 'tutorial':
 		case 'skip':
 		case 'quit':
@@ -99,7 +99,7 @@ const whichMessage = {
 			return "A little busy at the moment? We understand, no need to blow your cover.  Well, whenever you have a free hour, just text us ‘mission’ and we can get started."
 		} else if (userInput == 'yes') {
 			user.update({messageState: 'TUTORIAL_MISSION_2'});
-			return "The main purpose of this training mission is to get you, our newest recruit, used to our system.  Now first things first, before every mission you will be encouraged to send in your location. This enables us to tailor our missions to your location, perhaps even assign you missions that require interactions with other agents.  Most smartphones have the ability to send or share your current location through text.  Please send your current location to the Agency now."
+			return "The main purpose of this training mission is to get you, our newest recruit, used to our system.  Now first things first, before every mission you will be encouraged to send in your location. This enables us to tailor our missions to your location, perhaps even assign you missions that require interactions with other agents.  Most smartphones have the ability to send or share your current location through text.  Please send your current location to The Agency now."
 		}
 	},
 
@@ -236,27 +236,10 @@ const whichMessage = {
 	},
 
 	MISSION_1: (user, userInput) => {
-		
+		return getChallenge(user)
+		.then()
 	},
 
 	QUERY_HIATUS: () =>{return ""}
 
-}
-
-
-
-
-
-let not_lookup = function(userNum, userInput) {
-	// lookup userNum in userStatus table for currentState
-	
-	return "Hello Agent"+userInput
-
-	let currentState = {};
-	// lookup currentState and userInput in stateTransition table for nextState
-	let nextState = {};
-	// if lookup for nextState fails, return "sorry, the Agency's automated text processing has epic failed"
-	// lookup nextState in stateMessage table for message
-	let message = {};
-	return message;
 }

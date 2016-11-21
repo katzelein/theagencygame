@@ -17,7 +17,9 @@ const getChallenge(user) {
 	let currentChallenge = user.currentChallenge;
 
 	Mission.findById(chooseMission, {include})
-	.then(mission=>)
+	.then(mission => {
+		
+	})
 }
 
 module.exports = {chooseMission}
