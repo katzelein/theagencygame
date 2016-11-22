@@ -10,9 +10,11 @@ export default class App extends Component {
   render () {
     return (
          <div className="row">
-                  <Link to="/verification">
-                    <input type="submit" value="Phone Verification" className="btn btn-info btn-block"/>
-                  </Link>          
+              <form action="/api/mission" method="POST">
+               <label>Title:</label><br/>
+               <input type="text" name="title" />
+               <input type="submit" value="Submit"/>
+              </form>
           </div>
     );
   }

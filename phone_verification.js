@@ -77,13 +77,14 @@ PhoneVerification.prototype._request = function (type, path, params, callback, q
         strictSSL: true
     };
 
-    console.log(options.url);
 
     var callback_check = function (err, res, body) {
         if (!err) {
             if (res.statusCode === 200) {
+                console.log("BODY 200: ", body)
                 callback(null, body);
             } else {
+                console.log("BODY: ", body)
                 callback(body);
             }
         } else {

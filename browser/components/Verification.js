@@ -31,11 +31,19 @@ export default class Verification extends Component {
   }
 
   verifyNumber(e){
+    e.preventDefault()
     let token = e.target.token.value;
     let countryCode = this.state.countryCode
     let phoneNumber = this.state.phoneNumber
     axios.post('/authy/verification/verify', {token, countryCode, phoneNumber})
-
+    .then((res) => (res.data))
+    .then((data) => {
+      console.log("verifyNumber DATA: ", data)
+      if(data.number && data.verified){
+        this.props.findUser(data.number)
+      }
+      browserHistory.push('/dashboard')
+    })
   }
 
   render () {

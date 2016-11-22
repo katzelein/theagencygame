@@ -53,8 +53,12 @@ router.post('/verification/verify', function(req, res, next){
                 if (response.success) {
                 	console.log("REQ.SESSION: ", req.session)
                     req.session.ph_verified = true;
+                    let number = "+" + country_code + phone_number
+                    res.json({verified: true, number})
                 }
-                res.status(200).json(err);
+                else{
+                	res.status(200).json(err);
+            	}
             }
 
         });

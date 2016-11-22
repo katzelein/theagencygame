@@ -5,7 +5,11 @@ import ReactDOM from 'react-dom';
 // import AllPuppiesContainer from './components/all-puppies/AllPuppiesContainer';
 // import SinglePuppyContainer from './components/single-puppy/SinglePuppyContainer';
 import AppContainer from './containers/AppContainer';
-import VerificationContainer from './containers/VerificationContainer';
+import {SendVerificationContainer} from './containers/VerificationContainer';
+import {VerifyContainer} from './containers/VerificationContainer';
+import DashboardContainer from './containers/DashboardContainer';
+import AdminContainer from './containers/AdminContainer';
+import AddMission from './components/AddMission';
 
 import store from './store';
 import { Provider } from 'react-redux';
@@ -31,7 +35,12 @@ ReactDOM.render(
         <Router history={browserHistory}>
           <Route path="/">
             <Route path="login" component={AppContainer} />
-            <Route path="verification" component={VerificationContainer} />
+            <Route path="sendVerification" component={SendVerificationContainer} />
+            <Route path="verify" component={VerifyContainer} />
+            <Route path="dashboard" component={DashboardContainer}/>
+            <Route path="admin" component={AdminContainer}>
+              <Route path="addMission" component={AddMission}/>
+            </Route>
             <IndexRoute component={AppContainer}/>
           </Route>
         </Router>

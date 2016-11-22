@@ -1,20 +1,21 @@
 import { connect } from 'react-redux';
 //import { loadPuppies } from '../../action-creators';
-import Verification from '../components/Verification';
+import {SendVerification} from '../components/Verification';
+import {Verify} from '../components/Verification';
+import {fetchUser} from '../reducers/user';
 
 //******** FIX TO BE IN ES6 LIKE WE"RE USED TO
-const mapStateToProps = function (state) {
+const mapStateToProps = (state) => {
   return state
 };
 
-const mapDispatchToProps = function (dispatch) {
-  return {
-    findUser: function () {
-    	// onclick authenticate
-   
+const mapDispatchToProps = (dispatch) => ({
+    findUser: function (number){
+    	dispatch(fetchUser(number))
     }
-  };
-};
+});
 
-const VerificationContainer = connect(mapStateToProps, mapDispatchToProps)(Verification);
-export default VerificationContainer;
+const SendVerificationContainer = connect(mapStateToProps, mapDispatchToProps)(SendVerification);
+const VerifyContainer = connect(mapStateToProps, mapDispatchToProps)(Verify)
+export SendVerificationContainer;
+export VerifyContainer;
