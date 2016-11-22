@@ -70,8 +70,7 @@ twilioAPI.post('/testing', function(req, res, next){
   console.log("MEDIA URL: ", req.body.MediaUrl)
   console.log("From", req.body.From, "Body", req.body.Body)
 
-
-  var answer = lookup(req.body.From, req.body.Body)
+  var answer = lookup(req.body.From, req.body)
 
   // answer = "Hi"
 

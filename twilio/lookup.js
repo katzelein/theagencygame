@@ -38,29 +38,40 @@ const fetchMessage = (user, message) => {
 			break;
 	}
 
-	let str;
+	let returnObj;
 
 	switch(user.messageState) {
 		case 'NEED_USERNAME':
-			str = whichMessage[user.messageState] (user, message.Body);
+			returnObj = whichMessage[user.messageState] (message.Body);
 			break;
 		case 'TUTORIAL_MISSION_2': // need location
 		case 'QUERY_MISSION': // need location
 			// for those that need images or locations
-			str = whichMessage[user.messageState] (user, message);
+			returnObj = whichMessage[user.messageState] (message);
 			break;
 		default:
-			// str = "Sorry!"
-			str = whichMessage[user.messageState] (user, simpleInput);
+			// returnObj = "Sorry!"
+			returnObj = whichMessage[user.messageState] (simpleInput);
 			break;
 	}
 
-	return str;
+	console.log('returnObj instanceof Promise', returnObj instanceof Promise)
+
+	if (returnObj && returnObj.state) user.update(returnObj.state);
+	if (returnObj && returnObj.message) return returnObj.message;
+	if (returnObj instanceof Promise) {
+		return returnObj
+		.then(obj => {
+			if (obj && obj.state) user.update(obj.state);
+			if (obj && obj.message) return obj.message;
+		})
+	}
+	else return 'Sorry, The Agency\'s text processor has clearly failed.'
 }
 
 
 const whichMessage = {
-	NEED_USERNAME: (user, userInput) => {
+	NEED_USERNAME: (userInput) => {
 		let re = new RegExp("^[A-Za-z0-9]+$");
 		if (re.test(userInput)) {
 		    console.log("Valid username");
@@ -68,72 +79,75 @@ const whichMessage = {
 		    console.log("Invalid username");
 		}
 	
-		return user.update({
-			username: userInput, 
-			messageState: 'TUTORIAL_MISSION_1'
-		})
-		.then(user => {
-			return "Welcome to the Agency, Agent "+userInput+"! Would you like to participate in a training mission?"
-		})
-		
-	},
-
-	CONFIRM_JOIN: (user, userInput) => {
-		if((/(join)/i).test(userInput)){
-  			console.log("IT FOUND JOIN")
-  			console.log("USER IN JOIN: ", user)
-  			return user.update({
-				messageState: 'NEED_USERNAME'
-			})
-			.then(user => {
-				console.log("in .then()")
-				return "Ah, it's seems the agency has a new recruit! And what is your name, trainee?  Feel free to use an alias, we respect the secrets of our agents."
-			})
-	}},
-
-	TUTORIAL_MISSION_1: (user, userInput) => {
-		//can't expect just a yes or no
-		// var userInput = message.Body.toLowerCase()
-		if(userInput == 'no') {
-			user.update({messageState: 'TUTORIAL_MISSION_0'});
-			return "A little busy at the moment? We understand, no need to blow your cover.  Well, whenever you have a free hour, just text us ‘mission’ and we can get started."
-		} else if (userInput == 'yes') {
-			user.update({messageState: 'TUTORIAL_MISSION_2'});
-			return "The main purpose of this training mission is to get you, our newest recruit, used to our system.  Now first things first, before every mission you will be encouraged to send in your location. This enables us to tailor our missions to your location, perhaps even assign you missions that require interactions with other agents.  Most smartphones have the ability to send or share your current location through text.  Please send your current location to The Agency now."
+		return {
+			state: {
+				username: userInput, 
+				messageState: 'TUTORIAL_MISSION_1'
+			},
+			message: "Welcome to the Agency, Agent "+userInput+"! Would you like to participate in a training mission?"
 		}
 	},
 
-	TUTORIAL_MISSION_0: (user) => {
-		user.update({messageState: 'TUTORIAL_MISSION_1'})
-		.then(user => {
-			return "Ready for your training mission, Trainee "+user.username+"?"
-		})	
+	CONFIRM_JOIN: (userInput) => {
+		if((/(join)/i).test(userInput)){
+  			console.log("IT FOUND JOIN")
+  			return {
+  				state: {
+  					messageState: 'NEED_USERNAME'
+				}, 
+				message: "Ah, it's seems the agency has a new recruit! And what is your name, trainee?  Feel free to use an alias, we respect the secrets of our agents."
+			}
+		}
 	},
 
-	TUTORIAL_MISSION_2: (user, message) => {
+	TUTORIAL_MISSION_1: (userInput) => {
+		//can't expect just a yes or no
+		// var userInput = message.Body.toLowerCase()
+		if(userInput == 'no') {
+			return {
+				state: {
+					messageState: 'TUTORIAL_MISSION_0'
+				},
+				message: "A little busy at the moment? We understand, no need to blow your cover.  Well, whenever you have a free hour, just text us ‘mission’ and we can get started."
+			}
+		} else if (userInput == 'yes') {
+			return {
+				state: {
+					messageState: 'TUTORIAL_MISSION_2'
+				},
+				message: "The main purpose of this training mission is to get you, our newest recruit, used to our system.  Now first things first, before every mission you will be encouraged to send in your location. This enables us to tailor our missions to your location, perhaps even assign you missions that require interactions with other agents.  Most smartphones have the ability to send or share your current location through text.  Please send your current location to The Agency now."
+			}
+		}
+	},
+
+	TUTORIAL_MISSION_0: () => {
+		return {
+			state: {messageState: 'TUTORIAL_MISSION_1'},
+			message: "Ready for your training mission, Trainee "+user.username+"?"
+		}
+	},
+
+	TUTORIAL_MISSION_2: (message) => {
 		var coordinatesPromise = getLocation(message)
 		console.log("coordinatesPromise: ", coordinatesPromise)
 		return coordinatesPromise
 		.then(coordinates => {
 			if(typeof coordinates === 'object'){
-				return user.update({
+				console.log("found coordinates, .then")
+				return {
+					state: {
 						messageState: 'TUTORIAL_MISSION_3',
 						latitude: coordinates[0],
 						longitude: coordinates[1]
-				})
-				.then(user => {
-					console.log("found coordinates, .then")
-					return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
-				})
-			}
-			else{
+					},
+					message: "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
+				}
+			} else {
 				console.log("coordinates is not an array")
-				return user.update({})
-				.then(user => {
-					return coordinates
-				})
+				return {
+					message: "Sorry, The Agency's message processor was not able to parse your location from that message.  Please send in your street address instead."
+				}
 			}
-
 		})
 
 
@@ -183,30 +197,29 @@ const whichMessage = {
 		
 	},
 
-	TUTORIAL_MISSION_3: (user) => {
+	TUTORIAL_MISSION_3: () => {
 		// assuming they sent in a picture
-		user.update({messageState: 'STANDBY'})
-		.then(user => {
-			return "Congratulations, Trainee "+user.username+", you have completed your training mission!  Your name has been added to our list of active field agents.  Text in 'new mission' whenever you have the time to request your first mission!"
-		})
-	},
-
-	STANDBY: (user, userInput) => {
-		if (userInput == 'no') {
-			user.update({messageState: 'QUERY_HIATUS'})
-			.then(user => {
-				return "Agent "+user.username+", you are currently between missions. Do you wish to take a hiatus from missions?"
-			})
-		} else if (userInput == 'new' || userInput == 'new mission') {
-			user.update({messageState: 'QUERY_MISSION'})
-			.then(user => {
-				return "Ah, Agent "+user.username+", good of you to call in! Before we assign you a new mission, please send in your location."
-
-			})
+		return {
+			state: {messageState: 'STANDBY'},
+			message: "Congratulations, Trainee, you have completed your training mission!  Your name has been added to our list of active field agents.  Text in 'new mission' whenever you have the time to request your first mission!"
 		}
 	},
 
-	QUERY_MISSION: (user, message) => {
+	STANDBY: (userInput) => {
+		if (userInput == 'no') {
+			return {
+				state: {messageState: 'QUERY_HIATUS'},
+				message: "Agent, you are currently between missions. Do you wish to take a hiatus from missions?"
+			}
+		} else if (userInput == 'new' || userInput == 'new mission') {
+			return {
+				state: {messageState: 'QUERY_MISSION'},
+				message: "Ah, Agent, good of you to call in! Before we assign you a new mission, please send in your location."
+			}
+		}
+	},
+
+	QUERY_MISSION: (message) => {
 		// assume we were able to access and process location
 		var coordinatesPromise = getLocation(message)
 		console.log("coordinatesPromise: ", coordinatesPromise)
@@ -215,19 +228,20 @@ const whichMessage = {
 			if(typeof coordinates === 'object'){
 				return chooseMission()
 				.then(newMission => {
-					user.update({
-						messageState: 'MISSION_1', 
-						currentMission: newMission
-					});
-					return mission.title+": "+mission.summary+" Do you accept this mission, Agent "+user.username+"?";
+					return {
+						state: {
+							messageState: 'MISSION_1', 
+							currentMission: newMission
+						},
+						message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent?"
+					}
 				})
 			}
 			else{
 				console.log("coordinates is not an array")
-				return user.update({})
-				.then(user => {
-					return coordinates
-				})
+				return {
+					message: "Sorry, The Agency's message processor was not able to parse your location from that message.  Please send in your street address instead."
+				}
 			}
 
 		})

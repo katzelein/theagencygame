@@ -20,14 +20,18 @@ const data = {
     { username: 'philcoulson', 
       phoneNumber: '+5555555558'}
   ], 
+
   mission: [
     { title: 'Intrigue on Wall Street',  // mission 1
     description: 'One of our agents disappeared somewhere into the depths of the Trump Building on Wall Street. We need you to investigate his disappearance, which may be ever more dire with the upcoming inauguration.'},
     { title: 'The Dark Underbelly of Broadway\'s Bright Lights', // mission 2
       description: 'Agent Natasha Klimikov was a rising star in the 1950s during Rodgers and Hammerstein\'s golden age. You\'ll be heading towards 42nd Street to retrace Natasha\'s steps and to see if her mission remains active.'},
     { title: 'Grace Hopper and the Missing Bone', // mission 3
-      description: 'Ben, one of Grace Hopper Academy\'s proudest members, has had his favorite bone stolen out from under his nose. Can you identify the thief?'}
+      description: 'Ben, one of Grace Hopper Academy\'s proudest members, has had his favorite bone stolen out from under his nose. Can you identify the thief?',
+      location: 'Grace Hopper'
+    }
   ],
+  
   challenge: [
     { objective: 'Head to the Trump Building', // mission 1
       summary: 'We need photographic evidence of the specific street address assigned to this building. We believe that the etchings on the gold may somehow contain his fingerprints. When found, send photograph to this number. Show no others.', 
@@ -51,6 +55,7 @@ const data = {
       summary: 'This is where the rubber meets the road, agent. You will need to be your most stealthy. Find David Yang; he is never far away. Capture no more than 10 seconds of his voice to confirm his identity. We need to compare your footage to audio surveillance the Agency maintains for our own safety. Be careful.',
       conclusion: 'We have a match. David Yang is the thief of the missing bone. It is a dark day for Grace Hopper, but a proud day for the Agency. Well done, agent. Your country, and Ben, thanks you.',}
   ],
+  
   missionChallenge: [
     {missionId: 1, challengeId: 1}, 
     {missionId: 1, challengeId: 2}, 
@@ -60,12 +65,14 @@ const data = {
     {missionId: 3, challengeId: 6},
     {missionId: 3, challengeId: 7},
   ],
+  
   userMission: [
     {userId: 1, missionId: 1}, 
     {userId: 2, missionId: 2}, 
     {userId: 2, missionId: 3}, 
     {userId: 3, missionId: 1}
   ],
+  
   userChallenge: [
     {userId: 1, challengeId: 1}, 
     {userId: 1, challengeId: 2},
