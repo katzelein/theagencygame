@@ -20,7 +20,8 @@ const User = db.define('users', {
   longitude: {
   	type: Sequelize.FLOAT,
   	defaultValue: 0
-  }
+  },
+  lastMessageAt: Sequelize.DATE
 })
 
 module.exports = User
