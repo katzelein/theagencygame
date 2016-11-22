@@ -101,7 +101,7 @@ db.sync({force: true})
   })
   .then(mission => {
     console.log(mission)
-    console.log('setTasks', mission.setTasks)
+    console.log('setChallenges', mission.setChallenges)
   })
 .then(() => 
   Challenge.bulkCreate(data.challenge))
