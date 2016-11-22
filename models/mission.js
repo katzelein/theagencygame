@@ -15,6 +15,7 @@ const Mission = db.define('missions', {
   	type: Sequelize.FLOAT,
   	defaultValue: 0
   },
+  numChallenges: Sequelize.INTEGER
 })
 
 module.exports = Mission

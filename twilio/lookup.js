@@ -56,7 +56,7 @@ const fetchMessage = (user, message) => {
 				simpleInput
 			);
 			break;
-		case 'CHALLENGE_1':
+		case 'CHALLENGE_ANSWER':
 			returnObj = whichMessage[user.messageState] (user.currentChallenge, simpleInput)
 		default:
 		// text with all lowercase

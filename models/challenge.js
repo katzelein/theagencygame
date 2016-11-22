@@ -20,7 +20,8 @@ const Challenge = db.define('challenges', {
   targetText: Sequelize.TEXT,
   conclusion: Sequelize.TEXT,
   type: Sequelize.ENUM('text', 'image', 'voice'),
-  order: Sequelize.INTEGER
+  order: Sequelize.INTEGER,
+  hasNext: Sequelize.BOOLEAN
 })
 
 module.exports = Challenge

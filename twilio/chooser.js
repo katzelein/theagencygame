@@ -13,12 +13,12 @@ const chooseMission = (lat, long) => {
 // currentMission and currentChallenge extracted from user
 const getChallenge = (currentMission, currentChallenge) => {
 
-	return Challenge.findById(1);
+	// return Challenge.findById(1);
 
-	return Mission.findById(chooseMission, {include})
+	return Mission.findById(currentMission, {include:[Challenge]})
 	.then(mission => {
-		return 0
+		console.log(mission);
 	})
 }
 
-module.exports = {chooseMission}
+module.exports = {chooseMission, getChallenge}

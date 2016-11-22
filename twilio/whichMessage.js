@@ -10,8 +10,7 @@ const whichMessage = {
   			console.log("IT FOUND JOIN")
   			return {
   				state: {
-  					messageState: 'NEED_USERNAME',
-  					lastMessageAt: Sequelize.NOW
+  					messageState: 'NEED_USERNAME'
 				}, 
 				message: "Ah, it's seems The Agency has a new recruit! And what is your name, Trainee?  Feel free to use an alias, we respect the secrets of our agents."
 			}
@@ -166,7 +165,7 @@ const whichMessage = {
 					return {
 						state: {
 							messageState: 'FETCH_CHALLENGE', 
-							currentMission: newMission
+							currentMission: newMission.id
 						},
 						message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+username+"?"
 					}
@@ -184,13 +183,13 @@ const whichMessage = {
 		
 	},
 
-	FETCH_CHALLENGE: (currentMission, currentChallenge, userInput) => {
-		return getChallenge(currentMission, currentChallenge)
+	FETCH_CHALLENGE: (currentMission, currentChallengeId, userInput) => {
+		return getChallenge(currentMission, currentChallengeId)
 		.then(newChallenge => {
 			if (newChallenge) {
 				return {
 					state:{
-						messageState: 'CHALLENGE_1',
+						messageState: 'CHALLENGE_ANSWER',
 						currentChallenge: newChallenge.id
 					},
 					message: newChallenge.objective+": "+newChallenge.summary
@@ -207,8 +206,22 @@ const whichMessage = {
 		})
 	},
 
-	CHALLENGE_1: (currentChallenge, userInput) => {
-		return Challenge.findById(currentChallenge)
+	CHALLENGE_ANSWER: (currentChallengeId, userInput) => {
+		return Challenge.findById(currentChallengeId)
+		.then(currentChallenge => {
+			if (!currentChallenge.answer || userInput == currentChallenge.answer) {
+				return {
+					state: {
+						messageState: 'FETCH_CHALLENGE',
+					},
+					message: currentChallenge.conclusion + " | Text back when you are ready for the next challenge."
+				}
+			} else {
+				return {
+					message: "Your answer doesn't quite match ...."
+				}
+			}
+		})
 	},
 
 	QUERY_HIATUS: () =>{return ""}
