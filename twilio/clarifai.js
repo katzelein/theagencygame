@@ -20,8 +20,10 @@ function getPhotoTags(message){
   if (message.MediaContentType0 === 'image/jpeg' ||
       message.MediaContentType0 === 'image/gif' ||
       message.MediaContentType0 === 'image/png'){
+      //Make calls to Clarifai for custom model and general model
       tags.concat(analyzePhoto(customModelId, message.MediaUrl0))
       tags.concat(analyzePhoto(generalModelId, message.MediaUrl0))
+      return tags;
     } else {
       console.log('There was no media in this message')
     }
