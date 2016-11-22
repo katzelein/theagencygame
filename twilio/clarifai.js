@@ -29,6 +29,7 @@ function analyzePhoto(message){
            tags.push(res.data.outputs[0].data.concepts[i].name);
          }
          console.log("TAGS!!!", tags)
+         return tags;
        },
        (err) => {
          console.error(err);
