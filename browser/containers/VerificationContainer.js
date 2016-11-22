@@ -3,19 +3,21 @@ import { connect } from 'react-redux';
 import {SendVerification} from '../components/Verification';
 import {Verify} from '../components/Verification';
 import {fetchUser} from '../reducers/user';
+import {setPhoneNumber} from '../reducers/phoneNumber';
 
 //******** FIX TO BE IN ES6 LIKE WE"RE USED TO
-const mapStateToProps = (state) => {
-  return state
-};
+const mapStateToProps = ({phoneNumber}) => ({phoneNumber});
 
 const mapDispatchToProps = (dispatch) => ({
     findUser: function (number){
     	dispatch(fetchUser(number))
+    },
+
+    setNumber: function(number){
+    	dispatch(setPhoneNumber(number))
     }
+
 });
 
-const SendVerificationContainer = connect(mapStateToProps, mapDispatchToProps)(SendVerification);
-const VerifyContainer = connect(mapStateToProps, mapDispatchToProps)(Verify)
-export SendVerificationContainer;
-export VerifyContainer;
+export const SendVerificationContainer = connect(mapStateToProps, mapDispatchToProps)(SendVerification);
+export const VerifyContainer = connect(mapStateToProps, mapDispatchToProps)(Verify);

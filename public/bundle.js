@@ -60,21 +60,19 @@
 	
 	var _VerificationContainer = __webpack_require__(265);
 	
-	var _VerificationContainer2 = _interopRequireDefault(_VerificationContainer);
-	
-	var _DashboardContainer = __webpack_require__(293);
+	var _DashboardContainer = __webpack_require__(294);
 	
 	var _DashboardContainer2 = _interopRequireDefault(_DashboardContainer);
 	
-	var _AdminContainer = __webpack_require__(295);
+	var _AdminContainer = __webpack_require__(296);
 	
 	var _AdminContainer2 = _interopRequireDefault(_AdminContainer);
 	
-	var _AddMission = __webpack_require__(297);
+	var _AddMission = __webpack_require__(298);
 	
 	var _AddMission2 = _interopRequireDefault(_AddMission);
 	
-	var _store = __webpack_require__(298);
+	var _store = __webpack_require__(299);
 	
 	var _store2 = _interopRequireDefault(_store);
 	
@@ -98,8 +96,6 @@
 	//   store.dispatch(thunk);
 	// };
 	
-	// import AllPuppiesContainer from './components/all-puppies/AllPuppiesContainer';
-	// import SinglePuppyContainer from './components/single-puppy/SinglePuppyContainer';
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRedux.Provider,
 	  { store: _store2.default },
@@ -116,7 +112,8 @@
 	          _reactRouter.Route,
 	          { path: '/' },
 	          _react2.default.createElement(_reactRouter.Route, { path: 'login', component: _AppContainer2.default }),
-	          _react2.default.createElement(_reactRouter.Route, { path: 'verification', component: _VerificationContainer2.default }),
+	          _react2.default.createElement(_reactRouter.Route, { path: 'sendVerification', component: _VerificationContainer.SendVerificationContainer }),
+	          _react2.default.createElement(_reactRouter.Route, { path: 'verify', component: _VerificationContainer.VerifyContainer }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'dashboard', component: _DashboardContainer2.default }),
 	          _react2.default.createElement(
 	            _reactRouter.Route,
@@ -129,6 +126,8 @@
 	    )
 	  )
 	), document.getElementById('app'));
+	// import AllPuppiesContainer from './components/all-puppies/AllPuppiesContainer';
+	// import SinglePuppyContainer from './components/single-puppy/SinglePuppyContainer';
 
 /***/ },
 /* 1 */
@@ -23217,7 +23216,7 @@
 	        { className: 'row' },
 	        _react2.default.createElement(
 	          _reactRouter.Link,
-	          { to: '/verification' },
+	          { to: '/sendVerification' },
 	          _react2.default.createElement('input', { type: 'submit', value: 'Phone Verification', className: 'btn btn-info btn-block' })
 	        )
 	      );
@@ -28776,34 +28775,39 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.VerifyContainer = exports.SendVerificationContainer = undefined;
 	
 	var _reactRedux = __webpack_require__(179);
 	
 	var _Verification = __webpack_require__(266);
 	
-	var _Verification2 = _interopRequireDefault(_Verification);
-	
 	var _user = __webpack_require__(292);
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _phoneNumber = __webpack_require__(293);
 	
 	//******** FIX TO BE IN ES6 LIKE WE"RE USED TO
 	
 	//import { loadPuppies } from '../../action-creators';
-	var mapStateToProps = function mapStateToProps(state) {
-	    return state;
+	var mapStateToProps = function mapStateToProps(_ref) {
+	    var phoneNumber = _ref.phoneNumber;
+	    return { phoneNumber: phoneNumber };
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	    return {
 	        findUser: function findUser(number) {
 	            dispatch((0, _user.fetchUser)(number));
+	        },
+	
+	        setNumber: function setNumber(number) {
+	            dispatch((0, _phoneNumber.setPhoneNumber)(number));
 	        }
+	
 	    };
 	};
 	
-	var VerificationContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Verification2.default);
-	exports.default = VerificationContainer;
+	var SendVerificationContainer = exports.SendVerificationContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Verification.SendVerification);
+	var VerifyContainer = exports.VerifyContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Verification.Verify);
 
 /***/ },
 /* 266 */
@@ -28814,6 +28818,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.Verify = exports.SendVerification = undefined;
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
@@ -28837,21 +28842,20 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var Verification = function (_Component) {
-	    _inherits(Verification, _Component);
+	var SendVerification = exports.SendVerification = function (_Component) {
+	    _inherits(SendVerification, _Component);
 	
-	    function Verification() {
-	        _classCallCheck(this, Verification);
+	    function SendVerification() {
+	        _classCallCheck(this, SendVerification);
 	
-	        var _this = _possibleConstructorReturn(this, (Verification.__proto__ || Object.getPrototypeOf(Verification)).call(this));
+	        var _this = _possibleConstructorReturn(this, (SendVerification.__proto__ || Object.getPrototypeOf(SendVerification)).call(this));
 	
 	        _this.startVerification = _this.startVerification.bind(_this);
-	        _this.verifyNumber = _this.verifyNumber.bind(_this);
-	        _this.state = { showVerification: false, showSendToken: true };
+	        _this.state = {};
 	        return _this;
 	    }
 	
-	    _createClass(Verification, [{
+	    _createClass(SendVerification, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {}
 	    }, {
@@ -28862,38 +28866,39 @@
 	            //2. authy.startverification
 	            e.preventDefault();
 	            var countryCode = e.target.country_code.value;
-	            var phoneNumber = e.target.phone_number.value;
+	            var number = e.target.phone_number.value;
 	            var method = e.target.via.value;
 	            console.log("STATE: ", this.state);
 	            console.log("THIS: ", this);
-	            this.setState({ showVerification: true,
-	                countryCode: countryCode, phoneNumber: phoneNumber });
+	            this.setState({ countryCode: countryCode, number: number });
+	            var fullNumber = "+" + countryCode + number;
+	            this.props.setNumber({ countryCode: countryCode, number: number });
 	            console.log("AFTER SET STATE: ", this.state);
-	            _axios2.default.post('/authy/verification/start', { countryCode: countryCode, phoneNumber: phoneNumber, method: method });
-	        }
-	    }, {
-	        key: 'verifyNumber',
-	        value: function verifyNumber(e) {
-	            var _this2 = this;
-	
-	            e.preventDefault();
-	            var token = e.target.token.value;
-	            var countryCode = this.state.countryCode;
-	            var phoneNumber = this.state.phoneNumber;
-	            _axios2.default.post('/authy/verification/verify', { token: token, countryCode: countryCode, phoneNumber: phoneNumber }).then(function (res) {
-	                return res.data;
-	            }).then(function (data) {
-	                console.log("verifyNumber DATA: ", data);
-	                if (data.number && data.verified) {
-	                    _this2.props.findUser(data.number);
-	                }
-	                _reactRouter.browserHistory.push('/dashboard');
+	            _axios2.default.post('/authy/verification/start', { countryCode: countryCode, phoneNumber: number, method: method }).then(function () {
+	                return _reactRouter.browserHistory.push('/verify');
 	            });
 	        }
+	
+	        // verifyNumber(e){
+	        //   e.preventDefault()
+	        //   let token = e.target.token.value;
+	        //   let countryCode = this.state.countryCode
+	        //   let phoneNumber = this.state.phoneNumber
+	        //   axios.post('/authy/verification/verify', {token, countryCode, phoneNumber})
+	        //   .then((res) => (res.data))
+	        //   .then((data) => {
+	        //     console.log("verifyNumber DATA: ", data)
+	        //     if(data.number && data.verified){
+	        //       this.props.findUser(data.number)
+	        //     }
+	        //     browserHistory.push('/dashboard')
+	        //   })
+	        // }
+	
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _React$createElement, _React$createElement2, _React$createElement3;
+	            var _React$createElement, _React$createElement2;
 	
 	            return _react2.default.createElement(
 	                'div',
@@ -28915,40 +28920,7 @@
 	                                    { className: 'panel-title' },
 	                                    'Authy Phone Verification'
 	                                ),
-	                                this.state.showVerification ? _react2.default.createElement(
-	                                    'div',
-	                                    { className: 'panel-body' },
-	                                    _react2.default.createElement(
-	                                        'form',
-	                                        { role: 'form', onSubmit: this.verifyNumber },
-	                                        _react2.default.createElement(
-	                                            'div',
-	                                            { className: 'row' },
-	                                            _react2.default.createElement(
-	                                                'div',
-	                                                { className: 'col-xs-6 col-sm-6 col-md-6' },
-	                                                _react2.default.createElement(
-	                                                    'div',
-	                                                    { className: 'form-group' },
-	                                                    _react2.default.createElement('input', (_React$createElement = { type: 'text', name: 'token',
-	                                                        id: 'token',
-	                                                        className: 'form-control'
-	                                                    }, _defineProperty(_React$createElement, 'className', 'form-control input-sm'), _defineProperty(_React$createElement, 'placeholder', 'Verification Token'), _React$createElement))
-	                                                )
-	                                            ),
-	                                            _react2.default.createElement(
-	                                                'div',
-	                                                { className: 'col-xs-6 col-sm-6 col-md-6' },
-	                                                _react2.default.createElement(
-	                                                    'div',
-	                                                    { className: 'form-group' },
-	                                                    _react2.default.createElement('input', { type: 'submit', value: 'Verify Phone',
-	                                                        className: 'btn btn-info btn-block' })
-	                                                )
-	                                            )
-	                                        )
-	                                    )
-	                                ) : _react2.default.createElement(
+	                                _react2.default.createElement(
 	                                    'div',
 	                                    { className: 'panel-body' },
 	                                    _react2.default.createElement(
@@ -28963,9 +28935,9 @@
 	                                                _react2.default.createElement(
 	                                                    'div',
 	                                                    { className: 'form-group' },
-	                                                    _react2.default.createElement('input', (_React$createElement2 = { type: 'text', name: 'country_code', id: 'country_code',
+	                                                    _react2.default.createElement('input', (_React$createElement = { type: 'text', name: 'country_code', id: 'country_code',
 	                                                        className: 'form-control'
-	                                                    }, _defineProperty(_React$createElement2, 'className', 'form-control input-sm'), _defineProperty(_React$createElement2, 'placeholder', 'Country Code'), _React$createElement2))
+	                                                    }, _defineProperty(_React$createElement, 'className', 'form-control input-sm'), _defineProperty(_React$createElement, 'placeholder', 'Country Code'), _React$createElement))
 	                                                )
 	                                            ),
 	                                            _react2.default.createElement(
@@ -28974,9 +28946,9 @@
 	                                                _react2.default.createElement(
 	                                                    'div',
 	                                                    { className: 'form-group' },
-	                                                    _react2.default.createElement('input', (_React$createElement3 = { type: 'text', name: 'phone_number', id: 'phone_number',
+	                                                    _react2.default.createElement('input', (_React$createElement2 = { type: 'text', name: 'phone_number', id: 'phone_number',
 	                                                        className: 'form-control'
-	                                                    }, _defineProperty(_React$createElement3, 'className', 'form-control input-sm'), _defineProperty(_React$createElement3, 'placeholder', 'Phone #'), _React$createElement3))
+	                                                    }, _defineProperty(_React$createElement2, 'className', 'form-control input-sm'), _defineProperty(_React$createElement2, 'placeholder', 'Phone #'), _React$createElement2))
 	                                                )
 	                                            ),
 	                                            _react2.default.createElement(
@@ -29014,117 +28986,134 @@
 	        }
 	    }]);
 	
-	    return Verification;
+	    return SendVerification;
 	}(_react.Component);
 	
-	exports.default = Verification;
+	var Verify = exports.Verify = function (_Component2) {
+	    _inherits(Verify, _Component2);
 	
+	    function Verify() {
+	        _classCallCheck(this, Verify);
 	
-	var SendToken = _react2.default.createClass({
-	    displayName: 'SendToken',
-	    render: function render() {
-	        var _React$createElement4, _React$createElement5;
+	        var _this2 = _possibleConstructorReturn(this, (Verify.__proto__ || Object.getPrototypeOf(Verify)).call(this));
 	
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'panel-body' },
-	            _react2.default.createElement(
-	                'form',
-	                { role: 'form', onSubmit: this.startVerification },
+	        _this2.verifyNumber = _this2.verifyNumber.bind(_this2);
+	        _this2.state = {};
+	        return _this2;
+	    }
+	
+	    _createClass(Verify, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {}
+	
+	        // startVerification(e) {
+	        //   //dispatcher
+	        //   //1. check db for number
+	        //   //2. authy.startverification
+	        //   e.preventDefault()
+	        //   let countryCode = e.target.country_code.value
+	        //   let phoneNumber = e.target.phone_number.value
+	        //   let method = e.target.via.value
+	        //   console.log("STATE: ", this.state)
+	        //   console.log("THIS: ", this)
+	        //   this.setState({showVerification: true, 
+	        //     countryCode, phoneNumber})
+	        //   console.log("AFTER SET STATE: ", this.state)
+	        //   axios.post('/authy/verification/start', {countryCode, phoneNumber, method})
+	        //   .then(() => browserHistory.push('/'))
+	        // }
+	
+	    }, {
+	        key: 'verifyNumber',
+	        value: function verifyNumber(e) {
+	            var _this3 = this;
+	
+	            e.preventDefault();
+	            var token = e.target.token.value;
+	            // let countryCode = this.state.countryCode
+	            // let phoneNumber = this.state.phoneNumber
+	            var countryCode = this.props.phoneNumber.countryCode;
+	            var phoneNumber = this.props.phoneNumber.number;
+	            console.log("phone Number: ", phoneNumber);
+	            _axios2.default.post('/authy/verification/verify', { token: token, countryCode: countryCode, phoneNumber: phoneNumber }).then(function (res) {
+	                return res.data;
+	            }).then(function (data) {
+	                console.log("verifyNumber DATA: ", data);
+	                if (data.number && data.verified) {
+	                    _this3.props.findUser(data.number);
+	                }
+	                _reactRouter.browserHistory.push('/dashboard');
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _React$createElement3;
+	
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'container' },
 	                _react2.default.createElement(
 	                    'div',
-	                    { className: 'row' },
+	                    { className: 'row centered-form' },
 	                    _react2.default.createElement(
 	                        'div',
-	                        { className: 'col-xs-3 col-sm-3 col-md-3' },
+	                        { className: 'col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4' },
 	                        _react2.default.createElement(
 	                            'div',
-	                            { className: 'form-group' },
-	                            _react2.default.createElement('input', (_React$createElement4 = { type: 'text', name: 'country_code', id: 'country_code',
-	                                className: 'form-control'
-	                            }, _defineProperty(_React$createElement4, 'className', 'form-control input-sm'), _defineProperty(_React$createElement4, 'placeholder', 'Country Code'), _React$createElement4))
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'col-xs-6 col-sm-6 col-md-6' },
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'form-group' },
-	                            _react2.default.createElement('input', (_React$createElement5 = { type: 'text', name: 'phone_number', id: 'phone_number',
-	                                className: 'form-control'
-	                            }, _defineProperty(_React$createElement5, 'className', 'form-control input-sm'), _defineProperty(_React$createElement5, 'placeholder', 'Phone #'), _React$createElement5))
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'col-xs-3 col-sm-3 col-md-3' },
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'form-group' },
+	                            { className: 'panel panel-default' },
 	                            _react2.default.createElement(
-	                                'select',
-	                                { name: 'via', id: 'via', className: 'form-control' },
+	                                'div',
+	                                { className: 'panel-heading' },
 	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: 'sms', defaultValue: 'selected' },
-	                                    'SMS'
+	                                    'h3',
+	                                    { className: 'panel-title' },
+	                                    'Authy Phone Verification'
 	                                ),
 	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: 'call' },
-	                                    'CALL'
+	                                    'div',
+	                                    { className: 'panel-body' },
+	                                    _react2.default.createElement(
+	                                        'form',
+	                                        { role: 'form', onSubmit: this.verifyNumber },
+	                                        _react2.default.createElement(
+	                                            'div',
+	                                            { className: 'row' },
+	                                            _react2.default.createElement(
+	                                                'div',
+	                                                { className: 'col-xs-6 col-sm-6 col-md-6' },
+	                                                _react2.default.createElement(
+	                                                    'div',
+	                                                    { className: 'form-group' },
+	                                                    _react2.default.createElement('input', (_React$createElement3 = { type: 'text', name: 'token',
+	                                                        id: 'token',
+	                                                        className: 'form-control'
+	                                                    }, _defineProperty(_React$createElement3, 'className', 'form-control input-sm'), _defineProperty(_React$createElement3, 'placeholder', 'Verification Token'), _React$createElement3))
+	                                                )
+	                                            ),
+	                                            _react2.default.createElement(
+	                                                'div',
+	                                                { className: 'col-xs-6 col-sm-6 col-md-6' },
+	                                                _react2.default.createElement(
+	                                                    'div',
+	                                                    { className: 'form-group' },
+	                                                    _react2.default.createElement('input', { type: 'submit', value: 'Verify Phone',
+	                                                        className: 'btn btn-info btn-block' })
+	                                                )
+	                                            )
+	                                        )
+	                                    )
 	                                )
 	                            )
 	                        )
 	                    )
-	                ),
-	                _react2.default.createElement('input', { type: 'submit', value: 'Request Verification',
-	                    className: 'btn btn-info btn-block' })
-	            )
-	        );
-	    }
-	});
-	
-	var Verify = _react2.default.createClass({
-	    displayName: 'Verify',
-	    render: function render() {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'panel-body' },
-	            _react2.default.createElement(
-	                'form',
-	                { role: 'form' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'row' },
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'col-xs-6 col-sm-6 col-md-6' },
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'form-group' },
-	                            _react2.default.createElement('input', { type: 'text', name: 'token',
-	                                id: 'token',
-	                                className: 'form-control',
-	                                placeholder: 'Verification Token' })
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'col-xs-6 col-sm-6 col-md-6' },
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'form-group' },
-	                            _react2.default.createElement('input', { type: 'submit', value: 'Verify Phone',
-	                                className: 'btn btn-info btn-block' })
-	                        )
-	                    )
 	                )
-	            )
-	        );
-	    }
-	});
+	            );
+	        }
+	    }]);
+
+	    return Verify;
+	}(_react.Component);
 
 /***/ },
 /* 267 */
@@ -30667,6 +30656,62 @@
 /* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.phoneNumber = exports.fetchPhoneNumber = exports.setPhoneNumber = exports.SET_PHONE = undefined;
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
+	var _axios = __webpack_require__(267);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var SET_PHONE = exports.SET_PHONE = "SET_PHONE";
+	
+	var setPhoneNumber = exports.setPhoneNumber = function setPhoneNumber(phoneNumber) {
+	  return {
+	    type: SET_PHONE,
+	    phoneNumber: phoneNumber
+	  };
+	};
+	
+	var fetchPhoneNumber = exports.fetchPhoneNumber = function fetchPhoneNumber(number) {
+	  return function (dispatch) {
+	    console.log("dispatching users");
+	    console.log(typeof number === "undefined" ? "undefined" : _typeof(number), " : ", number);
+	    _axios2.default.get("/api/phoneNumber/" + number).then(function (res) {
+	      return res.data;
+	    }).then(function (phoneNumber) {
+	      console.log("PHONE in fetchPhoneNumber: ", phoneNumber);
+	      dispatch(setPhoneNumber(phoneNumber));
+	    });
+	  };
+	};
+	
+	var phoneNumber = exports.phoneNumber = function phoneNumber() {
+	  var phoneNumber = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	  var action = arguments[1];
+	
+	  console.log("phoneNumber dispatcher");
+	  switch (action.type) {
+	    case SET_PHONE:
+	      return action.phoneNumber;
+	    default:
+	      return phoneNumber;
+	  }
+	};
+	
+	//
+
+/***/ },
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -30675,7 +30720,7 @@
 	
 	var _reactRedux = __webpack_require__(179);
 	
-	var _Dashboard = __webpack_require__(294);
+	var _Dashboard = __webpack_require__(295);
 	
 	var _Dashboard2 = _interopRequireDefault(_Dashboard);
 	
@@ -30697,7 +30742,7 @@
 	exports.default = DashboardContainer;
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30762,7 +30807,7 @@
 	exports.default = Dashboard;
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30773,7 +30818,7 @@
 	
 	var _reactRedux = __webpack_require__(179);
 	
-	var _Admin = __webpack_require__(296);
+	var _Admin = __webpack_require__(297);
 	
 	var _Admin2 = _interopRequireDefault(_Admin);
 	
@@ -30799,7 +30844,7 @@
 	exports.default = AdminContainer;
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30863,7 +30908,7 @@
 	exports.default = Admin;
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30928,7 +30973,7 @@
 	exports.default = App;
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30939,15 +30984,15 @@
 	
 	var _redux = __webpack_require__(186);
 	
-	var _rootReducer = __webpack_require__(299);
+	var _rootReducer = __webpack_require__(300);
 	
 	var _rootReducer2 = _interopRequireDefault(_rootReducer);
 	
-	var _reduxThunk = __webpack_require__(300);
+	var _reduxThunk = __webpack_require__(301);
 	
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 	
-	var _reduxLogger = __webpack_require__(301);
+	var _reduxLogger = __webpack_require__(302);
 	
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 	
@@ -30959,7 +31004,7 @@
 	exports.default = store;
 
 /***/ },
-/* 299 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30972,14 +31017,17 @@
 	
 	var _user = __webpack_require__(292);
 	
+	var _phoneNumber = __webpack_require__(293);
+	
 	var rootReducer = (0, _redux.combineReducers)({
-	  user: _user.user
+	  user: _user.user,
+	  phoneNumber: _phoneNumber.phoneNumber
 	});
 	
 	exports.default = rootReducer;
 
 /***/ },
-/* 300 */
+/* 301 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31007,7 +31055,7 @@
 	exports['default'] = thunk;
 
 /***/ },
-/* 301 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31018,11 +31066,11 @@
 	  value: true
 	});
 	
-	var _core = __webpack_require__(302);
+	var _core = __webpack_require__(303);
 	
-	var _helpers = __webpack_require__(303);
+	var _helpers = __webpack_require__(304);
 	
-	var _defaults = __webpack_require__(306);
+	var _defaults = __webpack_require__(307);
 	
 	var _defaults2 = _interopRequireDefault(_defaults);
 	
@@ -31125,7 +31173,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 302 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31135,9 +31183,9 @@
 	});
 	exports.printBuffer = printBuffer;
 	
-	var _helpers = __webpack_require__(303);
+	var _helpers = __webpack_require__(304);
 	
-	var _diff = __webpack_require__(304);
+	var _diff = __webpack_require__(305);
 	
 	var _diff2 = _interopRequireDefault(_diff);
 	
@@ -31266,7 +31314,7 @@
 	}
 
 /***/ },
-/* 303 */
+/* 304 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -31290,7 +31338,7 @@
 	var timer = exports.timer = typeof performance !== "undefined" && performance !== null && typeof performance.now === "function" ? performance : Date;
 
 /***/ },
-/* 304 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31300,7 +31348,7 @@
 	});
 	exports.default = diffLogger;
 	
-	var _deepDiff = __webpack_require__(305);
+	var _deepDiff = __webpack_require__(306);
 	
 	var _deepDiff2 = _interopRequireDefault(_deepDiff);
 	
@@ -31386,7 +31434,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 305 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global) {/*!
@@ -31815,7 +31863,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 306 */
+/* 307 */
 /***/ function(module, exports) {
 
 	"use strict";

@@ -10,7 +10,7 @@ export default class App extends Component {
   render () {
     return (
          <div className="row">
-                  <Link to="/verification">
+                  <Link to="/sendVerification">
                     <input type="submit" value="Phone Verification" className="btn btn-info btn-block"/>
                   </Link>          
           </div>
