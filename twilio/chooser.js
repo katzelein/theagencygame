@@ -10,15 +10,14 @@ const chooseMission = (lat, long) => {
 	return Mission.findOne({where: {location: 'Grace Hopper'}})
 }
 
-const getChallenge = (user) => {
-	// extract current mission from user info
-	// extract current challenge from user infor
-	let currentMission = user.currentMission;
-	let currentChallenge = user.currentChallenge;
+// currentMission and currentChallenge extracted from user
+const getChallenge = (currentMission, currentChallenge) => {
 
-	Mission.findById(chooseMission, {include})
+	return Challenge.findById(1);
+
+	return Mission.findById(chooseMission, {include})
 	.then(mission => {
-
+		return 0
 	})
 }
 
