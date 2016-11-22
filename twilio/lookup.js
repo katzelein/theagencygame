@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const Sequelize = require('sequelize')
 
 const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
@@ -58,12 +59,18 @@ const fetchMessage = (user, message) => {
 	console.log('returnObj instanceof Promise', returnObj instanceof Promise)
 
 	if (returnObj && returnObj.state) user.update(returnObj.state);
-	if (returnObj && returnObj.message) return returnObj.message;
+	if (returnObj && returnObj.message) {
+		user.update({lastMessageAt: Date()})
+		return returnObj.message;
+	}
 	if (returnObj instanceof Promise) {
 		return returnObj
 		.then(obj => {
 			if (obj && obj.state) user.update(obj.state);
-			if (obj && obj.message) return obj.message;
+			if (obj && obj.message) {
+				user.update({lastMessageAt: Date()})
+				return obj.message;
+			}
 		})
 	}
 	else return 'Sorry, The Agency\'s text processor has clearly failed.'
@@ -93,7 +100,8 @@ const whichMessage = {
   			console.log("IT FOUND JOIN")
   			return {
   				state: {
-  					messageState: 'NEED_USERNAME'
+  					messageState: 'NEED_USERNAME',
+  					lastMessageAt: Sequelize.NOW
 				}, 
 				message: "Ah, it's seems the agency has a new recruit! And what is your name, trainee?  Feel free to use an alias, we respect the secrets of our agents."
 			}
