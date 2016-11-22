@@ -47,7 +47,7 @@ const data = {
       conclusion: 'You\'re on the mark, shouldn\'t be long now. Await further instructions'}, 
     { objective: 'Tracking the Teacher', // mission 3
       summary: 'We have a list of all the offices linked to the passcode you found, and one of the teachers of Grace Hopper and Fullstack Academy, Ashi Krishnan, spent the day in the office implicated during the theft of Ben\'s bone. Find Ashi and find out the name of her childhood dog -- but do it covertly. She can\'t know that she\'s a suspect. Then call this number, speak the name of the dog when prompted, and quickly hang up. Secrecy is key.', 
-      conclusion: 'Ashi may not be the thief, but our progress has been strong. Well done, agent. The future looks bright.'},
+      conclusion: 'Ashi may not be the thief, but our progress has been strong. Well done, agent. The future looks bright.'}, // imaginary friend-monster: gorp
     { objective: 'Grace Hopper Academy\'s Secret Storage', // mission 3
       summary: 'We think that the thief may have an even bigger profile at the school than we thought possible. The corruption runs deep. The thief may have been so smart as to code a clue into the Grace Hopper logo in plain sight. Head to the lobby of the school and send us a picture of the logo.', 
       conclusion: 'Our intel was correct; the logo contained vital information. One last step and we should be able to catch the thief red-handed.'},
@@ -97,7 +97,7 @@ db.sync({force: true})
   Challenge.bulkCreate(data.challenge))
   .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
 .then(() => 
-  MissionChallenge.bulkCreate(data.missionChallenge))
+  MissionChallenge.bulkCreate(data.missionChallenge)) // see if I can remove this and create the join table anyway
   .then(missionChallenges => console.log(`Seeded ${missionChallenges.length} missionChallenges OK`))
 .then(() => 
   UserMission.bulkCreate(data.userMission))
