@@ -1,4 +1,4 @@
-const db = require('./_db')
+const db = require('./index')
 
 const Promise = require('bluebird');
 const User = require('./user')
@@ -102,6 +102,7 @@ db.sync({force: true})
   .then(mission => {
     console.log(mission)
     console.log('setChallenges', mission.setChallenges)
+    mission.setChallenges([3,4,5,6,7])
   })
 .then(() => 
   Challenge.bulkCreate(data.challenge))
