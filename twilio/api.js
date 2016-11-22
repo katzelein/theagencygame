@@ -63,6 +63,67 @@ twilioAPI.post('/messages', function(req, res, next){
   
 });
 
+// PHONE AND SPEECH-TO-TEXT 
+
+const SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
+const watsonUsername = require('../constants').watsonUsername
+const watsonPassword = require('../constants').watsonPassword
+const fs = require('fs');
+const User = require('../models/user')
+const Message = require('../models/message')
+
+let speech_to_text = new SpeechToTextV1({
+  username: watsonUsername,
+  password: watsonPassword
+});
+
+
+twilioAPI.post('/voice', function (req, res, next) {
+  let city = req.body.FromCity;
+  let twiml = new twilio.TwimlResponse();
+  twiml.say('Go ahead.', { 
+    voice: 'woman' 
+  })
+    .record({
+      maxLength: 12,
+      action: '/twilio/recording'
+    })
+  // res.type('text/xml')
+  res.send(twiml.toString())
+});
+
+
+twilioAPI.post('/recording', function (req, res, next) {
+  console.log("THIS IS THE REQ.BODY TEXT: ",req.body)
+  // save message in the database
+
+  User.findOne({where: { phoneNumber: req.body.From}})
+    .then(user => {
+      if (user) {
+        Message.create({
+          recordingSid: req.body.RecordingSid,
+          type: 'call',
+          recordingUrl: req.body.RecordingUrl,
+        })
+          .then(message => {
+            var params = {
+              audio: fs.createReadStream(message.recordingUrl)
+              // content_type: 'audio/l16; rate=44100'
+            }
+            console.log(params)
+            speech_to_text.recognize(params, function (err, res) {
+              if (err) console.log(err);
+              else console.log(JSON.stringify(res, null, 2));
+            });
+          })
+      }
+      // else respond to the user with some kind of error message...
+    }) 
+})
+
+
+// END OF VOICE AND SPEECH-TO-TEXT
+
 
 twilioAPI.post('/testing', function(req, res, next){
   //console.log("Hey this is a message")
@@ -83,37 +144,6 @@ twilioAPI.post('/testing', function(req, res, next){
   })
 });
 
-// FOR PHONE CALLS
-
-twilioAPI.post('/voice', function (req, res, next) {
-  let city = req.body.FromCity;
-  let twiml = new twilio.TwimlResponse();
-  twiml.say('Go ahead.', { 
-    voice: 'woman' 
-  })
-    .record({
-      maxLength: 15,
-      action: '/recording'
-    })
-  // res.type('text/xml')
-  res.send(twiml.toString())
-});
-
-
-
-twilioAPI.post('/twilio/recording', function (req, res, next) {
-  console.log(req)
-
-  // Message.create({
-  //   sid: request.params.CallSid,
-  //   type: 'call',
-  //   recordingUrl: request.params.RecordingUrl,
-  //   recordingDuration: Number(request.params.RecordingDuration) // also include a phoneNumberId
-  // })
-})
-
-
-// END OF PHONE CALLS
 
 /*
 * Handle making requests to Clarifai

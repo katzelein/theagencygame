@@ -7,18 +7,22 @@ const Mission = require('./mission')
 const MissionChallenge = require('./missionChallenge')
 const UserMission = require('./userMission')
 const UserChallenge = require('./userChallenge')
+const Message = require('./message');
+const UserMessages = require('./userMessage')
 
 
 const data = {
   user: [
     { username: 'secretagentman', 
-      phoneNumber: '+5555555555' }, 
+      phoneNumber: '+15555555555' }, 
     { username: 'hawkeye', 
-      phoneNumber: '+5555555556'},
+      phoneNumber: '+15555555556'},
     { username: 'blackwidow', 
-      phoneNumber: '+5555555557'},
+      phoneNumber: '+15555555557'},
     { username: 'philcoulson', 
-      phoneNumber: '+5555555558'}
+      phoneNumber: '+15555555558'},
+    { username: 'operagirl',
+      phoneNumber: '+18607485586'}
   ], 
   mission: [
     { title: 'Intrigue on Wall Street',  // mission 1
