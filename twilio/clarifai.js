@@ -8,20 +8,30 @@ var clarifaiAPI = new Clarifai.App(
   clientSecret
 );
 
+var customModelId = 'bd006c0d75564935a8419ea5ba6a5a07'
+var generalModelId = Clarifai.GENERAL_MODEL;
+
+
 /*
-* Handle making requests to Clarifai
+* Function to call from lookup, takes a message and returns the tags array
 */
-function analyzePhoto(message){
+function getPhotoTags(message){
+  var tags = [];
   if (message.MediaContentType0 === 'image/jpeg' ||
       message.MediaContentType0 === 'image/gif' ||
       message.MediaContentType0 === 'image/png'){
-      analyzePhoto(req.body.MediaUrl0)
+      tags.concat(analyzePhoto(customModelId, message.MediaUrl0))
+      tags.concat(analyzePhoto(generalModelId, message.MediaUrl0))
     } else {
       console.log('There was no media in this message')
     }
+  }
 
-
-  clarifaiAPI.models.predict(Clarifai.GENERAL_MODEL, mediaUrl).then(
+  /*
+  * Function to make Clarifai calls w/specified model
+  */
+function analyzePhoto(modelToUse, mediaUrl){
+  clarifaiAPI.models.predict(modelToUse, mediaUrl).then(
        (res) => {
          console.log('Clarifai response = ', res);
          let tags = [];
@@ -36,3 +46,5 @@ function analyzePhoto(message){
        }
      )
 }
+
+module.exports = {getPhotoTags}
