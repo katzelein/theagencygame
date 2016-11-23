@@ -34,11 +34,11 @@ console.log("message body inside getLocation: ", message.Body)
   }
  // ********** SENT WITH PHONE USING GOOGLE MAPS (ie google phone or android) **********
   else if(message.Body.indexOf("maps.google.com") !== -1){
-  
+
   	console.log("looking for location!!")
   	var urlString = message.Body.replace(/["']/g, "")
-  	//var urlArray = urlString.split(/\r?\n/)
-    var urlArray = urlString.split("HELLO")
+  	var urlArray = urlString.split(/\r?\n/)
+    //var urlArray = urlString.split("HELLO")
   	console.log("urlArray: ", urlArray)
   	var address = urlArray[2]
     console.log
@@ -61,7 +61,7 @@ console.log("message body inside getLocation: ", message.Body)
         console.log("data status zero")
         return locationFailure
       }
-  // do something with data 
+  // do something with data
       else{
         LL = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
         console.log("DATA: ", data)
@@ -85,7 +85,7 @@ console.log("message body inside getLocation: ", message.Body)
  //      console.log("ERR: ", err)
  //      return locationFailure
  //    }
- //  // do something with data 
+ //  // do something with data
  //  else{
  //  		LL = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
  //  		console.log("DATA: ", data)
@@ -98,7 +98,7 @@ console.log("message body inside getLocation: ", message.Body)
  //      return LL
  //      //locationRes = LL
  //    }
-	// });	
+	// });
   }
 
 
@@ -116,7 +116,7 @@ console.log("message body inside getLocation: ", message.Body)
           console.log("data status zero")
           return locationFailure
         }
-      // do something with data 
+      // do something with data
         else{
           LL = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
           console.log("DATA: ", data)
@@ -128,7 +128,7 @@ console.log("message body inside getLocation: ", message.Body)
           console.log("data type: ", typeof data)
           return LL
       //locationRes = LL
-        } 
+        }
     })
     .catch(err => console.log(err))
   }
@@ -141,7 +141,7 @@ console.log("message body inside getLocation: ", message.Body)
     .then(locationFailure => locationFailure)
   }
 
-  //console.log("LOCATION RES: ", locationRes) 
+  //console.log("LOCATION RES: ", locationRes)
   //return locationRes
 }
 
