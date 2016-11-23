@@ -2,6 +2,7 @@
 const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
+const {checkWatsonAPI} = require('./voice')
 
 const whichMessage = {
 
@@ -223,6 +224,8 @@ const whichMessage = {
 					// else return fail;
 				case 'voice':
 					// put Kat's voice stuff here!!
+					if (checkWatsonAPI(userInput).transcript === currentChallenge.targetText) return success;
+					else return fail;
 				default:
 					return success;
 			}

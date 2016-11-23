@@ -23,7 +23,9 @@ module.exports = function(phoneNumber, message) {
 
 const fetchMessage = (user, message) => {
 	
-	const simpleInput = message.Body.toLowerCase();
+
+	const simpleInput = "";
+	if (message.Body != undefined) simpleInput = message.Body.toLowerCase();
 	switch(simpleInput) {
 		case 'help':
 		case 'options':
@@ -57,7 +59,7 @@ const fetchMessage = (user, message) => {
 			);
 			break;
 		case 'CHALLENGE_ANSWER':
-			returnObj = whichMessage[user.messageState] (user.currentChallenge, simpleInput)
+			returnObj = whichMessage[user.messageState] (user.currentChallenge, message)
 			break;
 		default:
 		// text with all lowercase
