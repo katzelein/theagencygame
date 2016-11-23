@@ -12,8 +12,6 @@ const authToken = require('../constants').authToken;
 const twilioNum = require('../constants').twilioNum;
 const client = require('twilio')(accountSid, authToken); 
 
-const User = require('../models/user')
-
 const lookup = require('./lookup')
 
 let speech_to_text = new SpeechToTextV1({
@@ -36,25 +34,26 @@ twilioAPI.post('/voice', function (req, res, next) {
 
 twilioAPI.post('/recording', function (req, res, next) {
   console.log("THIS IS THE REQ YOU WANT", req.body)
-  return lookup(req.body.From, req.body); 
+  lookup(req.body.From, req.body)
+    .then(res => console.log(res))
 })
 
-function checkWatsonAPI (body) {
-  // get the WAV file from twilio
-  request(body.RecordingUrl).pipe(fs.createWriteStream('message.wav')).on('end', ok => console.log('wrote message.wav'))
-  // check it in Watson
-  let params = {
-    audio: request(body.RecordingUrl),
-    content_type: 'audio/l16; rate=8000',
-    model: 'en-US_NarrowbandModel',
-  }
-  speech_to_text.recognize(params, function (err, res) {
-    if (err) console.log("This is the error you're getting: ", err);
-    else {
-      console.log("These are the correct results!", JSON.stringify(res, null, 2));
-      return res
-    }
-  });
-}
+// let checkWatsonAPI = function (body) {
+//   // get the WAV file from twilio
+//   request(body.RecordingUrl).pipe(fs.createWriteStream('message.wav')).on('end', ok => console.log('wrote message.wav'))
+//   // check it in Watson
+//   let params = {
+//     audio: request(body.RecordingUrl),
+//     content_type: 'audio/l16; rate=8000',
+//     model: 'en-US_NarrowbandModel',
+//   }
+//   speech_to_text.recognize(params, function (err, res) {
+//     if (err) console.log("This is the error you're getting: ", err);
+//     else {
+//       console.log("These are the correct results!", JSON.stringify(res, null, 2));
+//       return res
+//     }
+//   });
+// }
 
-module.exports = {twilioAPI, checkWatsonAPI}
+module.exports = {twilioAPI} //,checkWatsonAPI

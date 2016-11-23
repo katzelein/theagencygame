@@ -17,7 +17,9 @@ const data = {
     { username: 'blackwidow', 
       phoneNumber: '+5555555557'},
     { username: 'philcoulson', 
-      phoneNumber: '+5555555558'}
+      phoneNumber: '+5555555558'},
+    { username: 'operagirl',
+      phoneNumber: '+18607485586'}
   ], 
 
   mission: [
