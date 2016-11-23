@@ -9,10 +9,19 @@ const User = db.define('users', {
   status: Sequelize.ENUM('active', 'hiatus', 'retired'),
   currentMission: Sequelize.INTEGER,	
   currentChallenge: Sequelize.INTEGER,
-  messageState: Sequelize.STRING,
-  latitude: Sequelize.FLOAT,
-  longitude: Sequelize.FLOAT
-
+  messageState: {
+  	type: Sequelize.STRING,
+  	defaultValue: 'STANDBY'
+  },
+  latitude: {
+  	type: Sequelize.FLOAT,
+  	defaultValue: 0
+  },
+  longitude: {
+  	type: Sequelize.FLOAT,
+  	defaultValue: 0
+  },
+  lastMessageAt: Sequelize.DATE
 })
 
 module.exports = User

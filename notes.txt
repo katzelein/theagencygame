@@ -1,0 +1,7 @@
+notes
+
+// one website for admin and user
+	- login with phone number
+	- send verification code
+	- check if user is admin
+	- admin page will have option to post

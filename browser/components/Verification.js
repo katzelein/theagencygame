@@ -17,6 +17,8 @@ export class SendVerification extends Component {
     //dispatcher
     //1. check db for number
     //2. authy.startverification
+
+
     e.preventDefault()
     let countryCode = e.target.country_code.value
     let number = e.target.phone_number.value
@@ -27,6 +29,7 @@ export class SendVerification extends Component {
     let fullNumber = "+" + countryCode + number
     this.props.setNumber({countryCode, number})
     console.log("AFTER SET STATE: ", this.state)
+    // don't send text if user is not in database
     axios.post('/authy/verification/start', {countryCode, phoneNumber: number, method})
     .then(() => browserHistory.push('/verify'))
   }
@@ -143,6 +146,7 @@ export class Verify extends Component {
       if(data.number && data.verified){
         this.props.findUser(data.number)
       }
+      // do something different if user not found/incorrect verification token
       browserHistory.push('/dashboard')
     })
   }
