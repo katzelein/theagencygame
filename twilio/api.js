@@ -75,7 +75,9 @@ const Message = require('../models/message')
 const accountSid = require('../constants').accountSid;
 const authToken = require('../constants').authToken;
 const twilioNum = require('../constants').twilioNum;
-let client = require('twilio')(accountSid, authToken); 
+const client = require('twilio')(accountSid, authToken); 
+const fetch = require('node-fetch');
+
 
 let speech_to_text = new SpeechToTextV1({
   username: watsonUsername,
@@ -104,22 +106,14 @@ twilioAPI.post('/recording', function (req, res, next) {
   User.findOne({where: { phoneNumber: req.body.From}})
     .then(user => {
       if (user) {
-        Message.create({
-          recordingSid: req.body.RecordingSid,
-          type: 'call',
-          recordingUrl: req.body.RecordingUrl,
-        })
-          .then(message => {
-            // client.get(`/${req.body.RecordingUrl}`, function (req,res,next) {
-            // })
-
-
-
+        fetch(req.body.RecordingUrl)
+          .then(function (res) {
+            console.log("THIS IS THE RESPONSE", res)
             let params = {
-              audio: fs.createReadStream(req.body.RecordingUrl),
+              audio: fs.createReadStream(res),
               content_type: 'audio/l16; rate=44100'
             }
-            console.log(params)
+            console.log("THESE ARE THE PARAMS", params)
             speech_to_text.recognize(params, function (err, res) {
               if (err) console.log(err);
               else console.log(JSON.stringify(res, null, 2));
