@@ -10,4 +10,15 @@ const chooseMission = (lat, long) => {
 	return Mission.findOne({where: {location: 'Grace Hopper'}})
 }
 
-module.exports = {chooseMission}
+// currentMission and currentChallenge extracted from user
+const getChallenge = (currentMission, currentChallenge) => {
+
+	// return Challenge.findById(1);
+
+	return Mission.findById(currentMission, {include:[Challenge]})
+	.then(mission => {
+		console.log(mission);
+	})
+}
+
+module.exports = {chooseMission, getChallenge}
