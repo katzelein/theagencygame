@@ -13,8 +13,8 @@ User.belongsToMany(Mission, {through: UserMissions})
 Mission.belongsToMany(User, {through: UserMissions})
 User.belongsToMany(Challenge, {through: UserChallenges})
 Challenge.belongsToMany(User, {through: UserChallenges})
-Mission.hasMany(Challenge, {as: 'Tasks'})
+Mission.hasMany(Challenge)
+// Mission.hasMany(Challenge, {foreignKey: challenge_id})
 // Challenge.belongsToMany(Mission, {through: MissionChallenges})
-
 
 module.exports = db;
