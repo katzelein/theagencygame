@@ -1,0 +1,10 @@
+changes:
+
+1. put all the returns in .then()
+2. extract location and added location to user model
+3. added "CONFIRM_JOIN"
+4. we should probably add more confirmations
+5. we should do regex check not check for specific string (or use tone anlyzer when it is yes or no (pos/neg))
+6. we need to add cases for when their messages do not match
+
+7. check if username is taken and prompt again if invalid
