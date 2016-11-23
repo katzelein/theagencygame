@@ -177,14 +177,11 @@ const whichMessage = {
 					message: "Sorry, The Agency's message processor was not able to parse your location from that message.  Please send in your street address instead."
 				}
 			}
-
 		})
-
-		
 	},
 
-	FETCH_CHALLENGE: (currentMission, currentChallengeId, userInput) => {
-		return getChallenge(currentMission, currentChallengeId)
+	FETCH_CHALLENGE: (currentMissionId, currentChallengeId, userInput) => {
+		return getChallenge(currentMissionId, currentChallengeId)
 		.then(newChallenge => {
 			if (newChallenge) {
 				return {
@@ -209,17 +206,25 @@ const whichMessage = {
 	CHALLENGE_ANSWER: (currentChallengeId, userInput) => {
 		return Challenge.findById(currentChallengeId)
 		.then(currentChallenge => {
-			if (!currentChallenge.answer || userInput == currentChallenge.answer) {
-				return {
-					state: {
-						messageState: 'FETCH_CHALLENGE',
-					},
-					message: currentChallenge.conclusion + " | Text back when you are ready for the next challenge."
-				}
-			} else {
-				return {
-					message: "Your answer doesn't quite match ...."
-				}
+			let success = {
+				state: {messageState: 'FETCH_CHALLENGE'},
+				message: currentChallenge.conclusion + " | Text back when you are ready for the next challenge."
+			}
+			let fail = {message: "Your answer doesn't quite match ...."}
+
+			switch (currentChallenge.type) {
+				case 'text':
+					if (currentChallenge.targetText == userInput) return success;
+					else return fail;
+				case 'image':
+					// put clarifai function here!!!
+					let tags = [];
+					if (currentChallenge.targetTags) return success;
+					// else return fail;
+				case 'voice':
+					// put Kat's voice stuff here!!
+				default:
+					return success;
 			}
 		})
 	},
