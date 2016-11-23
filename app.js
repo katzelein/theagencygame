@@ -20,7 +20,7 @@ const {resolve} = require('path')
 app.use(volleyball);
 
 app.use(cookieParser());
-app.use(expressSession({'secret': secret}));
+app.use(expressSession({'secret': 'secret'}));
 // app.use(express.static(path.join(__dirname, './public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
