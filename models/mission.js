@@ -5,10 +5,17 @@ const db = require('./_db')
 
 const Mission = db.define('missions', {
   title: Sequelize.STRING,
-  summary: Sequelize.TEXT,
+  description: Sequelize.TEXT,
   location: Sequelize.STRING,
-  latitude: Sequelize.FLOAT,
-  longitude: Sequelize.FLOAT
+  latitude: {
+  	type: Sequelize.FLOAT,
+  	defaultValue: 0
+  },
+  longitude: {
+  	type: Sequelize.FLOAT,
+  	defaultValue: 0
+  },
+  numChallenges: Sequelize.INTEGER
 })
 
 module.exports = Mission
