@@ -4,7 +4,9 @@ const Sequelize = require('sequelize')
 const db = require('./_db')
 
 const Challenge = db.define('challenges', {
-  objective: Sequelize.STRING,
+  objective: {
+    type: Sequelize.STRING,
+    allowNull: false},
   summary: Sequelize.TEXT,
   // latitude: {
   //   type: Sequelize.FLOAT,
@@ -25,6 +27,3 @@ const Challenge = db.define('challenges', {
 })
 
 module.exports = Challenge
-
-
-
