@@ -1,20 +1,20 @@
 'use strict'
 
 const db = require('./_db')
-const Challenge = require('./challenge')
+const Mission = require('./mission')
 const {expect} = require('chai')
 
-describe('Challenge', () => {
+describe('Mission', () => {
   before('wait for the db', () => db.didSync)
 
   describe('validations', () => {
-    let challenge;
+    let mission;
     beforeEach('test challenge', () => {
-      challenge = Challenge.build({objective: "This is the objective"});
+      mission = Mission.build({title: "Mission title"});
     })
 
     it("has valid objective", () => {
-      expect(challenge.objective).to.be.a('string')
+      expect(mission.title).to.be.a('string')
     })
   })
 })
