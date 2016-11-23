@@ -72,6 +72,11 @@ const fs = require('fs');
 const User = require('../models/user')
 const Message = require('../models/message')
 
+const accountSid = require('../constants').accountSid;
+const authToken = require('../constants').authToken;
+const twilioNum = require('../constants').twilioNum;
+let client = require('twilio')(accountSid, authToken); 
+
 let speech_to_text = new SpeechToTextV1({
   username: watsonUsername,
   password: watsonPassword
@@ -79,9 +84,8 @@ let speech_to_text = new SpeechToTextV1({
 
 
 twilioAPI.post('/voice', function (req, res, next) {
-  let city = req.body.FromCity;
   let twiml = new twilio.TwimlResponse();
-  twiml.say('Go ahead.', { 
+  twiml.say('Go ahead agent.', { 
     voice: 'woman' 
   })
     .record({
@@ -106,9 +110,14 @@ twilioAPI.post('/recording', function (req, res, next) {
           recordingUrl: req.body.RecordingUrl,
         })
           .then(message => {
-            var params = {
-              audio: fs.createReadStream(message.recordingUrl)
-              // content_type: 'audio/l16; rate=44100'
+            // client.get(`/${req.body.RecordingUrl}`, function (req,res,next) {
+            // })
+
+
+
+            let params = {
+              audio: fs.createReadStream(req.body.RecordingUrl),
+              content_type: 'audio/l16; rate=44100'
             }
             console.log(params)
             speech_to_text.recognize(params, function (err, res) {
