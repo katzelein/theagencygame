@@ -48,6 +48,7 @@ const fetchMessage = (user, message) => {
 		case 'QUERY_MISSION': // need location
 		// for those that need images or locations
 			returnObj = whichMessage[user.messageState] (user.username, message);
+			console.log("RETURN OBJECT: ", returnObj)
 			break;
 		case 'FETCH_CHALLENGE':
 			returnObj = whichMessage[user.messageState] (
@@ -65,7 +66,9 @@ const fetchMessage = (user, message) => {
 			break;
 	}
 
+	//Ask Ashi about this
 	console.log('returnObj instanceof Promise', returnObj instanceof Promise)
+	console.log("Instance type: ", returnObj.constructor.name)
 
 	// user.update does not need to happen before sending message,
 	if (returnObj && returnObj.state) user.update(returnObj.state);
@@ -73,7 +76,7 @@ const fetchMessage = (user, message) => {
 		user.update({lastMessageAt: Date()})
 		return returnObj.message;
 	}
-	if (returnObj instanceof Promise) {
+	if (returnObj instanceof Promise || returnObj.constructor.name === 'Promise') {
 		return returnObj
 		.then(obj => {
 			if (obj && obj.state) user.update(obj.state);
