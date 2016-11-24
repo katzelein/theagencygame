@@ -2,6 +2,7 @@
 const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
+const User = require('../models/user')
 
 const whichMessage = {
 
@@ -18,20 +19,37 @@ const whichMessage = {
 	},
 
 	NEED_USERNAME: (username, userInput) => {
-		let re = new RegExp("^[A-Za-z0-9]+$");
+		//let re = new RegExp("^[A-Za-z0-9]+$");
+		let re = new RegExp("^[\\w\\s]+$", "g");
 		if (re.test(userInput)) {
 		    console.log("Valid username");
+
+		    User.findOne({
+				where: {
+					username: username
+				}
+			})
+			.then(user => {
+				if(user){
+					return {
+						message: "That username is taken. Please try again."
+					}
+				}
+				else{
+					return {
+						state: {
+							username: userInput, 
+							messageState: 'TUTORIAL_MISSION_1'
+						},
+						message: "Welcome to the Agency, Agent "+userInput+"! Would you like to participate in a training mission?"
+					}}	
+			})
+
 		} else {
 		    console.log("Invalid username");
-		}
-	
-		return {
-			state: {
-				username: userInput, 
-				messageState: 'TUTORIAL_MISSION_1'
-			},
-			message: "Welcome to the Agency, Agent "+userInput+"! Would you like to participate in a training mission?"
-		}
+		    return {
+		    	message: "Invalid username. Usernames can include numbers, letters, spaces, and underscores '_'."
+		    }}
 	},
 
 	TUTORIAL_MISSION_1: (username, userInput) => {
