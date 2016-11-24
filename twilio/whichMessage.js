@@ -71,8 +71,7 @@ const whichMessage = {
 				return {
 					state: {
 						messageState: 'TUTORIAL_MISSION_3',
-						latitude: coordinates[0],
-						longitude: coordinates[1]
+						location: {type: 'Point', coordinates: coordinates}
 					},
 					message: "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
 				}

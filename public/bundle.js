@@ -28864,6 +28864,8 @@
 	            //dispatcher
 	            //1. check db for number
 	            //2. authy.startverification
+	
+	
 	            e.preventDefault();
 	            var countryCode = e.target.country_code.value;
 	            var number = e.target.phone_number.value;
@@ -28874,6 +28876,7 @@
 	            var fullNumber = "+" + countryCode + number;
 	            this.props.setNumber({ countryCode: countryCode, number: number });
 	            console.log("AFTER SET STATE: ", this.state);
+	            // don't send text if user is not in database
 	            _axios2.default.post('/authy/verification/start', { countryCode: countryCode, phoneNumber: number, method: method }).then(function () {
 	                return _reactRouter.browserHistory.push('/verify');
 	            });
@@ -29042,6 +29045,7 @@
 	                if (data.number && data.verified) {
 	                    _this3.props.findUser(data.number);
 	                }
+	                // do something different if user not found/incorrect verification token
 	                _reactRouter.browserHistory.push('/dashboard');
 	            });
 	        }
