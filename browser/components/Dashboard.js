@@ -27,10 +27,10 @@ export default class Dashboard extends Component {
       <div>
         {this.props.user.id ? (
          <div>
-              <div className="col-xs-6 col-sm-6 col-md-6">
+              <div>
                   DASHBOARD
                   <div> {this.props.user.username} </div>
-                  <div><button type="button" onClick={this.logout}>Logout</button></div>
+                  <div ><button type="button" onClick={this.logout}>Logout</button></div>
               </div>
               {this.props.user && this.props.user.isAdmin ?
               (<div>
