@@ -13,13 +13,8 @@ const User = db.define('users', {
   	type: Sequelize.STRING,
   	defaultValue: 'STANDBY'
   },
-  latitude: {
-  	type: Sequelize.FLOAT,
-  	defaultValue: 0
-  },
-  longitude: {
-  	type: Sequelize.FLOAT,
-  	defaultValue: 0
+  location: {
+  	type: Sequelize.GEOMETRY,
   },
   lastMessageAt: Sequelize.DATE
 })

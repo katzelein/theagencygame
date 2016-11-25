@@ -5,3 +5,10 @@ notes
 	- send verification code
 	- check if user is admin
 	- admin page will have option to post
+
+	- right now lookup.js line 76 sets lastMessageAt: Date() I don't think that gives the current date? Date.now? also, we should be looking for the message status and if it actually sent
+
+	- username suggestions?
+
+	- when do we switch users to hiatus and retired? --> add a button on dashboard 
+	- what constitutes being active or on hiatus?
