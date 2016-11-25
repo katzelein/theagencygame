@@ -45,6 +45,7 @@ const fetchMessage = (user, message) => {
 			returnObj = whichMessage[user.messageState] (user.username, message.Body);
 			break;
 		case 'TUTORIAL_MISSION_2': // need location
+		case 'TUTORIAL_MISSION_3': // need image
 		case 'QUERY_MISSION': // need location
 		// for those that need images or locations
 			returnObj = whichMessage[user.messageState] (user.username, message);
@@ -58,7 +59,7 @@ const fetchMessage = (user, message) => {
 			);
 			break;
 		case 'CHALLENGE_ANSWER':
-			returnObj = whichMessage[user.messageState] (user.currentChallenge, simpleInput)
+			returnObj = whichMessage[user.messageState] (user.currentChallenge, message)
 			break;
 		default:
 		// text with all lowercase
