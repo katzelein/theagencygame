@@ -9,6 +9,7 @@ const User = db.define('users', {
   status: Sequelize.ENUM('active', 'hiatus', 'retired'),
   currentMission: Sequelize.INTEGER,	
   currentChallenge: Sequelize.INTEGER,
+  isAdmin: Sequelize.BOOLEAN,
   messageState: {
   	type: Sequelize.STRING,
   	defaultValue: 'STANDBY'
