@@ -4,15 +4,20 @@ import { Link } from 'react-router';
 export default class Admin extends Component {
 
   componentDidMount () {
-   
+   this.props.findUser()
   }
 
   render () {
+    console.log("admin component: ", this.props.user)
     return (
          <div className="row">
-              <div> THIS IS THE ADMIN PAGE </div>
+              {this.props.user && this.props.user.isAdmin ? 
+              (<div><div> THIS IS THE ADMIN PAGE </div>
               <Link to="/admin/addMission"> Add Mission </Link>
-              {this.props.children}       
+              {this.props.children} </div>)
+              :
+              (<div>You do not have permission to access this page, please contact and administrator</div>)
+              }      
           </div>
     );
   }

@@ -23,10 +23,9 @@ const whichMessage = {
 		let re = new RegExp("^[\\w\\s]+$", "g");
 		if (re.test(userInput)) {
 		    console.log("Valid username");
-
-		    User.findOne({
+		    return User.findOne({
 				where: {
-					username: username
+					username: userInput
 				}
 			})
 			.then(user => {
@@ -36,6 +35,7 @@ const whichMessage = {
 					}
 				}
 				else{
+					console.log("NEED_USERNAME")
 					return {
 						state: {
 							username: userInput, 
