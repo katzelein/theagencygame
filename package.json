@@ -4,8 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "mocha ./models/*.test.js --reporter mochawesome" ,
+    "test": "mocha ./models/*.test.js --reporter mochawesome",
     "build": "webpack",
+    "build-watch": "webpack -w",
     "start": "node_modules/.bin/webpack & nodemon app.js",
     "seed": "node models/seed.js"
   },
@@ -27,6 +28,7 @@
     "express": "^4.14.0",
     "express-session": "^1.14.2",
     "geocoder": "^0.2.2",
+    "material-ui": "^0.16.4",
     "mocha": "^3.1.2",
     "nodemon": "^1.11.0",
     "path": "^0.12.7",
@@ -36,6 +38,7 @@
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
     "react-router": "^2.8.1",
+    "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.0",
     "redux-thunk": "^2.1.0",
