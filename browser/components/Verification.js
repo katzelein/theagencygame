@@ -144,7 +144,7 @@ export class Verify extends Component {
     .then((data) => {
       console.log("verifyNumber DATA: ", data)
       if(data.number && data.verified){
-        this.props.findUser(data.number)
+        this.props.findUser()
       }
       // do something different if user not found/incorrect verification token
       browserHistory.push('/dashboard')

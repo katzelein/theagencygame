@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "mocha ./models/*.test.js --reporter mochawesome" ,
+    "test": "mocha ./models/*.test.js --reporter mochawesome",
     "build": "webpack",
     "start": "node_modules/.bin/webpack & nodemon app.js",
     "seed": "node models/seed.js"
@@ -24,8 +24,10 @@
     "chai": "^3.5.0",
     "clarifai": "^2.0.16",
     "cookie-parser": "^1.4.3",
+    "epilogue": "^0.7.0",
     "express": "^4.14.0",
     "express-session": "^1.14.2",
+    "formsy-react": "^0.18.1",
     "geocoder": "^0.2.2",
     "mocha": "^3.1.2",
     "nodemon": "^1.11.0",
