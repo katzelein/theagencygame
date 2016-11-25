@@ -69,7 +69,7 @@ const fetchMessage = (user, message) => {
 
 	//Ask Ashi about this
 	console.log('returnObj instanceof Promise', returnObj instanceof Promise)
-	console.log("Instance type: ", returnObj.constructor.name)
+	//console.log("Instance type: ", returnObj.constructor.name)
 
 	// user.update does not need to happen before sending message,
 	if (returnObj && returnObj.state) user.update(returnObj.state);
