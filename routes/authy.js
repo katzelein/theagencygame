@@ -48,7 +48,7 @@ router.post('/verification/verify', function(req, res, next){
         phoneReg.verifyPhoneToken(phone_number, country_code, token, function (err, response) {
             if (err) {
                 console.log('error creating phone reg request', err);
-                res.status(500).json(err);
+                res.json({verified: false});
             } else {
                 console.log('Confirm phone success confirming code: ', response);
                 if (response.success) {
@@ -66,14 +66,17 @@ router.post('/verification/verify', function(req, res, next){
                     })
                 }
                 else{
-                	res.status(200).json(err);
+                	res.json({verified: false});
             	}
             }
 
         });
-    } else {
+    } else if(phone_number && country_code && !token){
         console.log('Failed in Confirm Phone request body: ', req.body);
-        res.status(500).json({error: "Missing fields"});
+        res.json({error: "Please enter your token."});
+    }
+    else{
+        res.json({error: "Error. Please request a new code."})
     }
 })
 
