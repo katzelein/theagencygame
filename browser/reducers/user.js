@@ -6,15 +6,25 @@ export const setUser = (user) => ({
 	user
 })
 
-export const fetchUser = (number) => ((dispatch) => {
+export const fetchUser = () => ((dispatch) => {
 	console.log("dispatching users")
-	console.log(typeof number, " : ", number)
-	axios.get(`/api/user/${number}`)
-    .then(res => res.data)
-    .then(user => {
-    	console.log("USER in fetchUser: ", user)
-    	dispatch(setUser(user))
-    });
+	//console.log(typeof number, " : ", number)
+  axios.get('/api/whoami')
+  .then(res => res.data)
+  .then(user => {
+    //console.log("user from whoami: ", user.username)
+    if(user.id){
+      axios.get(`/api/user/${user.id}`)
+      .then(res => res.data)
+      .then(user => {
+        console.log("USER in fetchUser: ", user)
+        dispatch(setUser(user))
+      });
+    }
+    else{
+      dispatch(setUser({}))
+    }
+  })
 })
 
 export const user = (user = {}, action) => {

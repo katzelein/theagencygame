@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var twilio = require('twilio');
-var constants = require('../constants')
+var constants = require('../constants');
+var User = require('../models/user');
 
 // router.get('/', function (req, res, next) {
 //   res.send("I'm working!")
@@ -54,7 +55,15 @@ router.post('/verification/verify', function(req, res, next){
                 	console.log("REQ.SESSION: ", req.session)
                     req.session.ph_verified = true;
                     let number = "+" + country_code + phone_number
-                    res.json({verified: true, number})
+                    User.findOne({
+                        where: {
+                            phoneNumber: number
+                        }
+                    })
+                    .then(user => {
+                        req.session.user = user
+                        res.json({verified: true, number})
+                    })
                 }
                 else{
                 	res.status(200).json(err);
