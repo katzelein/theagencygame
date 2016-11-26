@@ -11,7 +11,7 @@ import DashboardContainer from './containers/DashboardContainer';
 import AdminContainer from './containers/AdminContainer';
 import AddMission from './components/AddMission';
 import EditMissionsContainer from './containers/EditMissionsContainer';
-
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import store from './store';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
@@ -28,11 +28,12 @@ import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 //   const thunk = loadOnePuppy(puppyId);
 //   store.dispatch(thunk);
 // };
+injectTapEventPlugin();
 
 ReactDOM.render(
   <Provider store={store}>
     <div className="container flexbox-container">
-      <div className="jumbotron">
+      <div>
         <Router history={browserHistory}>
           <Route path="/">
             <Route path="login" component={AppContainer} />

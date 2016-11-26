@@ -22,6 +22,14 @@ const Challenge = db.define('challenges', {
   type: Sequelize.ENUM('text', 'image', 'voice'),
   order: Sequelize.INTEGER,
   hasNext: Sequelize.BOOLEAN
+},
+{ hooks: {
+  afterCreate: function(challenge, options) {
+      challenge.getMission()
+      .then(mission => console.log("mission: ", mission))
+    }
+  }
+
 })
 
 module.exports = Challenge

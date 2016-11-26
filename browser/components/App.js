@@ -9,11 +9,13 @@ export default class App extends Component {
 
   render () {
     return (
+      <div className="jumbotron">
          <div className="row">
                   <Link to="/sendVerification">
                     <input type="submit" value="Phone Verification" className="btn btn-info btn-block"/>
                   </Link>          
           </div>
+      </div>
     );
   }
 }

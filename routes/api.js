@@ -3,6 +3,7 @@ var router = express.Router();
 var twilio = require('twilio');
 var User = require('../models/user')
 var Mission = require('../models/mission')
+var Challenge = require('../models/challenge')
 const {mustBeAdmin, mustBeLoggedIn, selfOnly} = require('./permissions')
 
 // router.get('/', function (req, res, next) {
@@ -64,9 +65,14 @@ router.post('/mission', function(req, res, next){
 
 router.get('/missions', function(req, res, next){
 	console.log("getting mission")
-	mustBeAdmin()(req, res, next)
-	Mission.findAll()
+	//mustBeAdmin()(req, res, next)
+	Mission.findAll({
+		include: [
+     		{ model: Challenge }
+  		]
+	})
 	.then(missions => {
+		console.log("MISSIONS: ", missions)
 		res.status(200).json(missions)
 	})
 	.catch(next)

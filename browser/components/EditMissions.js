@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { Form } from 'formsy-react';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
 
 import MyInput from './Input';
 
@@ -63,26 +65,60 @@ export default class EditMission extends Component {
 
   render () {
     return (
+        <MuiThemeProvider>
          <div>
          {this.props.missions.map((mission, i) => {
+          console.log("MISSION CHALLENGES: ", mission.challenges)
           if(this.state.expanded === mission.id) {
             return (
-          <div style={{padding: '10px'}} key={mission.id} onClick={() => this.handleClick(mission.id)}>
+          <Card style={{padding: '10px', margin:'10px'}} key={mission.id} onClick={() => this.handleClick(mission.id)}>
+          <CardHeader actAsExpander={true} showExpandableButton={true}>
           <div> {mission.title} </div>
           <div> {mission.description} </div>
+          </CardHeader>
           <div> IT WORKED </div>
-          </div>
+          {mission.challenges.map((challenge, i) => {
+            return(
+              <div key={challenge.id}> {challenge.objective} </div>
+              )
+          })}
+          </Card>
           )}
           else{
             return(
-              <div style={{padding: '10px'}} key={mission.id} onClick={() => this.handleClick(mission.id)}>
+          <Card style={{padding: '10px', margin:'10px'}} key={mission.id} onClick={() => this.handleClick(mission.id)}>
+          <CardHeader actAsExpander={true} showExpandableButton={true}>
           <div> {mission.title} </div>
           <div> {mission.description} </div>
-          </div>
+          </CardHeader>
+          </Card>
           )
 
           }})}
           </div>
+            </MuiThemeProvider>
     )
+    // return (
+    //      <div>
+    //      {this.props.missions.map((mission, i) => {
+    //       if(this.state.expanded === mission.id) {
+    //         return (
+    //       <div style={{padding: '10px'}} key={mission.id} onClick={() => this.handleClick(mission.id)}>
+    //       <div> {mission.title} </div>
+    //       <div> {mission.description} </div>
+    //       <div> IT WORKED </div>
+    //       </div>
+    //       )}
+    //       else{
+    //         return(
+    //           <div style={{padding: '10px'}} key={mission.id} onClick={() => this.handleClick(mission.id)}>
+    //       <div> {mission.title} </div>
+    //       <div> {mission.description} </div>
+    //       </div>
+    //       )
+
+    //       }})}
+    //       </div>
+    // )
   }
 }

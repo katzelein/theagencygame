@@ -12,3 +12,6 @@ notes
 
 	- when do we switch users to hiatus and retired? --> add a button on dashboard 
 	- what constitutes being active or on hiatus?
+
+	-user needs current mission, current challenge
+	-userChallenge needs a status completed, date started, date finished

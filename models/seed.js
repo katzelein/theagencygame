@@ -110,8 +110,16 @@ db.sync({force: true})
     console.log('setChallenges', mission.setChallenges)
     mission.setChallenges([3,4,5,6,7])
   })
-.then(() =>
-  Challenge.bulkCreate(data.challenge))
+  .then(() =>  
+    Challenge.bulkCreate(data.challenge))
+    .then(() => Challenge.update({
+    missionId: 3
+    },{where: {
+      order: {
+        $between: [1, 6]
+      }
+    }
+  }))
   .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
 .then(() =>
   UserMission.bulkCreate(data.userMission))

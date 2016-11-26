@@ -70,7 +70,7 @@ export class SendVerification extends Component {
 
   render () {
     return (
-  <div className="container">
+  <div className="container jumbotron">
     <div className="row centered-form">
         <div className="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
             <div className="panel panel-default">
@@ -177,7 +177,7 @@ export class Verify extends Component {
 
   render () {
     return (
-  <div className="container">
+  <div className="container jumbotron">
     <div className="row centered-form">
         <div>
             <div className="panel panel-default">
