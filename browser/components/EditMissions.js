@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { Form } from 'formsy-react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
-
+import FlatButton from 'material-ui/FlatButton';
 import MyInput from './Input';
 
 const Fields = props => {
@@ -43,7 +43,7 @@ export default class EditMission extends Component {
     super(props)
     this.state = { fields: [], canSubmit: false, expanded: false }
     this.handleClick = this.handleClick.bind(this);
-
+    this.buttonAlert = this.buttonAlert.bind(this);
   }
 
   componentDidMount () {
@@ -63,40 +63,46 @@ export default class EditMission extends Component {
     }
   }
 
+  buttonAlert(){
+    alert("testing button")
+  }
+
   render () {
     return (
         <MuiThemeProvider>
-         <div>
-         {this.props.missions.map((mission, i) => {
-          console.log("MISSION CHALLENGES: ", mission.challenges)
-          if(this.state.expanded === mission.id) {
-            return (
-          <Card style={{padding: '10px', margin:'10px'}} key={mission.id} onClick={() => this.handleClick(mission.id)}>
-          <CardHeader actAsExpander={true} showExpandableButton={true}>
-          <div> {mission.title} </div>
-          <div> {mission.description} </div>
-          </CardHeader>
-          <div> IT WORKED </div>
-          {mission.challenges.map((challenge, i) => {
-            return(
-              <div key={challenge.id}> {challenge.objective} </div>
-              )
-          })}
-          </Card>
-          )}
-          else{
-            return(
-          <Card style={{padding: '10px', margin:'10px'}} key={mission.id} onClick={() => this.handleClick(mission.id)}>
-          <CardHeader actAsExpander={true} showExpandableButton={true}>
-          <div> {mission.title} </div>
-          <div> {mission.description} </div>
-          </CardHeader>
-          </Card>
-          )
+           <div className="container jumbotron">
+             <div className="row centered-form">
+            <div>
+      
+           {this.props.missions.map((mission, i) => {
+              console.log("MISSION CHALLENGES: ", mission.challenges)
+              return(
+              <Card style={{padding: '10px', margin: '10px'}} key={mission.id}>
+                <CardHeader actAsExpander={true} 
+                  showExpandableButton={true} title={mission.title}
+                  titleStyle={{"font-weight": "bold"}}>
+                  <div className="card-header"> {mission.description} </div>
+                </CardHeader>
+                <CardText expandable={true}>
+                  <div> IT WORKED </div>
+                  {mission.challenges.map((challenge, i) => {
+                    return(
+                    <Card key={challenge.id}> 
+                    <CardHeader title={challenge.objective}/> 
+                    </Card>
+                    )
+                  })}
+                </CardText>
+                <CardActions expandable={true}>
+                <FlatButton label="Add Challenge" onClick={this.buttonAlert}/>
+                </CardActions>
+            </Card>
+            )})}
 
-          }})}
-          </div>
-            </MuiThemeProvider>
+            </div>
+            </div>
+            </div>
+          </MuiThemeProvider>
     )
     // return (
     //      <div>

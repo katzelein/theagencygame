@@ -1,3 +1,29 @@
 .error{
 	color: red;
 }
+.missions-row{
+	padding-left: 100em;
+	padding-right: 100em;
+}
+
+.container{
+
+}
+
+.card-header{
+	word-wrap: normal;
+	width: 90%;
+	height:auto;
+	white-space: normal;
+}
+
+.card{
+	margin: 0px;
+	display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.width-set{
+	width: 100%;
+}
