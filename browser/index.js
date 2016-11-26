@@ -28,10 +28,28 @@ import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 //   store.dispatch(thunk);
 // };
 
+// Adding Material-UI
+
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { yellow200, blue800 } from 'material-ui/styles/colors';
+import Paper from 'material-ui/Paper'
+
+const muiTheme = getMuiTheme({
+  palette: {
+    primary1Color: blue800,
+    primary2Color: yellow200
+  },
+});
+
+
 ReactDOM.render(
-  <Provider store={store}>
-    <div className="container flexbox-container">
-      <div className="jumbotron">
+  <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+    <Provider store={store}>
+      <div className="container">
+      <Paper>
         <Router history={browserHistory}>
           <Route path="/">
             <Route path="login" component={AppContainer} />
@@ -44,8 +62,9 @@ ReactDOM.render(
             <IndexRoute component={AppContainer}/>
           </Route>
         </Router>
+      </Paper>
       </div>
-    </div>
-  </Provider>,
+    </Provider>
+  </MuiThemeProvider>,
   document.getElementById('app')
 );
