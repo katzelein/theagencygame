@@ -39,7 +39,8 @@ const Fields = props => {
 export default class EditMission extends Component {
   constructor(props){
     super(props)
-    this.state = { fields: [], canSubmit: false }
+    this.state = { fields: [], canSubmit: false, expanded: false }
+    this.handleClick = this.handleClick.bind(this);
 
   }
 
@@ -47,15 +48,40 @@ export default class EditMission extends Component {
     this.props.findMissions()
   }
 
+  handleClick(missionId){
+    console.log("MISSION ID: ", missionId)
+    console.log("this.state: ", this.state.expanded)
+    if(this.state.expanded === missionId){
+      console.log("already expanded")
+      this.setState({expanded: false})
+    }
+    else{
+      console.log("now expanding")
+      this.setState({expanded: missionId})
+    }
+  }
+
   render () {
     return (
          <div>
-         {this.props.missions.map((mission, i) => (
-          <div key={mission.id}>
+         {this.props.missions.map((mission, i) => {
+          if(this.state.expanded === mission.id) {
+            return (
+          <div style={{padding: '10px'}} key={mission.id} onClick={() => this.handleClick(mission.id)}>
+          <div> {mission.title} </div>
+          <div> {mission.description} </div>
+          <div> IT WORKED </div>
+          </div>
+          )}
+          else{
+            return(
+              <div style={{padding: '10px'}} key={mission.id} onClick={() => this.handleClick(mission.id)}>
           <div> {mission.title} </div>
           <div> {mission.description} </div>
           </div>
-          ))}
+          )
+
+          }})}
           </div>
     )
   }
