@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
+import axios from 'axios';
 import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}
   from 'material-ui/Table';
@@ -9,7 +10,6 @@ const styles = {
   paper: {
     height: 500,
     width: 800,
-    margin: 20,
     textAlign: 'center',
     display: 'inline-block',
   },
@@ -62,7 +62,6 @@ const tableData = [
   },
 ];
 
-
 export default class Dashboard extends Component {
 
   constructor(props) {
@@ -83,6 +82,7 @@ export default class Dashboard extends Component {
 
     this.handleToggle.bind(this)
     this.handleChange.bind(this)
+    this.logout = this.logout.bind(this)
   }
 
   handleToggle (event, toggled) {
@@ -98,10 +98,21 @@ export default class Dashboard extends Component {
   }
 
   componentDidMount () {
+    this.props.findUser()
    
   }
 
+  logout(){
+    this.props.logoutUser()
+    axios.post('/api/logout')
+    .then(res => {
+      console.log("logout res: ", res)
+      browserHistory.push('/')
+    })
+  }
+
   render () {
+    console.log("DASHBOARD USER: ", this.props.user)
     return (
       <Paper style={styles.paper} zDepth={4} >
         <Table height={'300'} >
@@ -155,6 +166,26 @@ export default class Dashboard extends Component {
         </Table>
           <div> {this.props.user.username} </div>
 
+          {this.props.user.id ? (
+            <div>
+              <div>
+                  DASHBOARD
+                  <div> {this.props.user.username} </div>
+                  <div ><button type="button" onClick={this.logout}>Logout</button></div>
+              </div>
+
+              {this.props.user && this.props.user.isAdmin ?
+                (<div>
+                  <Link to="/admin">Admin Page</Link>
+                  </div>
+                ) :
+                null   
+              }           
+            </div>
+          ) : (
+            <div> Please <Link to="/">log in</Link> to view your dashboard </div>
+          )
+        }
       </Paper>
     );
   }

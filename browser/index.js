@@ -48,7 +48,7 @@ const muiTheme = getMuiTheme({
 ReactDOM.render(
   <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
     <Provider store={store}>
-      <div className="container">
+      <div className="jumbotron">
       <Paper>
         <Router history={browserHistory}>
           <Route path="/">

@@ -4,6 +4,7 @@ liveconstants.js
 npm-debug.log
 node_modules/
 notes
+key.json
 
 /public/bundle.js
 /public/bundle.js.map

@@ -15,7 +15,7 @@ const User = db.define('users', {
   	defaultValue: 'STANDBY'
   },
   location: {
-  	type: Sequelize.GEOMETRY,
+  	type: Sequelize.GEOMETRY
   },
   lastMessageAt: Sequelize.DATE
 })

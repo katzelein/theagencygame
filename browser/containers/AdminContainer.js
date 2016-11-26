@@ -1,20 +1,17 @@
 import { connect } from 'react-redux';
 //import { loadPuppies } from '../../action-creators';
 import Admin from '../components/Admin';
+import {fetchUser} from '../reducers/user';
 
 //******** FIX TO BE IN ES6 LIKE WE"RE USED TO
-const mapStateToProps = function (state) {
-  return state
-};
+const mapStateToProps = ({user}) => ({user})
 
-const mapDispatchToProps = function (dispatch) {
-  return {
-    findUser: function () {
-    	// onclick authenticate
-   
+const mapDispatchToProps = (dispatch) => ({
+	findUser: function (){
+    	dispatch(fetchUser())
     }
-  };
-};
+  
+ });
 
 const AdminContainer = connect(mapStateToProps, mapDispatchToProps)(Admin);
 export default AdminContainer;

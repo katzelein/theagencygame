@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var twilio = require('twilio');
-var constants = require('../constants')
+var constants = require('../constants');
+var User = require('../models/user');
 
 // router.get('/', function (req, res, next) {
 //   res.send("I'm working!")
@@ -47,24 +48,35 @@ router.post('/verification/verify', function(req, res, next){
         phoneReg.verifyPhoneToken(phone_number, country_code, token, function (err, response) {
             if (err) {
                 console.log('error creating phone reg request', err);
-                res.status(500).json(err);
+                res.json({verified: false});
             } else {
                 console.log('Confirm phone success confirming code: ', response);
                 if (response.success) {
                 	console.log("REQ.SESSION: ", req.session)
                     req.session.ph_verified = true;
                     let number = "+" + country_code + phone_number
-                    res.json({verified: true, number})
+                    User.findOne({
+                        where: {
+                            phoneNumber: number
+                        }
+                    })
+                    .then(user => {
+                        req.session.user = user
+                        res.json({verified: true, number})
+                    })
                 }
                 else{
-                	res.status(200).json(err);
+                	res.json({verified: false});
             	}
             }
 
         });
-    } else {
+    } else if(phone_number && country_code && !token){
         console.log('Failed in Confirm Phone request body: ', req.body);
-        res.status(500).json({error: "Missing fields"});
+        res.json({error: "Please enter your token."});
+    }
+    else{
+        res.json({error: "Error. Please request a new code."})
     }
 })
 
