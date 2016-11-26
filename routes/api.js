@@ -29,26 +29,6 @@ router.get('/user/:id', function(req, res, next){
 	.catch(next)
 })
 
-router.get('/user/exists/:number', function(req, res, next){
-	console.log("Req: ", req.session)
-	console.log("getting user")
-	User.findOne({
-		where: {
-			phoneNumber: req.params.number
-		}
-	})
-	.then(user => {
-		if(user){
-			res.status(200).json({found: true})
-		}
-		else{
-			res.json({found: false})
-		}
-
-	})
-	.catch(next)
-})
-
 
 router.post('/mission', function(req, res, next){
 	console.log("posting mission")
