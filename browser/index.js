@@ -10,6 +10,7 @@ import {VerifyContainer} from './containers/VerificationContainer';
 import DashboardContainer from './containers/DashboardContainer';
 import AdminContainer from './containers/AdminContainer';
 import AddMission from './components/AddMission';
+import EditMissionsContainer from './containers/EditMissionsContainer';
 
 import store from './store';
 import { Provider } from 'react-redux';
@@ -40,6 +41,7 @@ ReactDOM.render(
             <Route path="dashboard" component={DashboardContainer}/>
             <Route path="admin" component={AdminContainer}>
               <Route path="addMission" component={AddMission}/>
+              <Route path="editMission" component={EditMissionsContainer}/>
             </Route>
             <IndexRoute component={AppContainer}/>
           </Route>

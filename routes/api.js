@@ -62,6 +62,16 @@ router.post('/mission', function(req, res, next){
 	.catch(next)
 })
 
+router.get('/missions', function(req, res, next){
+	console.log("getting mission")
+	mustBeAdmin()(req, res, next)
+	Mission.findAll()
+	.then(missions => {
+		res.status(200).json(missions)
+	})
+	.catch(next)
+})
+
 router.post('/logout', function(req, res, next){
 	req.session.user = null;
 	res.sendStatus(200)
