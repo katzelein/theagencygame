@@ -87,7 +87,6 @@ export default class EditMission extends Component {
 
   render () {
     return (
-        <MuiThemeProvider>
            <div className="container jumbotron">
              <div className="row centered-form">
             <div>
@@ -111,7 +110,6 @@ export default class EditMission extends Component {
       
             </div>
             </div>
-          </MuiThemeProvider>
     )
   }
 }
@@ -157,7 +155,7 @@ export class MissionCard extends Component {
                   <div> Challenges </div>
                   {this.props.mission.challenges.map((challenge, i) => {
                     return(
-                    <ChallengeCard key={challenge.id} challenge={challenge} mission={this.props.mission} findMissions={this.props.findMissions}/>
+                    <ChallengeCard id={challenge.id} key={challenge.id} challenge={challenge} mission={this.props.mission} findMissions={this.props.findMissions}/>
                     )
                   })}
                   {this.state.addChallenge ? <ChallengeForm findMissions={this.props.findMissions} mission={this.props.mission} toggleAdd={this.toggleAdd}/> : null}
@@ -222,12 +220,12 @@ export class ChallengeCard extends Component{
   
   render(){
     return (
-  <Card style={{padding: '10px', margin: '10px'}}>
-      <CardHeader actAsExpander={true} 
+  <Card style={{padding: '10px', margin: '10px', 'background-color': 'white', color: 'black'}}>
+      <CardHeader className="white-challenge-card" actAsExpander={true} 
                   showExpandableButton={true} title={this.props.challenge.objective}
-                  titleStyle={{fontWeight: "bold"}}>
+                  titleStyle={{fontWeight: "bold", color: 'black'}} style={{color: 'black'}}>
       </CardHeader>
-      <CardText expandable={true}>
+      <CardText style={{color: 'black'}} expandable={true}>
         <div><h5> Summary </h5>{this.props.challenge.summary} </div>
         <div>
           <h4> Target Answers </h4>
@@ -241,12 +239,12 @@ export class ChallengeCard extends Component{
         <div className="mui-button" style={{position: 'absolute', height: '100%', 'margin-right': '0px'}}>
         <IconButton className="inside-mui-button" tooltip="edit"
                     tooltipPosition="top-center" onClick={() => this.deleteMission(this.props.mission.id)}
-                    style={{padding: '0px', height: '100%', width: '28px'}}>
+                    iconStyle={{color: 'black'}} style={{padding: '0px', height: '100%', width: '28px'}}>
           <EditorModeEdit/>
         </IconButton>
         <IconButton className="inside-mui-button" tooltip="delete"
                     tooltipPosition="top-center" onClick={() => this.deleteChallenge(this.props.challenge.id)}
-                    style={{padding: '0px', height: '100%', width: '28px'}}>
+                    iconStyle={{color: 'black'}} style={{padding: '0px', height: '100%', width: '28px'}}>
           <ActionDelete/>
         </IconButton>
         </div>

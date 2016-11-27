@@ -1,6 +1,7 @@
 .error{
 	color: red;
 }
+
 .missions-row{
 	padding-left: 100em;
 	padding-right: 100em;
@@ -65,4 +66,22 @@ svg{
 	position: relative;
 	right: 0px;
 	bottom: 0px;
+}
+
+html, body
+{
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.white-challenge-card svg{
+	color: black;
+}
+
+#main
+{
+  height: 100%;
+  min-height: 100%;
 }
