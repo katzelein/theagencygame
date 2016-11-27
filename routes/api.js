@@ -53,9 +53,12 @@ router.get('/user/exists/:number', function(req, res, next){
 
 router.post('/mission', function(req, res, next){
 	console.log("posting mission")
-	mustBeAdmin()(req, res, next)
+	console.log("REQ BODY FROM FORM: ", req.body)
+	//mustBeAdmin()(req, res, next)
+	let {title, description, place, location} = req.body
 	Mission.create({
-		title: req.body.title
+		title, description, place, location, 
+		numChallenges: 0
 	})
 	.then(mission => {
 		res.status(200).json(mission)
@@ -69,18 +72,34 @@ router.get('/missions', function(req, res, next){
 	Mission.findAll({
 		include: [
      		{ model: Challenge }
-  		]
+  		],
+
+  		order: 'id'
 	})
 	.then(missions => {
-		console.log("MISSIONS: ", missions)
+		//console.log("MISSIONS: ", missions)
 		res.status(200).json(missions)
 	})
 	.catch(next)
+})
+
+router.delete('/mission/:id', function(req, res, next){
+	//mustBeAdmin()(req, res, next)
+	Mission.findById(req.params.id)
+	.then((mission) => {
+		mission.getChallenges()
+		.then(() => {
+			console.log("DON'T FORGET TO UPDATE CHALLENGES")
+			return mission.destroy({force: true})
+		})
+		.then(() => res.sendStatus(200))
+	})
 })
 
 router.post('/logout', function(req, res, next){
 	req.session.user = null;
 	res.sendStatus(200)
 })
+
 
 module.exports = router;

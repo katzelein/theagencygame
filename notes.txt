@@ -15,3 +15,18 @@ notes
 
 	-user needs current mission, current challenge
 	-userChallenge needs a status completed, date started, date finished
+
+	Adding mission/challenges:
+
+	1. reorder challenges by dragging
+	2. view/edit toggle
+	3. have a trash can icon for delete (with confirmation to double check)
+	4. little pop up that says "mission deleted", "mission saved", etc
+	5. hooks that will update associated models (ie, adding challenge will update column in mission)
+	6. adding or removing challenge will update other challenges order
+	7. long/lat should pull form place
+	8. is it better to set missions to state and just concat or better to dispatch again
+	9. form validations for required fields and formatting
+
+	9. mission delete should also delete challenges?
+	10. send text message to users who were doing that challenge
