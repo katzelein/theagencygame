@@ -52,8 +52,6 @@ export default class ChallengeForm extends Component {
 
   submitAlert(e){
     e.preventDefault()
-    let missionId = this.props.mission.id
-    console.log("MISSION ID ON SUBMIT: ", missionId)
     let objective = e.target.objective.value
     let summary = e.target.summary.value
     let targetTags = e.target.targetTags.value.split(",")
@@ -61,13 +59,42 @@ export default class ChallengeForm extends Component {
     let conclusion = e.target.conclusion.value
     let type = e.target.type.value
     let order = e.target.order.value
-    axios.post(`/api/challenge/setMission/${missionId}`, {objective, summary, targetTags, targetText, conclusion, type, order})
-    .then((res) => res.data)
-    .then(challenge => {
-      console.log("CHALLENGE: ", challenge)
-        this.props.findMissions()
-        this.props.toggleAdd()
-    })
+
+    if(this.props.missionSpecific || (e.target.mission && e.target.mission.value !== "null")){
+      let missionId = (this.props.missionSpecific ? this.props.mission.id : e.target.mission.value)
+      console.log("MISSION ID ON SUBMIT: ", missionId)
+      axios.post(`/api/challenge/setMission/${missionId}`, {objective, summary, targetTags, targetText, conclusion, type, order})
+      .then((res) => res.data)
+      .then(challenge => {
+        console.log("CHALLENGE: ", challenge)
+          this.props.refreshCards()
+          this.props.toggleAdd()
+      })
+    }
+    // if(this.props.missionSpecific){
+    //   let missionId = this.props.mission.id
+    //   console.log("MISSION ID ON SUBMIT: ", missionId)
+    //   axios.post(`/api/challenge/setMission/${missionId}`, {objective, summary, targetTags, targetText, conclusion, type, order})
+    //   .then((res) => res.data)
+    //   .then(challenge => {
+    //     console.log("CHALLENGE: ", challenge)
+    //       this.props.findMissions()
+    //       this.props.toggleAdd()
+    //   })
+    // }
+    // else if(e.target.mission && e.target.mission.value){
+    //   let missionId = e.target.mission.value
+    // }
+
+    else{
+      axios.post('/api/challenge', {objective, summary, targetTags, targetText, conclusion, type, order})
+      .then((res) => res.data)
+      .then(challenge => {
+        console.log("CHALLENGE: ", challenge)
+          this.props.refreshCards()
+          this.props.toggleAdd()
+      })
+    }
   }
 
   closeForm(){
@@ -76,7 +103,7 @@ export default class ChallengeForm extends Component {
 
   render () {
     return (
-      <Card id="new-mission-form" style={{padding: '10px', margin: '10px'}}>
+      <Card id="new-challenge-form" style={{padding: '10px', margin: '10px'}}>
         <CardHeader style={{position: 'relative', padding: '10px 16px 10px 16px', height: '50px'}} title="NEW CHALLENGE"
             titleStyle={{fontWeight: "bold", 'vertical-align': 'center'}}>
            {/* <div className="mui-button" style={{'padding-right': '0px', top: '0px', height: '21.25px', position: 'absolute'}}>*/}
@@ -87,7 +114,8 @@ export default class ChallengeForm extends Component {
         </IconButton>
         </CardHeader>
         <CardText>
-          <form id="mission-form" onSubmit={this.submitAlert}> 
+          <form id="challenge-form" onSubmit={this.submitAlert}> 
+            {this.props.missionSpecific ? null : <MissionDropDown missions={this.props.missions}/>}
             <label>Objective:</label><br/>
             <input type="text" name="objective" /><br/>
             <label>Summary: </label><br/>
@@ -109,7 +137,18 @@ export default class ChallengeForm extends Component {
   }
 }
 
-
-
+export const MissionDropDown = ({ missions }) => (
+  <div>
+  <label>Mission:</label><br/>
+  <select name="mission">
+    <option value="null">Leave Unassigned</option>
+    {missions.map((mission, i) => {
+      return(
+        <option key={mission.id} value={mission.id}> {mission.title} </option>
+      )
+    })}
+  </select><br/>
+  </div>
+)
 
 

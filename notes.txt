@@ -34,3 +34,20 @@ notes
 	11. pass ideal image in to get targetTags for input form
 	12. drop down so you can add unassigned challenges to a mission
 	13. view and edit challenges specfically on a challenge page
+
+
+
+TESTS ***************
+	deleting challenges:
+
+	deleting challenge when on missions page
+	deleteing challenge from challenge page
+		- challenge is assigned to mission
+		- challenge is not assigned to mission
+
+	adding challenges:
+
+	adding challenge on missions page
+	adding chalenge on challenge page
+		- leave challenge unassigned
+		- assign challenge

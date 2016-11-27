@@ -25,18 +25,35 @@ const Challenge = db.define('challenges', {
 }
 ,
 { hooks: {
-  afterUpdate: function(challenge, options) {
-      challenge.getMission()
-      .then(mission => {
-        console.log("mission: ", mission)
-        mission.getChallenges()
-        .then(challenges => {
-        console.log("MISSION ASSOCIATIONS: ", challenges)
-        return mission.update
+  // afterUpdate: function(challenge, options) {
+  //     challenge.getMission()
+  //     .then(mission => {
+  //       console.log("mission: ", mission)
+  //       mission.getChallenges()
+  //       .then(challenges => {
+  //       console.log("MISSION ASSOCIATIONS: ", challenges)
+  //       return mission.update
+  //   })
+  //   .then(() => console.log("hook done"))
+  //   })
+  // }
+  beforeDestroy: function(challenge, options){
+    challenge.getMission()
+    .then(mission => {
+      console.log("MISSION BEFORE DESTORY: ", mission)
+      if(mission){
+        mission.removeChallenge(challenge.id)
+        .then(() => {
+          mission.decrement("numChallenges")
+          .then(() => console.log("UPDATED MISSION BEFORE DESTROY"))
+        })
+      }
+      else{
+        console.log("NO MISSION")
+      }
     })
-  .then(() => console.log("hook done"))
-  })
-}}}
+  }
+}}
 )
 
 module.exports = Challenge

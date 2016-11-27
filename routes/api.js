@@ -67,7 +67,7 @@ router.post('/mission', function(req, res, next){
 })
 
 router.get('/missions', function(req, res, next){
-	console.log("getting mission")
+	console.log("getting missions")
 	//mustBeAdmin()(req, res, next)
 	Mission.findAll({
 		include: [
@@ -94,6 +94,24 @@ router.delete('/mission/:id', function(req, res, next){
 		})
 		.then(() => res.sendStatus(200))
 	})
+})
+
+router.get('/challenges', function(req, res, next){
+	console.log("getting challenges")
+	//mustBeAdmin()(req, res, next)
+	Challenge.findAll({
+		include: [
+     		{ model: Mission}
+  		],
+
+  		order: 'id'
+	})
+	.then(challenges => {
+		//console.log("CHALLENGES: ", challenges)
+		res.status(200).json(challenges)
+	})
+	.catch(next)
+
 })
 
 router.post('/challenge/setMission/:missionId', function(req, res, next){
@@ -137,6 +155,7 @@ router.post('/challenge', function(req, res, next){
 	.catch(next)
 })
 
+// delete challenge from mission but not from database
 router.delete('/challenge/:id/mission/:missionId', function(req, res, next){
 	//mustBeAdmin()(req, res, next)
 	Challenge.findById(req.params.id)
@@ -151,15 +170,13 @@ router.delete('/challenge/:id/mission/:missionId', function(req, res, next){
 			.then(() => {
 				challenge.getUsers()
 				.then(() => {
-					console.log("DON'T FORGET TO ALERT USERS")
-					return challenge.destroy({force: true})
+					res.sendStatus(200)
 				})
-				.then(() => res.sendStatus(200))
-	})
+				
 })
-	})})})
+	})})})})
 
-
+// delete challenge from database
 router.delete('/challenge/:id', function(req, res, next){
 	//mustBeAdmin()(req, res, next)
 	Challenge.findById(req.params.id)
@@ -167,6 +184,10 @@ router.delete('/challenge/:id', function(req, res, next){
 		challenge.getUsers()
 		.then(() => {
 			console.log("DON'T FORGET TO ALERT USERS")
+			// challenge.getMission()
+			// .then(mission => {
+			// 	mission.removeChallenge(challenge.id)
+			// })
 			return challenge.destroy({force: true})
 		})
 		.then(() => res.sendStatus(200))

@@ -11,6 +11,7 @@ import DashboardContainer from './containers/DashboardContainer';
 import AdminContainer from './containers/AdminContainer';
 import AddMission from './components/AddMission';
 import EditMissionsContainer from './containers/EditMissionsContainer';
+import EditChallengesContainer from './containers/EditChallengesContainer';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import store from './store';
 import { Provider } from 'react-redux';
@@ -41,7 +42,7 @@ ReactDOM.render(
             <Route path="verify" component={VerifyContainer} />
             <Route path="dashboard" component={DashboardContainer}/>
             <Route path="admin" component={AdminContainer}>
-              <Route path="addMission" component={AddMission}/>
+              <Route path="editChallenge" component={EditChallengesContainer}/>
               <Route path="editMission" component={EditMissionsContainer}/>
             </Route>
             <IndexRoute component={AppContainer}/>
