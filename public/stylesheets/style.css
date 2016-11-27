@@ -37,11 +37,18 @@
 }
 
 .mui-button{
-	padding: 0px;
+	padding: 0px 16px 0px 0px;
 	position: absolute;
 	right: 0px;
 	bottom: 0px;
 	margin-right: 0px;
+	vertical-align: center;
+	height: 100%;
+}
+
+.inside-mui-button{
+	padding: inherit;
+	height: 100%;
 }
 
 svg{
@@ -50,8 +57,12 @@ svg{
 
 #actions{
 	position: relative;
+	height: 52.23px;
+	padding: 8px;
 }
 
 #challenge-actions{
 	position: relative;
+	right: 0px;
+	bottom: 0px;
 }

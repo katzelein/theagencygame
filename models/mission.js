@@ -11,7 +11,8 @@ const Mission = db.define('missions', {
   	type: Sequelize.GEOMETRY,
   },
   numChallenges: Sequelize.INTEGER
-})
+}
+)
 
 module.exports = Mission
 

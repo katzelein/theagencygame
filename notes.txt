@@ -27,6 +27,10 @@ notes
 	7. long/lat should pull form place
 	8. is it better to set missions to state and just concat or better to dispatch again
 	9. form validations for required fields and formatting
+	10. cancel form if change mind
 
 	9. mission delete should also delete challenges?
 	10. send text message to users who were doing that challenge
+	11. pass ideal image in to get targetTags for input form
+	12. drop down so you can add unassigned challenges to a mission
+	13. view and edit challenges specfically on a challenge page

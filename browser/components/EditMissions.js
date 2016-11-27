@@ -6,8 +6,10 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
 import {RaisedButton, FlatButton, IconButton} from 'material-ui';
 import MyInput from './Input';
 import MissionForm from './MissionForm';
+import ChallengeForm from './ChallengeForm';
 import axios from 'axios';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
+import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 
 
 const Fields = props => {
@@ -124,13 +126,13 @@ export class MissionCard extends Component {
   }
 
   toggleAdd(){
-    let bool = !this.state.addMission
+    let bool = !this.state.addChallenge
     let buttonText = bool ? "SAVE CHALLENGE" : "ADD CHALLENGE"
     console.log("BUTTON TEXT: ", buttonText)
-    if(this.state.addMission){
+    if(this.state.addChallenge){
       // post challenge to database
     }
-    this.setState({addMission: bool, addOrSave: buttonText})
+    this.setState({addChallenge: bool, addOrSave: buttonText})
   }
 
   deleteMission(id){
@@ -140,13 +142,7 @@ export class MissionCard extends Component {
     })
   }
 
-  deleteChallenge(id){
-    axios.delete(`/api/challenge/${id}`)
-    .then(() => {
-      this.props.findMissions()
-    })
-  }
-
+  
   render () {
     return (
   
@@ -161,20 +157,31 @@ export class MissionCard extends Component {
                   <div> Challenges </div>
                   {this.props.mission.challenges.map((challenge, i) => {
                     return(
-                    <ChallengeCard key={challenge.id} challenge={challenge} mission={this.props.mission}/>
+                    <ChallengeCard key={challenge.id} challenge={challenge} mission={this.props.mission} findMissions={this.props.findMissions}/>
                     )
                   })}
-                  {this.state.addMission ? (<div>ADD CHALLENGE</div>) : null}
+                  {this.state.addChallenge ? <ChallengeForm findMissions={this.props.findMissions} mission={this.props.mission} toggleAdd={this.toggleAdd}/> : null}
+    
+            {this.state.addChallenge ? 
+              (<RaisedButton type="submit" form="mission-form" className="mission-button" label="SAVE CHALLENGE" />)
+              : null}
+            {this.state.addChallenge ? null :
+              (<RaisedButton type="button" className="mission-button" label="ADD CHALLENGE" onClick={this.toggleAdd}/>)
+            }
                 </CardText>
                 <CardActions id="actions" expandable={true}>
-                  <RaisedButton className="challenge-button" label={this.state.addOrSave} onClick={this.toggleAdd}>
-                    {/*<label for={`mission-${mission.id}`}>TEST</label>*/}
-                  </RaisedButton>
-                  <IconButton className="mui-button" tooltip="SVG Icon" tooltip="top-center"
-                    tooltipPosition="top-center" onClick={() => this.deleteMission(this.props.mission.id)}
-                    style={{padding: '0px', position: 'absolute', margin: '0px 0px, 0px, 0px', 'margin-right': '0px', height: '100%'}}>
-                    <ActionDelete/>
-                  </IconButton>
+                  <div className="mui-button" style={{position: 'absolute', height: '100%', 'margin-right': '0px'}}>
+                    <IconButton className="inside-mui-button" tooltip="edit"
+                      tooltipPosition="top-center" onClick={() => this.deleteMission(this.props.mission.id)}
+                      style={{padding: '0px', height: '100%', width: '28px'}}>
+                      <EditorModeEdit/>
+                    </IconButton>
+                    <IconButton className="inside-mui-button" tooltip="delete"
+                      tooltipPosition="top-center" onClick={() => this.deleteMission(this.props.mission.id)}
+                      style={{padding: '0px', height: '100%', width: '28px'}}>
+                      <ActionDelete/>
+                    </IconButton>
+                  </div>
                 </CardActions>
             </Card>
         
@@ -182,32 +189,72 @@ export class MissionCard extends Component {
   }
 }
 
-export const ChallengeCard = ({ challenge, mission }) => (
+export class ChallengeCard extends Component{
+  constructor(props){
+    super(props)
+    this.state = { refresh: true, canSubmit: false, addMission: false, addOrSave: "ADD CHALLENGE"}
+    //this.handleClick = this.handleClick.bind(this);
+    this.toggleAdd = this.toggleAdd.bind(this);
+    this.deleteChallenge = this.deleteChallenge.bind(this);
+  }
+
+  toggleAdd(){
+    let bool = !this.state.addMission
+    let buttonText = bool ? "SAVE CHALLENGE" : "ADD CHALLENGE"
+    console.log("BUTTON TEXT: ", buttonText)
+    if(this.state.addMission){
+      // post challenge to database
+    }
+    this.setState({addMission: bool, addOrSave: buttonText})
+  }
+
+  deleteChallenge(id){
+    let bool = !this.state.refresh
+    let missionId = this.props.mission.id
+    axios.delete(`/api/challenge/${id}/mission/${missionId}`)
+    .then(() => {
+      console.log("PROPS: ", this.props)
+      this.props.findMissions()
+      this.setState({refresh: bool})
+      console.log("REFRESH: ", this.state.refresh)
+    })
+  }
+  
+  render(){
+    return (
   <Card style={{padding: '10px', margin: '10px'}}>
       <CardHeader actAsExpander={true} 
-                  showExpandableButton={true} title={challenge.objective}
+                  showExpandableButton={true} title={this.props.challenge.objective}
                   titleStyle={{fontWeight: "bold"}}>
       </CardHeader>
       <CardText expandable={true}>
-        <div><h5> Summary </h5>{challenge.summary} </div>
+        <div><h5> Summary </h5>{this.props.challenge.summary} </div>
         <div>
           <h4> Target Answers </h4>
-          <div><h5> Tags: </h5>{challenge.tagetTags} </div>
-          <div><h5> Text: </h5>{challenge.tagetText} </div>
+          <div><h5> Tags: </h5>{this.props.challenge.tagetTags} </div>
+          <div><h5> Text: </h5>{this.props.challenge.tagetText} </div>
         </div>
-        <div><h5> Conclusion </h5> {challenge.conclusion} </div>
-        <div><h5> Type </h5> {challenge.type} </div>
+        <div><h5> Conclusion </h5> {this.props.challenge.conclusion} </div>
+        <div><h5> Type </h5> {this.props.challenge.type} </div>
       </CardText>
-      <CardActions id="challenge-actions" style={{height: '52.23px'}} expandable={true}>
-        <IconButton className="mui-button" tooltip="SVG Icon" tooltip="top-center"
+      <CardActions id="challenge-actions" style={{height: '40px', padding: '0px'}} expandable={true}>
+        <div className="mui-button" style={{position: 'absolute', height: '100%', 'margin-right': '0px'}}>
+        <IconButton className="inside-mui-button" tooltip="edit"
                     tooltipPosition="top-center" onClick={() => this.deleteMission(this.props.mission.id)}
-                    style={{padding: '0px', position: 'absolute', margin: '0px 0px, 0px, 0px', 'margin-right': '0px', height: '100%'}}>
+                    style={{padding: '0px', height: '100%', width: '28px'}}>
+          <EditorModeEdit/>
+        </IconButton>
+        <IconButton className="inside-mui-button" tooltip="delete"
+                    tooltipPosition="top-center" onClick={() => this.deleteChallenge(this.props.challenge.id)}
+                    style={{padding: '0px', height: '100%', width: '28px'}}>
           <ActionDelete/>
         </IconButton>
+        </div>
       </CardActions>
   </Card>
+  )}
 
-)
+}
 
 
 

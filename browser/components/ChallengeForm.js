@@ -41,7 +41,7 @@ const Fields = props => {
   );
 };
 
-export default class MissionForm extends Component {
+export default class ChallengeForm extends Component {
   constructor(props){
     super(props)
     this.state = { fields: [], canSubmit: false, add: false, addOrSave: "ADD MISSION"}
@@ -52,15 +52,21 @@ export default class MissionForm extends Component {
 
   submitAlert(e){
     e.preventDefault()
-    let title = e.target.title.value
-    let description = e.target.description.value
-    let place = e.target.place.value
-    let coordinates = e.target.location.value.split(",")
-    let location = {type: "Point", coordinates}
-    axios.post('/api/mission', {title, description, place, location})
-    .then(() => {
-      this.props.findMissions()
-      this.props.toggleAdd()
+    let missionId = this.props.mission.id
+    console.log("MISSION ID ON SUBMIT: ", missionId)
+    let objective = e.target.objective.value
+    let summary = e.target.summary.value
+    let targetTags = e.target.targetTags.value.split(",")
+    let targetText = e.target.targetText.value
+    let conclusion = e.target.conclusion.value
+    let type = e.target.type.value
+    let order = e.target.order.value
+    axios.post(`/api/challenge/setMission/${missionId}`, {objective, summary, targetTags, targetText, conclusion, type, order})
+    .then((res) => res.data)
+    .then(challenge => {
+      console.log("CHALLENGE: ", challenge)
+        this.props.findMissions()
+        this.props.toggleAdd()
     })
   }
 
@@ -71,7 +77,7 @@ export default class MissionForm extends Component {
   render () {
     return (
       <Card id="new-mission-form" style={{padding: '10px', margin: '10px'}}>
-        <CardHeader style={{position: 'relative', padding: '10px 16px 10px 16px', height: '50px'}} title="NEW MISSION"
+        <CardHeader style={{position: 'relative', padding: '10px 16px 10px 16px', height: '50px'}} title="NEW CHALLENGE"
             titleStyle={{fontWeight: "bold", 'vertical-align': 'center'}}>
            {/* <div className="mui-button" style={{'padding-right': '0px', top: '0px', height: '21.25px', position: 'absolute'}}>*/}
             <IconButton className="inside-mui-button" tooltip="Cancel"
@@ -82,14 +88,20 @@ export default class MissionForm extends Component {
         </CardHeader>
         <CardText>
           <form id="mission-form" onSubmit={this.submitAlert}> 
-            <label>Title:</label><br/>
-            <input type="text" name="title" /><br/>
-            <label>Description: </label><br/>
-            <textArea type="text" name="description"/><br/>
-            <label>Place: </label><br/>
-            <input type="text" name="place" /><br/>
-            <label>Location: </label><br/>
-            <input type="text" name="location" /><br/>
+            <label>Objective:</label><br/>
+            <input type="text" name="objective" /><br/>
+            <label>Summary: </label><br/>
+            <textArea type="text" name="summary"/><br/>
+            <label>Target Tags: </label><br/>
+            <input type="text" name="targetTags" /><br/>
+            <label>Target Text: </label><br/>
+            <input type="text" name="targetText" /><br/>
+            <label>Conclusion: </label><br/>
+            <textArea type="text" name="conclusion"/><br/>
+            <label>Type: </label><br/>
+            <input type="text" name="type" /><br/>
+            <label>Order: </label><br/>
+            <input type="text" name="order" /><br/>
           </form>
         </CardText>
         </Card>   

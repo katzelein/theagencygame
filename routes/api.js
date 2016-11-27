@@ -96,6 +96,83 @@ router.delete('/mission/:id', function(req, res, next){
 	})
 })
 
+router.post('/challenge/setMission/:missionId', function(req, res, next){
+	console.log("posting challenge")
+	console.log("REQ BODY FROM FORM: ", req.body)
+	//mustBeAdmin()(req, res, next)
+	let {objective, summary, targetTags, targetText, conclusion, type, order} = req.body
+	Challenge.create({
+		objective, summary, targetTags, targetText, conclusion, type, order
+	})
+	.then(challenge => {
+		return challenge.setMission(req.params.missionId)
+		.then(() => {
+			Mission.findById(req.params.missionId)
+			.then(mission => {
+				// mission.getChallenges()
+				// .then(challenges => {
+				// 	mission.update({
+				// 		numChallenges: challenges.length
+				// 	})
+				// })
+				mission.increment('numChallenges')
+			})
+		})
+	})
+	.then(challenge => res.status(200).json(challenge))
+	.catch(next)
+})
+
+router.post('/challenge', function(req, res, next){
+	console.log("posting challenge")
+	console.log("REQ BODY FROM FORM: ", req.body)
+	//mustBeAdmin()(req, res, next)
+	let {objective, summary, targetTags, targetText, conclusion, type, order} = req.body
+	Challenge.create({
+		objective, summary, targetTags, targetText, conclusion, type, order
+	})
+	.then(challenge => {
+		res.status(200).json(challenge)
+	})
+	.catch(next)
+})
+
+router.delete('/challenge/:id/mission/:missionId', function(req, res, next){
+	//mustBeAdmin()(req, res, next)
+	Challenge.findById(req.params.id)
+	.then((challenge) => {
+		Mission.findById(req.params.missionId)
+		.then(mission => {
+			mission.removeChallenge(challenge.id)
+		
+		.then(() => {
+			console.log("MISSION after remove challenge: ", mission)
+			mission.decrement('numChallenges')
+			.then(() => {
+				challenge.getUsers()
+				.then(() => {
+					console.log("DON'T FORGET TO ALERT USERS")
+					return challenge.destroy({force: true})
+				})
+				.then(() => res.sendStatus(200))
+	})
+})
+	})})})
+
+
+router.delete('/challenge/:id', function(req, res, next){
+	//mustBeAdmin()(req, res, next)
+	Challenge.findById(req.params.id)
+	.then((challenge) => {
+		challenge.getUsers()
+		.then(() => {
+			console.log("DON'T FORGET TO ALERT USERS")
+			return challenge.destroy({force: true})
+		})
+		.then(() => res.sendStatus(200))
+	})
+})
+
 router.post('/logout', function(req, res, next){
 	req.session.user = null;
 	res.sendStatus(200)
