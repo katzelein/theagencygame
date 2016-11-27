@@ -2,34 +2,20 @@ import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
 import axios from 'axios';
 
+import {Grid, Row, Col} from 'react-flexbox-grid';
 import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}
   from 'material-ui/Table';
-
+import RaisedButton from 'material-ui/RaisedButton';
 
 const styles = {
   paper: {
-    height: 500,
-    width: 800,
-    margin: 20,
+    // height: 100,
+    // width: 800,
     textAlign: 'center',
     display: 'inline-block',
-  },
-  propContainer: {
-    width: 200,
-    overflow: 'hidden',
-    margin: '20px auto 0',
-  },
-  propToggleHeader: {
-    margin: '20px auto 10px',
-  },
+  }
 };
-
-// Things to display:
-
-// List of Missions
-// Nested list of challenges
-// Data contained therein
 
 const tableData = [
   {
@@ -65,10 +51,6 @@ const tableData = [
 ];
 
 export default class Dashboard extends Component {
-  constructor(props){
-    super(props)
-    this.logout = this.logout.bind(this)
-  }
 
   constructor(props) {
     super(props);
@@ -88,6 +70,7 @@ export default class Dashboard extends Component {
 
     this.handleToggle.bind(this)
     this.handleChange.bind(this)
+    this.logout = this.logout.bind(this)
   }
 
   handleToggle (event, toggled) {
@@ -119,80 +102,73 @@ export default class Dashboard extends Component {
   render () {
     console.log("DASHBOARD USER: ", this.props.user)
     return (
+      <div id="main">
+        <Grid>
+          <Row>
+          <Paper style={styles.paper} zDepth={4} >
+              {this.props.user.id ? (
+                <div>
+                  <div>
+                      DASHBOARD
+                      <Table style={styles.table} >
+                        <TableHeader adjustForCheckbox={false}>
+                          <TableRow>
+                            <TableHeaderColumn colSpan={6} style={{textAlign: 'center'}}>
+                              {this.props.user.username}
+                            </TableHeaderColumn>
+                          </TableRow>
 
-      <div>
-        {this.props.user.id ? (
-         <div>
-              <div>
-                  DASHBOARD
-                  <div> {this.props.user.username} </div>
-                  <div ><button type="button" onClick={this.logout}>Logout</button></div>
-              </div>
-              {this.props.user && this.props.user.isAdmin ?
-              (<div>
-                <Link to="/admin">Admin Page</Link>
-                </div>):
-                null
-                }           
-          </div>
-          ) : (<div> Please <Link to="/">log in</Link> to view your dashboard </div>)
+                          <TableRow>
+                            <TableHeaderColumn>Mission Status</TableHeaderColumn>
+                            <TableHeaderColumn>Mission ID</TableHeaderColumn>
+                            <TableHeaderColumn>Title</TableHeaderColumn>
+                            <TableHeaderColumn>Description</TableHeaderColumn>
+                            <TableHeaderColumn>Location</TableHeaderColumn>
+                            <TableHeaderColumn>Begun At</TableHeaderColumn>
+                          </TableRow>
 
-        }
-        </div>
+                        </TableHeader>
 
-      <Paper style={styles.paper} zDepth={4} >
-        <Table height={'300'} >
-          <TableHeader >
-            <TableRow>
-              <TableHeaderColumn colSpan="3" tooltip="Dashboard" style={{textAlign: 'center'}}>
-                Dashboard
-              </TableHeaderColumn>
-            </TableRow>
+                        <TableBody
+                          displayRowCheckbox={false}
+                          deselectOnClickaway={true}
+                          showRowHover={true} 
+                          adjustForCheckbox={false}>
 
-            <TableRow>
-              <TableHeaderColumn tooltip="The ID">ID</TableHeaderColumn>
-              <TableHeaderColumn tooltip="The Name">Name</TableHeaderColumn>
-              <TableHeaderColumn tooltip="The Status">Status</TableHeaderColumn>
-            </TableRow>
+                          {tableData.map( (row, index) => (
+                            <TableRow key={index} selected={row.selected} onCellClick={(e) => {e.PreventDefault()}}>
+                              <TableRowColumn>{row.status}</TableRowColumn>
+                              <TableRowColumn>{row.status}</TableRowColumn>
+                              <TableRowColumn>{row.status}</TableRowColumn>
+                              <TableRowColumn>{row.status}</TableRowColumn>
+                              <TableRowColumn>{row.status}</TableRowColumn>
+                              <TableRowColumn>{row.status}</TableRowColumn>
+                            </TableRow>
+                          ))}
 
-          </TableHeader>
+                        </TableBody>
 
-          <TableBody
-            displayRowCheckbox={false}
-            deselectOnClickaway={true}
-            showRowHover={true} >
+                      </Table>
 
-            {tableData.map( (row, index) => (
-              <TableRow key={index} selected={row.selected}>
-                <TableRowColumn>{index}</TableRowColumn>
-                <TableRowColumn>{row.name}</TableRowColumn>
-                <TableRowColumn>{row.status}</TableRowColumn>
-              </TableRow>
-            ))}
+                      <div ><RaisedButton label="Logout" onClick={this.logout} /></div>
+                  </div>
 
-          </TableBody>
-
-          <TableFooter
-            adjustForCheckbox={this.state.showCheckboxes} >
-            
-            <TableRow>
-              <TableRowColumn>ID</TableRowColumn>
-              <TableRowColumn>Name</TableRowColumn>
-              <TableRowColumn>Status</TableRowColumn>
-            </TableRow>
-
-            <TableRow>
-              <TableRowColumn colSpan="3" style={{textAlign: 'center'}}>
-                Super Footer
-              </TableRowColumn>
-            </TableRow>
-
-          </TableFooter>
-
-        </Table>
-          <div> {this.props.user.username} </div>
-
-      </Paper>
+                  {this.props.user && this.props.user.isAdmin ?
+                    (<div>
+                      <Link to="/admin">Admin Page</Link>
+                      </div>
+                    ) :
+                    null   
+                  }           
+                </div>
+              ) : (
+                <div> Please <Link to="/">log in</Link> to view your dashboard </div>
+              )
+            }
+          </Paper>
+          </Row>
+        </Grid>
+      </div>
     );
   }
 }

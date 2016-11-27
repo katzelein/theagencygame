@@ -31,39 +31,35 @@ import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 // Adding Material-UI
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import agencyBaseTheme from 'material-ui/styles/baseThemes/agencyBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { yellow200, blue800 } from 'material-ui/styles/colors';
 import Paper from 'material-ui/Paper'
 
-const muiTheme = getMuiTheme({
-  palette: {
-    primary1Color: blue800,
-    primary2Color: yellow200
-  },
-});
+
+import { Grid } from 'react-flexbox-grid/lib/index'
+
 
 
 ReactDOM.render(
-  <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+  <MuiThemeProvider muiTheme={getMuiTheme(agencyBaseTheme)}>
     <Provider store={store}>
-      <div className="container">
-      <Paper>
-        <Router history={browserHistory}>
-          <Route path="/">
-            <Route path="login" component={AppContainer} />
-            <Route path="sendVerification" component={SendVerificationContainer} />
-            <Route path="verify" component={VerifyContainer} />
-            <Route path="dashboard" component={DashboardContainer}/>
-            <Route path="admin" component={AdminContainer}>
-              <Route path="addMission" component={AddMission}/>
+      <Grid>
+        <Paper>
+          <Router history={browserHistory}>
+            <Route path="/">
+              <Route path="login" component={AppContainer} />
+              <Route path="sendVerification" component={SendVerificationContainer} />
+              <Route path="verify" component={VerifyContainer} />
+              <Route path="dashboard" component={DashboardContainer}/>
+              <Route path="admin" component={AdminContainer}>
+                <Route path="addMission" component={AddMission}/>
+              </Route>
+              <IndexRoute component={AppContainer}/>
             </Route>
-            <IndexRoute component={AppContainer}/>
-          </Route>
-        </Router>
-      </Paper>
-      </div>
+          </Router>
+        </Paper>
+      </Grid>
     </Provider>
   </MuiThemeProvider>,
   document.getElementById('app')
