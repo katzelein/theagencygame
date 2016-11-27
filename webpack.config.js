@@ -20,7 +20,13 @@ module.exports = {
         query: {
           presets: ['react', 'es2015']
         }
-      }
+      },
+      {
+  test: /\.css$/,
+  loader: 'style!css!postcss',
+  include: path.join(__dirname, 'node_modules'), // oops, this also includes flexboxgrid
+  exclude: /flexboxgrid/, // so we have to exclude it
+}
     ]
   },
 };

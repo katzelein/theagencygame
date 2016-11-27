@@ -77,7 +77,8 @@ const fetchMessage = (user, message) => {
 		user.update({lastMessageAt: Date()})
 		return returnObj.message;
 	}
-	
+
+
 	if (returnObj instanceof Promise || returnObj.constructor.name === 'Promise') {
 		return returnObj
 		.then(obj => {

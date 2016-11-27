@@ -6,9 +6,14 @@ node_modules/
 notes
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 public/bundle.js
 public/bundle.js.map
 =======
 /public/bundle.js
 /public/bundle.js.map
 >>>>>>> eab42836df591e3dd6135321cdd53e54decc3ae1
+=======
+/public/bundle.js
+/public/bundle.js.map
+>>>>>>> 3cadb30642c36b01444f73ff04058124a818dde7
