@@ -79,7 +79,7 @@ export default class ChallengeCard extends Component{
           : <div><h5> Not assigned to mission </h5></div>)}
       </CardText>
       <CardActions id="challenge-actions" style={{height: '40px', padding: '0px'}} expandable={true}>
-        <div className="mui-button" style={{position: 'absolute', height: '100%', 'margin-right': '0px'}}>
+        <div className="mui-button" style={{position: 'absolute', height: '100%', 'marginRight': '0px'}}>
         <IconButton className="inside-mui-button" tooltip="edit"
                     tooltipPosition="top-center" onClick={this.editChallenge}
                     style={{padding: '0px', height: '100%', width: '28px'}}>

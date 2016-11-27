@@ -17,6 +17,11 @@ const routes = require('./routes');
 const db = require('./models');
 const {resolve} = require('path')
 
+
+app.use(require('cookie-session') ({
+    name: 'session',
+    keys: [process.env.SESSION_SECRET || 'an insecure secret key'],
+}))
 app.use(volleyball);
 
 app.use(cookieParser());

@@ -72,7 +72,7 @@ export default class MissionForm extends Component {
     return (
       <Card id="new-mission-form" style={{padding: '10px', margin: '10px'}}>
         <CardHeader style={{position: 'relative', padding: '10px 16px 10px 16px', height: '50px'}} title="NEW MISSION"
-            titleStyle={{fontWeight: "bold", 'vertical-align': 'center'}}>
+            titleStyle={{fontWeight: "bold", 'verticalAlign': 'center'}}>
            {/* <div className="mui-button" style={{'padding-right': '0px', top: '0px', height: '21.25px', position: 'absolute'}}>*/}
             <IconButton className="inside-mui-button" tooltip="Cancel"
                     tooltipPosition="top-center" onClick={this.closeForm}
