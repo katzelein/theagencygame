@@ -28,24 +28,39 @@ import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 //   store.dispatch(thunk);
 // };
 
+// Adding Material-UI
+
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import agencyBaseTheme from 'material-ui/styles/baseThemes/agencyBaseTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import Paper from 'material-ui/Paper'
+
+
+import { Grid } from 'react-flexbox-grid/lib/index'
+
+
+
 ReactDOM.render(
-  <Provider store={store}>
-    <div className="container flexbox-container">
-      <div className="jumbotron">
-        <Router history={browserHistory}>
-          <Route path="/">
-            <Route path="login" component={AppContainer} />
-            <Route path="sendVerification" component={SendVerificationContainer} />
-            <Route path="verify" component={VerifyContainer} />
-            <Route path="dashboard" component={DashboardContainer}/>
-            <Route path="admin" component={AdminContainer}>
-              <Route path="addMission" component={AddMission}/>
+  <MuiThemeProvider muiTheme={getMuiTheme(agencyBaseTheme)}>
+    <Provider store={store}>
+      <Grid>
+        <Paper>
+          <Router history={browserHistory}>
+            <Route path="/">
+              <Route path="login" component={AppContainer} />
+              <Route path="sendVerification" component={SendVerificationContainer} />
+              <Route path="verify" component={VerifyContainer} />
+              <Route path="dashboard" component={DashboardContainer}/>
+              <Route path="admin" component={AdminContainer}>
+                <Route path="addMission" component={AddMission}/>
+              </Route>
+              <IndexRoute component={AppContainer}/>
             </Route>
-            <IndexRoute component={AppContainer}/>
-          </Route>
-        </Router>
-      </div>
-    </div>
-  </Provider>,
+          </Router>
+        </Paper>
+      </Grid>
+    </Provider>
+  </MuiThemeProvider>,
   document.getElementById('app')
 );
