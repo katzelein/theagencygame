@@ -28,20 +28,7 @@ injectTapEventPlugin();
 
 
 ReactDOM.render(
-<<<<<<< HEAD
-  <Provider store={store}>
-    <div className="container flexbox-container">
-      <div>
-        <Router history={browserHistory}>
-          <Route path="/">
-            <Route path="login" component={AppContainer} />
-            <Route path="sendVerification" component={SendVerificationContainer} />
-            <Route path="verify" component={VerifyContainer} />
-            <Route path="dashboard" component={DashboardContainer}/>
-            <Route path="admin" component={AdminContainer}>
-              <Route path="editChallenge" component={EditChallengesContainer}/>
-              <Route path="editMission" component={EditMissionsContainer}/>
-=======
+
   <MuiThemeProvider muiTheme={getMuiTheme(agencyBaseTheme)}>
     <Provider store={store}>
       <Grid>
@@ -53,11 +40,10 @@ ReactDOM.render(
               <Route path="verify" component={VerifyContainer} />
               <Route path="dashboard" component={DashboardContainer}/>
               <Route path="admin" component={AdminContainer}>
-                <Route path="addMission" component={AddMission}/>
+                <Route path="editChallenge" component={EditChallengesContainer}/>
                 <Route path="editMission" component={EditMissionsContainer}/>
               </Route>
               <IndexRoute component={AppContainer}/>
->>>>>>> adminMissions2
             </Route>
           </Router>
         </Paper>
