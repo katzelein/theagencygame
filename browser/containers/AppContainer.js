@@ -3,18 +3,12 @@ import { connect } from 'react-redux';
 import App from '../components/App';
 
 //******** FIX TO BE IN ES6 LIKE WE"RE USED TO
-const mapStateToProps = function (state) {
-  return state
-};
+const mapStateToProps = (state) => (state)
 
-const mapDispatchToProps = function (dispatch) {
-  return {
-    findUser: function () {
-    	// onclick authenticate
-   
-    }
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+    
+ });
+
 
 const AppContainer = connect(mapStateToProps, mapDispatchToProps)(App);
 export default AppContainer;

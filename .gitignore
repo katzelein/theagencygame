@@ -1,9 +1,14 @@
-
+mochaawesome-reports/
 constants.js
 liveconstants.js
 npm-debug.log
 node_modules/
 notes
 
+<<<<<<< HEAD
 public/bundle.js
 public/bundle.js.map
+=======
+/public/bundle.js
+/public/bundle.js.map
+>>>>>>> eab42836df591e3dd6135321cdd53e54decc3ae1

@@ -20,7 +20,7 @@ const {resolve} = require('path')
 app.use(volleyball);
 
 app.use(cookieParser());
-app.use(expressSession({'secret': secret}));
+app.use(expressSession({'secret': 'secret'}));
 // app.use(express.static(path.join(__dirname, './public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -43,7 +43,7 @@ module.exports = app;
 var port = process.env.PORT || 3000; // needs to be used whenever you're not in development
 app.listen(port, function () {
   console.log('The server is listening closely on port', port);
-  db.sync()
+  db.sync({})
   .then(function () {
     console.log('Synchronated the database');
   })
