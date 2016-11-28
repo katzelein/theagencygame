@@ -155,6 +155,57 @@ router.post('/challenge', function(req, res, next){
 	.catch(next)
 })
 
+router.put('/challenge/:id/update', function(req, res, next){
+	let {missionId, objective, summary, targetTags, targetText, conclusion, type, order} = req.body
+	//missionId = parseInt(missionId)
+	console.log("IS MISSION NULL? : type ", typeof missionId, " val ", missionId)
+	Challenge.findById(req.params.id)
+	.then(challenge => {
+		challenge.getMission()
+		.then(mission => {
+			console.log("MISSION BEFORE UPDATE: ", mission)
+			let prevMission = mission ? mission.id : null
+			console.log("PREV MISSION: ", prevMission, " type: ", typeof prevMission)
+			console.log("NEW MISSION: ", missionId, " type ", typeof missionId)
+			//if(prevMission === missionId){
+				console.log("MISSION WAS UNCHANGED")
+				challenge.update({
+					missionId, objective, summary, targetTags, targetText, conclusion, type, order
+				})
+				.then(challenge => res.status(200).json(challenge))
+			//}
+			// else{ 
+			// 	if(prevMission !== null){
+			// 	console.log("MISSION WAS NULL BUT CHANGING")
+			// 	// remove challenge from mission and decrement numChallenges
+			// 	mission.removeChallenge(req.params.id)
+			// 	.then(() => {
+			// 		mission.decrement('numChallenges')
+			// 	})
+
+			// 	}
+			// 	if(missionId !== null){
+			// 	// add challenge to mission and increment numChallenges
+			// 	}
+			// 	res.sendStatus(200)
+			// }
+		})
+	})
+})
+
+router.put('/challenge/:id/addToMission/:missionId', function(req, res, next){
+	Mission.findById(req.params.missionId)
+	.then(mission => {
+		console.log("FOUND MISSION")
+		mission.addChallenge(req.params.id)
+		.then(() => {
+			console.log("INCREMENTING NUM CHALLENGES")
+			return mission.increment('numChallenges')
+		})
+		.then(() => res.sendStatus(200))
+	})
+})
+
 // delete challenge from mission but not from database
 router.delete('/challenge/:id/mission/:missionId', function(req, res, next){
 	//mustBeAdmin()(req, res, next)

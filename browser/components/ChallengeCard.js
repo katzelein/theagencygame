@@ -4,19 +4,25 @@ import { Form } from 'formsy-react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
 import {RaisedButton, FlatButton, IconButton} from 'material-ui';
-import ChallengeForm from './ChallengeForm';
+import EditChallengeForm from './EditChallengeForm';
 import axios from 'axios';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
+import ContentClear from 'material-ui/svg-icons/content/clear';
 
 export default class ChallengeCard extends Component{
   constructor(props){
     super(props)
-    this.state = { refresh: true }
+    this.state = { refresh: true, isEditing: false, challenge: this.props.challenge, prevMission: this.props.challenge.missionId}
     //this.handleClick = this.handleClick.bind(this);
     //this.toggleAdd = this.toggleAdd.bind(this);
+    this.challenge = Object.assign({}, this.state.challenge)
     this.deleteChallenge = this.deleteChallenge.bind(this);
     this.editChallenge = this.editChallenge.bind(this);
+    this.updateChallengeState = this.updateChallengeState.bind(this);
+    this.saveChallenge = this.saveChallenge.bind(this);
+    this.updatePrevMission = this.updatePrevMission.bind(this);
+    this.updateNextMission = this.updateNextMission.bind(this);
   }
 
   // toggleAdd(){
@@ -36,29 +42,132 @@ export default class ChallengeCard extends Component{
       let missionId = this.props.mission.id
       axios.delete(`/api/challenge/${id}/mission/${missionId}`)
       .then(() => {
-        console.log("PROPS: ", this.props)
-        this.props.findMissions()
+        // console.log("PROPS: ", this.props)
+        this.props.refreshCards()
         this.setState({refresh: bool})
-        console.log("REFRESH: ", this.state.refresh)
+        // console.log("REFRESH: ", this.state.refresh)
       })
     }
     // delete challenge from database
     else{
       axios.delete(`/api/challenge/${id}`)
       .then(() => {
-        console.log("PROPS: ", this.props)
-        this.props.findChallenges()
+        // console.log("PROPS: ", this.props)
+        this.props.refreshCards()
         this.setState({refresh: bool})
-        console.log("REFRESH: ", this.state.refresh)
+      //   console.log("REFRESH: ", this.state.refresh)
       })
     }
   }
 
   editChallenge(){
-    // do something
+    let bool = !this.state.isEditing
+    this.setState({isEditing: bool})
+  }
+
+  updateChallengeState(e){
+    console.log("CHALLENGE BODY: ", this.state.challenge)
+    console.log("EVENT: ", e)
+    console.log("EVENT TARGET: ", e.target)
+    console.log("THIS.CHALLENGE: ", this.challenge)
+
+    if(e.target.name === 'mission'){
+      // console.log("MISSION TARGET")
+      // console.log("MISSION VALUE: ", e.target.value)
+      let val = e.target.value === 'null' ? null : parseInt(e.target.value)
+      this.challenge.missionId = val
+      this.setState({
+        challenge: this.challenge
+      })
+    }
+    else{
+      let val = e.target.value
+      if(e.target.name === 'targetTags'){
+        val = val.split(",")
+      }
+      this.challenge[e.target.name] = val
+      // console.log("CHANGED CHALLENGE: ", this.challenge)
+      this.setState({challenge: this.challenge})
+      }
+    }
+    // this.setState({challenge: {
+    //   body: {objective, summary, targetTags, targetText, conclusion, type, order}, 
+    //   missionId: missionId}
+    // })
+
+  saveChallenge(){
+    console.log("STATE BEFORE SAVE: ", this.state)
+    let missionId = this.state.challenge.missionId
+    let prevMission = this.state.prevMission
+    let challengeId = this.state.challenge.id
+    console.log("IN SAVE: ")
+    console.log("MISSION ID: ", missionId, " type ", typeof missionId)
+    console.log("PREV MISSION: ", prevMission, " type ", typeof prevMission)
+    axios.put(`/api/challenge/${challengeId}/update`, this.state.challenge)
+    .then(() => {
+        console.log("SAVED CHALLENGE")
+        if(prevMission !== missionId){
+          console.log("PREV AND NEW NOT EQUAL")
+          if(prevMission && missionId){
+            console.log("BOTH NOT NULL")
+            return axios.all([this.updatePrevMission(), this.updateNextMission()])
+          }
+          else if(prevMission){
+            console.log("JUST PREV NOT NULL")
+            return axios.all([this.updatePrevMission()])
+          }
+          else if(missionId){
+            console.log("JUST NEXT NOT NULL")
+            return axios.all([this.updateNextMission()])
+          }
+        }
+    })
+    .then(() => {
+      this.props.refreshCards()
+      let bool = !this.state.isEditing
+      this.setState({isEditing: bool, prevMission: missionId})
+    })
+  }
+
+  updatePrevMission(){
+    return axios.delete(`/api/challenge/${this.props.challenge.id}/mission/${this.state.prevMission}`)
+  }
+
+  updateNextMission(){
+    return axios.put(`/api/challenge/${this.props.challenge.id}/addToMission/${this.state.challenge.missionId}`)
   }
   
   render(){
+    if(this.state.isEditing){
+      return(
+
+        <Card style={{padding: '10px', margin: '10px', 'background-color': 'white', color: 'black'}}>
+      <CardText style={{color: 'black'}} expandable={true}>
+        <EditChallengeForm onChange={this.updateChallengeState} challenge={this.state.challenge} editChallenge={this.props.editChallenge} missionSpecific={this.props.missionSpecific} missions={this.props.missions}/>
+      </CardText>
+      <CardActions id="challenge-actions" style={{height: '40px', padding: '0px'}} expandable={true}>
+        <div className="mui-button" style={{position: 'absolute', height: '100%', 'marginRight': '0px'}}>
+        <IconButton className="inside-mui-button" tooltip="Save"
+                    tooltipPosition="top-center" onClick={this.saveChallenge}
+                    iconStyle={{color: 'black'}} style={{padding: '0px', height: '100%', width: '28px'}}>
+          <ContentClear/>
+        </IconButton>
+        <IconButton className="inside-mui-button" tooltip="Cancel"
+                    tooltipPosition="top-center" onClick={this.editChallenge}
+                    iconStyle={{color: 'black'}} style={{padding: '0px', height: '100%', width: '28px'}}>
+          <ContentClear/>
+        </IconButton>
+        <IconButton className="inside-mui-button" tooltip="Delete"
+                    tooltipPosition="top-center" onClick={() => this.deleteChallenge(this.props.challenge.id)}
+                    iconStyle={{color: 'black'}} style={{padding: '0px', height: '100%', width: '28px'}}>
+          <ActionDelete/>
+        </IconButton>
+        </div>
+      </CardActions>
+  </Card>
+        )
+    }
+    else{
     return (
   <Card style={{padding: '10px', margin: '10px', 'background-color': 'white', color: 'black'}}>
       <CardHeader className="white-challenge-card" actAsExpander={true} 
@@ -92,8 +201,8 @@ export default class ChallengeCard extends Component{
         </IconButton>
         </div>
       </CardActions>
-  </Card>
-  )}
-
-
+  </Card>)
 }
+  }}
+
+

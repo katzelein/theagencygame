@@ -161,7 +161,7 @@ export class MissionCard extends Component {
                   <div> Challenges </div>
                   {this.props.mission.challenges.map((challenge, i) => {
                     return(
-                    <ChallengeCard key={challenge.id} challenge={challenge} mission={this.props.mission} findMissions={this.props.findMissions}
+                    <ChallengeCard key={challenge.id} challenge={challenge} mission={this.props.mission} refreshCards={this.props.findMissions}
                     missionSpecific={true}/>
                     )
                   })}

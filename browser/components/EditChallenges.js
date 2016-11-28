@@ -99,8 +99,8 @@ export default class EditChallenges extends Component {
               return(
               <ChallengeCard id={`challenge-${challenge.id}`} 
                             style={{padding: '10px', margin: '10px'}} 
-                            key={challenge.id} challenge={challenge} missionSpecific={false}
-                            deleteFromMission={false} findChallenges={this.props.findChallenges}/>
+                            key={challenge.id} challenge={challenge} missionSpecific={false} missions={this.props.missions}
+                            deleteFromMission={false} refreshCards={this.props.findChallenges}/>
           
             )})}
             {this.state.addChallenge ? <ChallengeForm missionSpecific={false} missions={this.props.missions} refreshCards={this.props.findChallenges} toggleAdd={this.toggleAdd}/> : null}
