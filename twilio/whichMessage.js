@@ -2,6 +2,7 @@
 const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
+const getPhotoTags = require('./clarifai')
 
 const User = require('../models/user')
 
@@ -165,9 +166,12 @@ const whichMessage = {
 		 * 				message // whole body of twilio request
 		 * returns: true / false
 		 */
-		let actualTags = ['thing'] // clarifai stuff
-		if (actualTags.length) return success;
-		else return fail;
+		return getPhotoTags(message)
+		.then (actualTags => {
+			console.log(actualTags);
+			if (actualTags.length) return success;
+			else return fail;
+		})
 	},
 
 	STANDBY: (username, userInput) => {
@@ -268,10 +272,14 @@ const whichMessage = {
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
-					 let actualTags = [] // clarifai stuff
-					 // if (checkTags(currentChallenge.targetTags, actualTags)) return success;
-					if (true) return success;
-					else return fail;
+					// let actualTags = [] // clarifai stuff
+					
+					return getPhotoTags(message)
+					.then (actualTags => {
+						console.log(actualTags);
+						if (checkTags(currentChallenge.targetTags, actualTags)) return success;
+						else return fail;
+					})
 				case 'voice':
 					// put Kat's voice stuff here!!
 					/*

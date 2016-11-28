@@ -158,3 +158,27 @@ describe('Game Logic', () => {
 	})
 }) 
 
+
+// this is for clarifai
+// { ToCountry: 'US',
+//   MediaContentType0: 'image/jpeg',
+//   ToState: 'NJ',
+//   SmsMessageSid: 'MMf83db10bb0caba9a75aeee2e3d8a5612',
+//   NumMedia: '1',
+//   ToCity: 'FAIRFIELD',
+//   FromZip: '07416',
+//   SmsSid: 'MMf83db10bb0caba9a75aeee2e3d8a5612',
+//   FromState: 'NJ',
+//   SmsStatus: 'received',
+//   FromCity: 'FRANKLIN',
+//   Body: '',
+//   FromCountry: 'US',
+//   To: '+19738745304',
+//   MessagingServiceSid: 'MG2575ddfed9822f7d1e8d73e0dd9a4771',
+//   ToZip: '07004',
+//   NumSegments: '1',
+//   MessageSid: 'MMf83db10bb0caba9a75aeee2e3d8a5612',
+//   AccountSid: 'ACc41e6487bcf3da0f8bdde627b28740d2',
+//   From: '+19739975239',
+//   MediaUrl0: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Messages/MMf83db10bb0caba9a75aeee2e3d8a5612/Media/ME217735d4d981bcb4ad9c314455319b82',
+//   ApiVersion: '2010-04-01' }
