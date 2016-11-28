@@ -30,9 +30,7 @@ twilioAPI.post('/messages', function(req, res, next){
     res.writeHead(200, {'Content-Type': 'text/xml'})
     res.end(twiml.toString())
   })
-
 });
-
 
 twilioAPI.post('/testing', function(req, res, next){
   //console.log("Hey this is a message")
@@ -41,8 +39,6 @@ twilioAPI.post('/testing', function(req, res, next){
   console.log("From", req.body.From, "Body", req.body.Body)
 
   var answer = lookup(req.body.From, req.body)
-
-  // answer = "Hi"
 
   console.log(answer);
   answer

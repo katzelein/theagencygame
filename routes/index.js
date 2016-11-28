@@ -6,6 +6,7 @@ var twilio = require('twilio');
 //   res.send("I'm working!")
 // })
 
+router.use('/voice', require('../twilio/voice').twilioAPI)
 router.use('/twilio', require('../twilio/api'))
 router.use('/authy', require('./authy'))
 

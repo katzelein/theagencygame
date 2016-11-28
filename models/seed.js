@@ -16,8 +16,11 @@ const data = {
       phoneNumber: '+5555555556'},
     { username: 'blackwidow',
       phoneNumber: '+5555555557'},
-    { username: 'philcoulson',
-      phoneNumber: '+5555555558'}, 
+    { username: 'philcoulson', 
+      phoneNumber: '+5555555558'},
+    { username: 'operagirl',
+      phoneNumber: '+18607485586', 
+      isAdmin: true},
     { username: 'Gator',
       phoneNumber: '+19146469702',
       isAdmin: true
@@ -42,7 +45,8 @@ const data = {
       conclusion: 'Great work. The fingerprints are being to the lab for analysis. In the meantime, we have another task for you.'
     },
     { objective: 'Origins of the Open Market', // mission 1
-      summary: 'According to our surveillance, agent SoAndSo bought an omelette with spinach and broccoli every morning at the Open Market. Head to the store and talk to Vinnie, the guy behind the omelette counter. Give him the passcode and, if he deems you trustworthy, send us his return passcode.', targetText: 'What are you talking about',
+      summary: 'According to our surveillance, agent SoAndSo bought an omelette with spinach and broccoli every morning at the Open Market. Head to the store and talk to Vinnie, the guy behind the omelette counter. Give him the passcode and, if he deems you trustworthy, send us his return passcode.', targetText: 'What are you talking about', 
+      type: 'voice',
       conclusion: 'Vinnie may be connected to the mob. He trusted you with the right passcode, so our way deeper into the depths may be open. Please await your next mission.'
     },
 
@@ -127,18 +131,3 @@ db.sync({force: true})
 .then(() =>
   UserChallenge.bulkCreate(data.userChallenge))
   .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
-
-
-
-//   .then(seedMissions)
-//   .then(missions => console.log(`Seeded ${missions.length} missions OK`))
-//   .then(seedChallenges)
-//   .then(challenges => console.log(`Seeded ${challenges.length} challenges OK`))
-//   .then(seedMissionChallenges)
-//   .then(missionChallenges => console.log(`Seeded ${missionChallenges.length} missionChallenges OK`))
-//   .then(seedUserMissions)
-//   .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
-//   .then(seedUserChallenges)
-//   .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
-//   .catch(error => console.error(error))
-//   .finally(() => db.close())

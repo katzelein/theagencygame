@@ -34,26 +34,41 @@ twilioAPI.post('/voice', function (req, res, next) {
 
 twilioAPI.post('/recording', function (req, res, next) {
   console.log("THIS IS THE REQ YOU WANT", req.body)
-  lookup(req.body.From, req.body)
-    .then(res => console.log(res))
+  // req.body.To still gives us the user phone number
+
+  let result = checkWatsonAPI(req.body)
+
+  // KARIN: This is where you would use your game logic, either lookup or whatever new helper function you've written, to incorporate the result. Result will be a string, all lowercase, that you can compare to the targetText
+
+  //
+  //
+  //
+
 })
 
-// let checkWatsonAPI = function (body) {
-//   // get the WAV file from twilio
-//   request(body.RecordingUrl).pipe(fs.createWriteStream('message.wav')).on('end', ok => console.log('wrote message.wav'))
-//   // check it in Watson
-//   let params = {
-//     audio: request(body.RecordingUrl),
-//     content_type: 'audio/l16; rate=8000',
-//     model: 'en-US_NarrowbandModel',
-//   }
-//   speech_to_text.recognize(params, function (err, res) {
-//     if (err) console.log("This is the error you're getting: ", err);
-//     else {
-//       console.log("These are the correct results!", JSON.stringify(res, null, 2));
-//       return res
-//     }
-//   });
-// }
+let checkWatsonAPI = function (body) {
+
+  // get the WAV file from twilio
+  request(body.RecordingUrl).pipe(fs.createWriteStream('message.wav')).on('end', ok => console.log('wrote message.wav'))
+  
+  // check it in Watson
+  let params = {
+    audio: request(body.RecordingUrl),
+    content_type: 'audio/wav',
+    model: 'en-US_NarrowbandModel'
+  }
+  speech_to_text.recognize(params, function (err, res) {
+    if (err) {
+      console.log("Watson cannot detect transcript", err)
+      return '';
+    }
+    else {
+      console.log("Message transcript detected")
+      // returns a string to match, ex: "how are you today"
+      let result = res.results[0].alternatives[0].transcript.toLowerCase()
+      return result;
+    }
+  });
+}
 
 module.exports = {twilioAPI} //,checkWatsonAPI
