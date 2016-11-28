@@ -15,29 +15,21 @@ twilioAPI.get('/', function(req, res, next){
 
 twilioAPI.post('/messages', function(req, res, next){
   console.log("REQ BODY: ", req.body)
-  // console.log("MEDIA URL: ", req.body.MediaUrl0)
-  // console.log("From", req.body.From, "Body", req.body.Body)
+  console.log("MEDIA URL: ", req.body.MediaUrl0)
+  console.log("From", req.body.From, "Body", req.body.Body)
 
-  if (req.body.MediaUrl0) {
-    const result = getPhotoTags(req.body);
-    console.log(result)
-  }
-  else {
-    console.log("This is the API error message")
-  }
-
-  // var answer = lookup(req.body.From, req.body) // must return a promise
-  // console.log("ANSWER: ", answer)
-  // answer
-  // .then(message => {
-  //   console.log("answer message: ", message)
-  //   var twiml = new twilio.TwimlResponse();
-  //   twiml.message(function() {
-  //     this.body(message);
-  //   });
-  //   res.writeHead(200, {'Content-Type': 'text/xml'})
-  //   res.end(twiml.toString())
-  // })
+  var answer = lookup(req.body.From, req.body) // must return a promise
+  console.log("ANSWER: ", answer)
+  answer
+  .then(message => {
+    console.log("answer message: ", message)
+    var twiml = new twilio.TwimlResponse();
+    twiml.message(function() {
+      this.body(message);
+    });
+    res.writeHead(200, {'Content-Type': 'text/xml'})
+    res.end(twiml.toString())
+  })
 
 });
 
