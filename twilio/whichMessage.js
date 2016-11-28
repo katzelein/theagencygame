@@ -1,10 +1,6 @@
-
 const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
-// const {checkWatsonAPI} = require('./voice')
-
-const Challenge = require('../models/challenge')
 const User = require('../models/user')
 
 const whichMessage = {
@@ -243,15 +239,6 @@ const whichMessage = {
 					// else return fail;
 				case 'voice':
 					// put Kat's voice stuff here!!
-					var result = checkWatsonAPI(userInput)
-					console.log("THIS IS THE RESULT IN WHICHMESSAGE: ",result)
-					// var result = checkWatsonAPI(userInput)
-					// console.log(result)
-					// if (result.toLowerCase() == currentChallenge.targetText.toLowerCase()) {
-					// 	console.log("THIS IS THE USER INPUT: ", userInput)
-					// 	return success;
-					// }
-					// else return fail;
 				default:
 					return success;
 			}
@@ -261,43 +248,5 @@ const whichMessage = {
 	QUERY_HIATUS: () =>{return ""}
 
 }
-
-const request = require('request');
-const fs = require('fs');
-
-const SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
-const watsonUsername = require('../constants').watsonUsername
-const watsonPassword = require('../constants').watsonPassword
-
-let speech_to_text = new SpeechToTextV1({
-  username: watsonUsername,
-  password: watsonPassword
-});
-
-
-const checkWatsonAPI = function (body) {
-  // get the WAV file from twilio
-  request(body.RecordingUrl).pipe(fs.createWriteStream('message.wav')).on('end', ok => console.log('wrote message.wav'))
-  // check it in Watson
-
-  let params = {
-    audio: request(body.RecordingUrl),
-    content_type: 'audio/l16; rate=8000',
-    model: 'en-US_NarrowbandModel',
-  }
-  var str = ''
-  speech_to_text.recognize(params, function (err, res) {
-    if (err) {
-    	console.log("This is the Watson API error: ", err);
-    }
-    else {
-      console.log("These are the correct results!", JSON.stringify(res, null, 2));
-      str = JSON.stringify(res, null, 2)
-    }
-  });
-  return str;
-}
-
-// { "Called": "+12023351245", "Digits": "hangup", "RecordingUrl": "https://api.twilio.com/2010-04-01/Accounts/AC70bab373e9da55d1241e26b6edc0ade1/Recordings/RE72795ae4d54d0f5e196853a0b03d80cc", "ToState": "DC", "CallerCountry": "US", "Direction": "inbound", "CallerState": "CT", "ToZip": "20388", "CallSid": "CAabdeb036ececc2d28f9cea51883da199", "To": "+12023351245", "CallerZip": "06120", "ToCountry": "US", "ApiVersion": "2010-04-01", "CalledZip": "20388", "CalledCity": "WASHINGTON", "CallStatus": "completed", "RecordingSid": "RE72795ae4d54d0f5e196853a0b03d80cc", "From": "+18607485586", "AccountSid": "AC70bab373e9da55d1241e26b6edc0ade1", "CalledCountry": "US", "CallerCity": "HARTFORD", "Caller": "+18607485586", "FromCountry": "US", "ToCity": "WASHINGTON' FromCity": "HARTFORD", "CalledState": "DC", "FromZip": "06120", "FromState": "CT", "RecordingDuration": "5" }
 
 module.exports = whichMessage;
