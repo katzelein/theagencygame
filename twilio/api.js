@@ -40,8 +40,6 @@ twilioAPI.post('/testing', function(req, res, next){
 
   var answer = lookup(req.body.From, req.body)
 
-  // answer = "Hi"
-
   console.log(answer);
   answer
   .then(message => {
