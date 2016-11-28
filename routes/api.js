@@ -83,6 +83,17 @@ router.get('/missions', function(req, res, next){
 	.catch(next)
 })
 
+router.put('/mission/:id/update', function(req, res, next){
+	let {title, description, place, location} = req.body
+	Mission.findById(req.params.id)
+	.then(mission => {
+		mission.update({
+			title, description, place, location
+		})
+		.then(mission => res.status(200).json(mission))
+	})
+})
+
 router.delete('/mission/:id', function(req, res, next){
 	//mustBeAdmin()(req, res, next)
 	Mission.findById(req.params.id)

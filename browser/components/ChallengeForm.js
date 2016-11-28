@@ -9,37 +9,6 @@ import axios from 'axios';
 import bluebird from 'bluebird';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
-const Fields = props => {
-  function onRemove(pos) {
-    return event => {
-      event.preventDefault();
-      props.onRemove(pos);
-    };
-  }
-  const foo = 'required';
-  return (
-    <div className="fields">
-      {props.data.map((field, i) => (
-        <div className="field" key={field.id}>
-          {
-            field.type === 'input' ?
-            (
-              <MyInput
-                value=""
-                name={`fields[${i}]`}
-                title={field.validations ? JSON.stringify(field.validations) : 'No validations'}
-                required={field.required}
-                validations={field.validations}
-              />
-            ) : null
-          }
-          <a href="#" className="remove-field" onClick={onRemove(i)}>X</a>
-        </div>
-      ))
-    }
-    </div>
-  );
-};
 
 export default class ChallengeForm extends Component {
   constructor(props){

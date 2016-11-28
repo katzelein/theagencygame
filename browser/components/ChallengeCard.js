@@ -14,8 +14,6 @@ export default class ChallengeCard extends Component{
   constructor(props){
     super(props)
     this.state = { refresh: true, isEditing: false, challenge: this.props.challenge, prevMission: this.props.challenge.missionId}
-    //this.handleClick = this.handleClick.bind(this);
-    //this.toggleAdd = this.toggleAdd.bind(this);
     this.challenge = Object.assign({}, this.state.challenge)
     this.deleteChallenge = this.deleteChallenge.bind(this);
     this.editChallenge = this.editChallenge.bind(this);
@@ -25,15 +23,6 @@ export default class ChallengeCard extends Component{
     this.updateNextMission = this.updateNextMission.bind(this);
   }
 
-  // toggleAdd(){
-  //   let bool = !this.state.addMission
-  //   let buttonText = bool ? "SAVE CHALLENGE" : "ADD CHALLENGE"
-  //   console.log("BUTTON TEXT: ", buttonText)
-  //   if(this.state.addMission){
-  //     // post challenge to database
-  //   }
-  //   this.setState({addMission: bool, addOrSave: buttonText})
-  // }
 
   deleteChallenge(id){
     let bool = !this.state.refresh
@@ -90,10 +79,7 @@ export default class ChallengeCard extends Component{
       this.setState({challenge: this.challenge})
       }
     }
-    // this.setState({challenge: {
-    //   body: {objective, summary, targetTags, targetText, conclusion, type, order}, 
-    //   missionId: missionId}
-    // })
+  
 
   saveChallenge(){
     console.log("STATE BEFORE SAVE: ", this.state)
@@ -143,7 +129,8 @@ export default class ChallengeCard extends Component{
 
         <Card style={{padding: '10px', margin: '10px', 'background-color': 'white', color: 'black'}}>
       <CardText style={{color: 'black'}} expandable={true}>
-        <EditChallengeForm onChange={this.updateChallengeState} challenge={this.state.challenge} editChallenge={this.props.editChallenge} missionSpecific={this.props.missionSpecific} missions={this.props.missions}/>
+        <EditChallengeForm onChange={this.updateChallengeState} challenge={this.state.challenge} editChallenge={this.props.editChallenge} 
+        missionSpecific={this.props.missionSpecific} missions={this.props.missions}/>
       </CardText>
       <CardActions id="challenge-actions" style={{height: '40px', padding: '0px'}} expandable={true}>
         <div className="mui-button" style={{position: 'absolute', height: '100%', 'marginRight': '0px'}}>

@@ -9,93 +9,14 @@ import axios from 'axios';
 import bluebird from 'bluebird';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
-const Fields = props => {
-  function onRemove(pos) {
-    return event => {
-      event.preventDefault();
-      props.onRemove(pos);
-    };
-  }
-  const foo = 'required';
-  return (
-    <div className="fields">
-      {props.data.map((field, i) => (
-        <div className="field" key={field.id}>
-          {
-            field.type === 'input' ?
-            (
-              <MyInput
-                value=""
-                name={`fields[${i}]`}
-                title={field.validations ? JSON.stringify(field.validations) : 'No validations'}
-                required={field.required}
-                validations={field.validations}
-              />
-            ) : null
-          }
-          <a href="#" className="remove-field" onClick={onRemove(i)}>X</a>
-        </div>
-      ))
-    }
-    </div>
-  );
-};
-
 export default class ChallengeForm extends Component {
   constructor(props){
     super(props)
-    this.state = { fields: [], canSubmit: false, add: false, addOrSave: "ADD MISSION"}
-    //this.handleClick = this.handleClick.bind(this);
-    this.submitAlert = this.submitAlert.bind(this)
+    this.state = {add: false, addOrSave: "ADD MISSION"}
     this.closeForm = this.closeForm.bind(this)
   }
 
-  submitAlert(e){
-    e.preventDefault()
-    let objective = e.target.objective.value
-    let summary = e.target.summary.value
-    let targetTags = e.target.targetTags.value.split(",")
-    let targetText = e.target.targetText.value
-    let conclusion = e.target.conclusion.value
-    let type = e.target.type.value
-    let order = e.target.order.value
-
-    if(this.props.missionSpecific || (e.target.mission && e.target.mission.value !== "null")){
-      let missionId = (this.props.missionSpecific ? this.props.mission.id : e.target.mission.value)
-      console.log("MISSION ID ON SUBMIT: ", missionId)
-      axios.post(`/api/challenge/setMission/${missionId}`, {objective, summary, targetTags, targetText, conclusion, type, order})
-      .then((res) => res.data)
-      .then(challenge => {
-        console.log("CHALLENGE: ", challenge)
-          this.props.refreshCards()
-          this.props.toggleAdd()
-      })
-    }
-    // if(this.props.missionSpecific){
-    //   let missionId = this.props.mission.id
-    //   console.log("MISSION ID ON SUBMIT: ", missionId)
-    //   axios.post(`/api/challenge/setMission/${missionId}`, {objective, summary, targetTags, targetText, conclusion, type, order})
-    //   .then((res) => res.data)
-    //   .then(challenge => {
-    //     console.log("CHALLENGE: ", challenge)
-    //       this.props.findMissions()
-    //       this.props.toggleAdd()
-    //   })
-    // }
-    // else if(e.target.mission && e.target.mission.value){
-    //   let missionId = e.target.mission.value
-    // }
-
-    else{
-      axios.post('/api/challenge', {objective, summary, targetTags, targetText, conclusion, type, order})
-      .then((res) => res.data)
-      .then(challenge => {
-        console.log("CHALLENGE: ", challenge)
-          this.props.refreshCards()
-          this.props.toggleAdd()
-      })
-    }
-  }
+  
 
   closeForm(){
     this.props.toggleAdd()
@@ -110,7 +31,7 @@ export default class ChallengeForm extends Component {
            {/* <div className="mui-button" style={{'padding-right': '0px', top: '0px', height: '21.25px', position: 'absolute'}}>*/}
         </CardHeader>
         <CardText>
-          <form id="challenge-form" onSubmit={this.submitAlert}> 
+          <form id="challenge-form"> 
             {this.props.missionSpecific ? null : <MissionDropDown onChange={this.props.onChange} missions={this.props.missions} challenge={this.props.challenge}/>}
             <label>Objective:</label><br/>
             <input type="text" name="objective" value={this.props.challenge.objective} onChange={this.props.onChange}/><br/>
