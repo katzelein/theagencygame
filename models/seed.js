@@ -24,6 +24,10 @@ const data = {
     { username: 'Gator',
       phoneNumber: '+19146469702',
       isAdmin: true
+    },
+    { username: 'kittensgalore',
+      phoneNumber: '+19196105358',
+      isAdmin: true
     }
   ],
 
