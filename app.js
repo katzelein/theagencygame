@@ -17,6 +17,11 @@ const routes = require('./routes');
 const db = require('./models');
 const {resolve} = require('path')
 
+
+app.use(require('cookie-session') ({
+    name: 'session',
+    keys: [process.env.SESSION_SECRET || 'an insecure secret key'],
+}))
 app.use(volleyball);
 
 app.use(cookieParser());
@@ -43,7 +48,7 @@ module.exports = app;
 var port = process.env.PORT || 3000; // needs to be used whenever you're not in development
 app.listen(port, function () {
   console.log('The server is listening closely on port', port);
-  db.sync({})
+  db.sync()
   .then(function () {
     console.log('Synchronated the database');
   })

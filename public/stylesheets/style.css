@@ -2,12 +2,82 @@
 	color: red;
 }
 
+.missions-row{
+	padding-left: 100em;
+	padding-right: 100em;
+}
+
+.container{
+
+}
+
+.card-header{
+	word-wrap: normal;
+	width: 90%;
+	height:auto;
+	white-space: normal;
+}
+
+.card{
+	margin: 0px;
+	display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.width-set{
+	width: 100%;
+}
+
+.challenge-button{
+	margin-left: 0px;
+}
+
+.mission-button{
+	margin-left: 10px;
+}
+
+.mui-button{
+	padding: 0px 16px 0px 0px;
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	margin-right: 0px;
+	vertical-align: center;
+	height: 100%;
+}
+
+.inside-mui-button{
+	padding: inherit;
+	height: 100%;
+}
+
+svg{
+	vertical-align: center;
+}
+
+#actions{
+	position: relative;
+	height: 52.23px;
+	padding: 8px;
+}
+
+#challenge-actions{
+	position: relative;
+	right: 0px;
+	bottom: 0px;
+}
+
 html, body
 {
   height: 100%;
   min-height: 100%;
   margin: 0;
   padding: 0;
+}
+
+.white-challenge-card svg{
+	color: black;
 }
 
 #main

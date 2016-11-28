@@ -4,6 +4,7 @@ var rp = require('request-promise');
 var geocoder = require('geocoder');
 
 var lookup = require('./lookup')
+var getPhotoTags = require('./clarifai')
 
 /*
 * Handle data from Twilio
@@ -13,13 +14,9 @@ twilioAPI.get('/', function(req, res, next){
 })
 
 twilioAPI.post('/messages', function(req, res, next){
-  //console.log("Hey this is a message")
   console.log("REQ BODY: ", req.body)
-  console.log("MEDIA URL: ", req.body.MediaUrl)
-
+  console.log("MEDIA URL: ", req.body.MediaUrl0)
   console.log("From", req.body.From, "Body", req.body.Body)
-
-
 
   var answer = lookup(req.body.From, req.body) // must return a promise
   console.log("ANSWER: ", answer)
