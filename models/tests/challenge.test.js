@@ -1,7 +1,7 @@
 'use strict'
 
-const db = require('./_db')
-const Challenge = require('./challenge')
+const db = require('../_db')
+const Challenge = require('../challenge')
 const {expect} = require('chai')
 
 describe('Challenge', () => {
