@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "mocha ./models/*.test.js --reporter mochawesome",
+    "test": "mocha ./models/*.test.js",
+    "coverage": "istanbul cover test",
     "build": "webpack",
     "build-watch": "webpack -w",
     "start": "node_modules/.bin/webpack & nodemon app.js",
@@ -26,6 +27,7 @@
     "clarifai": "^2.0.16",
     "classnames": "^2.2.5",
     "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-alpha.2",
     "epilogue": "^0.7.0",
     "express": "^4.14.0",
     "express-session": "^1.14.2",
@@ -40,6 +42,7 @@
     "pg-hstore": "^2.3.2",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
+    "react-mdl": "^1.9.0",
     "react-flexbox-grid": "^0.10.2",
     "react-redux": "^4.4.5",
     "react-router": "^2.8.1",
@@ -56,7 +59,7 @@
   },
   "devDependencies": {
     "css-loader": "^0.26.0",
-    "mochawesome": "^1.5.4",
+    "istanbul": "^0.4.5",
     "npm": "^4.0.2",
     "style-loader": "^0.13.1"
   }
