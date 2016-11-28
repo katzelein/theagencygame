@@ -12,3 +12,42 @@ notes
 
 	- when do we switch users to hiatus and retired? --> add a button on dashboard 
 	- what constitutes being active or on hiatus?
+
+	-user needs current mission, current challenge
+	-userChallenge needs a status completed, date started, date finished
+
+	Adding mission/challenges:
+
+	1. reorder challenges by dragging
+	2. view/edit toggle
+	3. have a trash can icon for delete (with confirmation to double check)
+	4. little pop up that says "mission deleted", "mission saved", etc
+	5. hooks that will update associated models (ie, adding challenge will update column in mission)
+	6. adding or removing challenge will update other challenges order
+	7. long/lat should pull form place
+	8. is it better to set missions to state and just concat or better to dispatch again
+	9. form validations for required fields and formatting
+	10. cancel form if change mind
+
+	9. mission delete should also delete challenges?
+	10. send text message to users who were doing that challenge
+	11. pass ideal image in to get targetTags for input form
+	12. drop down so you can add unassigned challenges to a mission
+	13. view and edit challenges specfically on a challenge page
+
+
+
+TESTS ***************
+	deleting challenges:
+
+	deleting challenge when on missions page
+	deleteing challenge from challenge page
+		- challenge is assigned to mission
+		- challenge is not assigned to mission
+
+	adding challenges:
+
+	adding challenge on missions page
+	adding chalenge on challenge page
+		- leave challenge unassigned
+		- assign challenge
