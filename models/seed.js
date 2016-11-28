@@ -24,6 +24,9 @@ const data = {
     { username: 'Gator',
       phoneNumber: '+19146469702',
       isAdmin: true
+    },
+    { username: 'violet',
+      phoneNumber: '+13036664202'
     }
   ],
 
@@ -39,15 +42,17 @@ const data = {
     }
   ],
 
-  challenge: [
+  challenge: missions => [
     { objective: 'Head to the Trump Building', // mission 1
       summary: 'We need photographic evidence of the specific street address assigned to this building. We believe that the etchings on the gold may somehow contain his fingerprints. When found, send photograph to this number. Show no others.',
-      conclusion: 'Great work. The fingerprints are being to the lab for analysis. In the meantime, we have another task for you.'
+      conclusion: 'Great work. The fingerprints are being to the lab for analysis. In the meantime, we have another task for you.',
+      missionId: missions['Intrigue on Wall Street'].id,
     },
     { objective: 'Origins of the Open Market', // mission 1
       summary: 'According to our surveillance, agent SoAndSo bought an omelette with spinach and broccoli every morning at the Open Market. Head to the store and talk to Vinnie, the guy behind the omelette counter. Give him the passcode and, if he deems you trustworthy, send us his return passcode.', targetText: 'What are you talking about', 
       type: 'voice',
-      conclusion: 'Vinnie may be connected to the mob. He trusted you with the right passcode, so our way deeper into the depths may be open. Please await your next mission.'
+      conclusion: 'Vinnie may be connected to the mob. He trusted you with the right passcode, so our way deeper into the depths may be open. Please await your next mission.',
+      missionId: missions['Intrigue on Wall Street'].id,
     },
 
     { objective: 'Find GHA\'s Newest Hero, Ceren', // mission 3
@@ -79,7 +84,7 @@ const data = {
     }
   ],
 
-  userMission: [
+  userMission: (users, missions) => [
     {userId: 1, missionId: 1},
     {userId: 2, missionId: 2},
     {userId: 2, missionId: 3},
@@ -100,34 +105,63 @@ const data = {
 };
 
 db.sync({force: true})
-.then(() =>
-  User.bulkCreate(data.user))
-  .then(users => console.log(`Seeded ${users.length} users OK`))
-.then(() =>
-  Mission.bulkCreate(data.mission))
-  .then(missions => {
-    console.log(`Seeded ${missions.length} missions OK`)
-    return missions[2];
-  })
-  .then(mission => {
-    console.log(mission)
-    console.log('setChallenges', mission.setChallenges)
-    mission.setChallenges([3,4,5,6,7])
-  })
-  .then(() =>  
-    Challenge.bulkCreate(data.challenge))
-    .then(() => Challenge.update({
-    missionId: 3
-    },{where: {
-      order: {
-        $between: [1, 6]
-      }
-    }
-  }))
-  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
-.then(() =>
-  UserMission.bulkCreate(data.userMission))
-  .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
-.then(() =>
-  UserChallenge.bulkCreate(data.userChallenge))
-  .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
+.then(() => {
+  const users = User.bulkCreate(data.user))
+    .then(users => {
+      console.log(`Seeded ${users.length} users OK`)
+      return users
+    })
+    .then(users => users.reduce((allUsers, user) =>
+      Object.assign({}, allUsers, {[user.phoneNumber]: user}), {}))
+
+  const missions = Mission.bulkCreate(data.mission))
+    .then(missions => {
+      console.log(`Seeded ${missions.length} missions OK`)
+      return missions
+    })
+    .then(missions => missions.reduce(
+      (allMissions, mission) =>
+        Object.assign({}, allMissions, {[mission.title]: mission}),
+          {}))
+
+  const challenges = missions
+    .then(missions => Challenge.bulkCreate(data.challenge(missions)))
+    .then(challenges => challenges.reduce(
+      (allChallenges, challenge) =>
+        Object.assign({}, allChallenges, {[challenge.objective]: challenge}),
+          {}))
+
+  Promise.all([challenges, users])
+    .spread((challenges, users) => {/* ... */})
+})
+  
+// .then(() =>
+  
+//   .then(
+//     //return missions[2];
+//   })
+//   // .then(mission => {
+//   //   //console.log(mission)
+//   //   //console.log('setChallenges', mission.setChallenges)
+//   //   //mission.setChallenges([3,4,5,6,7])
+//   //   return missions
+//   // })
+//   .then(missions =>
+
+//     return 
+
+//     .then(() => Challenge.update({
+//     missionId: 3
+//     },{where: {
+//       order: {
+//         $between: [1, 6]
+//       }
+//     }
+//   }))
+//   .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
+// .then(() =>
+//   UserMission.bulkCreate(data.userMission))
+//   .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
+// .then(() =>
+//   UserChallenge.bulkCreate(data.userChallenge))
+//   .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
