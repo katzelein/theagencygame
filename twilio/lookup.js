@@ -1,7 +1,7 @@
 const User = require('../models/user')
 const Sequelize = require('sequelize')
 
-const whichMessage = require('./whichMessage')
+const {whichMessage} = require('./whichMessage')
 
 module.exports = function(phoneNumber, message) {
 	return User.findOne({where: {phoneNumber}})

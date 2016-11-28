@@ -27,7 +27,7 @@ const data = {
       description: 'Agent Natasha Klimikov was a rising star in the 1950s during Rodgers and Hammerstein\'s golden age. You\'ll be heading towards 42nd Street to retrace Natasha\'s steps and to see if her mission remains active.'},
     { title: 'Grace Hopper and the Missing Bone', // mission 3
       description: 'Ben, one of Grace Hopper Academy\'s proudest members, has had his favorite bone stolen out from under his nose. Can you identify the thief?',
-      location: 'Grace Hopper',
+      place: 'Grace Hopper',
       numChallenges: 5
     }
   ],
@@ -98,6 +98,9 @@ db.sync({force: true})
   User.bulkCreate(data.user))
   .then(users => console.log(`Seeded ${users.length} users OK`))
 .then(() =>
+  Challenge.bulkCreate(data.challenge))
+  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
+.then(() =>
   Mission.bulkCreate(data.mission))
   .then(missions => {
     console.log(`Seeded ${missions.length} missions OK`)
@@ -108,9 +111,6 @@ db.sync({force: true})
     console.log('setChallenges', mission.setChallenges)
     mission.setChallenges([3,4,5,6,7])
   })
-.then(() =>
-  Challenge.bulkCreate(data.challenge))
-  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
 .then(() =>
   UserMission.bulkCreate(data.userMission))
   .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))

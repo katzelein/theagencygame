@@ -199,6 +199,7 @@ const whichMessage = {
 	},
 
 	FETCH_CHALLENGE: (currentMissionId, currentChallengeId, userInput) => {
+		// still need to adjust based on userInput
 		return getChallenge(currentMissionId, currentChallengeId)
 		.then(newChallenge => {
 			if (newChallenge) {
@@ -221,26 +222,50 @@ const whichMessage = {
 		})
 	},
 
-	CHALLENGE_ANSWER: (currentChallengeId, userInput) => {
+	CHALLENGE_ANSWER: (currentChallengeId, message) => {
 		return Challenge.findById(currentChallengeId)
 		.then(currentChallenge => {
-			let success = {
-				state: {messageState: 'FETCH_CHALLENGE'},
-				message: currentChallenge.conclusion + " | Text back when you are ready for the next challenge."
+			let success;
+
+			if (currentChallenge.hasNext) {
+				success = {
+					state: {messageState: 'FETCH_CHALLENGE'},
+					message: currentChallenge.conclusion + " | Are you ready for your next challenge?"
+				}
+			} else {
+				success = {
+					state: {
+						messageState: 'STANDBY',
+						currentMission: 0,
+						currentChallenge: 0
+					},
+					message: currentChallenge.conclusion + "| You have completed your mission.  Text 'new mission' to start a new mission"
+				}
 			}
 			let fail = {message: "Your answer doesn't quite match ...."}
 
 			switch (currentChallenge.type) {
 				case 'text':
-					if (currentChallenge.targetText == userInput) return success;
+					if (currentChallenge.targetText == message.body) return success;
 					else return fail;
 				case 'image':
 					// put clarifai function here!!!
-					let tags = [];
-					if (currentChallenge.targetTags) return success;
-					// else return fail;
+					/*
+					 * parameters:	currentChallenge.targetTags // array of target tags
+					 * 				message // whole body of twilio request
+					 * returns: true / false
+					 */
+					if (true) return success;
+					else return fail;
 				case 'voice':
 					// put Kat's voice stuff here!!
+					/*
+					 * parameters:	currentChallenge.targetText // target words
+					 * 				message // whole body of twilio request
+					 * returns: true / false
+					 */
+					 if(true) return success;
+					 else return fail;
 				default:
 					return success;
 			}
@@ -248,7 +273,20 @@ const whichMessage = {
 	},
 
 	QUERY_HIATUS: () =>{return ""}
-
 }
 
-module.exports = whichMessage;
+const checkTags = (expectedTags, actualTags) => {
+	// at least one of expectedTags exists in actualTags
+
+	if (!Array.isArray(expectedTags) || !Array.isArray(actualTags)) return false;
+
+	let tagExists = false;
+	expectedTags.forEach(element => {
+		if(actualTags.includes(element)) tagExists = true;
+	})
+
+	return tagExists
+}
+
+
+module.exports = {whichMessage, checkTags};
