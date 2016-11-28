@@ -149,12 +149,25 @@ const whichMessage = {
 		
 	},
 
-	TUTORIAL_MISSION_3: () => {
+	TUTORIAL_MISSION_3: (username, message) => {
 		// assuming they sent in a picture
-		return {
+
+		let success = {
 			state: {messageState: 'STANDBY'},
 			message: "Congratulations, Trainee, you have completed your training mission!  Your name has been added to our list of active field agents.  Text in 'new mission' whenever you have the time to request your first mission!"
 		}
+		let fail = {
+			message: "That ... wasn't a picture ...."
+		}
+		// put clarifai function here!!!
+		/*
+		 * parameters:	currentChallenge.targetTags // array of target tags
+		 * 				message // whole body of twilio request
+		 * returns: true / false
+		 */
+		let actualTags = ['thing'] // clarifai stuff
+		if (actualTags.length) return success;
+		else return fail;
 	},
 
 	STANDBY: (username, userInput) => {
@@ -255,6 +268,8 @@ const whichMessage = {
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
+					 let actualTags = [] // clarifai stuff
+					 // if (checkTags(currentChallenge.targetTags, actualTags)) return success;
 					if (true) return success;
 					else return fail;
 				case 'voice':
