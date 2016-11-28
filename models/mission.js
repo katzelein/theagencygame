@@ -10,7 +10,10 @@ const Mission = db.define('missions', {
   location: {
   	type: Sequelize.GEOMETRY,
   },
-  numChallenges: Sequelize.INTEGER
+  numChallenges: {
+  	type: Sequelize.INTEGER,
+  	defaultValue: 0
+	}
 }
 )
 
