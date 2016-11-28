@@ -1,4 +1,3 @@
-
 const express = require('express');
 const app = express();
 const volleyball = require('volleyball');
@@ -17,10 +16,15 @@ const routes = require('./routes');
 const db = require('./models');
 const {resolve} = require('path')
 
+
+app.use(require('cookie-session') ({
+    name: 'session',
+    keys: [process.env.SESSION_SECRET || 'an insecure secret key'],
+}))
 app.use(volleyball);
 
 app.use(cookieParser());
-app.use(expressSession({'secret': process.env.SESSION_SECRET || 'insecure'}));
+app.use(expressSession({'secret': 'secret'}));
 // app.use(express.static(path.join(__dirname, './public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -51,7 +55,3 @@ app.listen(port, function () {
     console.error('Trouble right here in River City', err, err.stack);
   });
 });
-
-// 1 G-baby  +19146469096  confirmName 2016-11-19 22:14:01.75-05 2016-11-19 22:14:39.785-05
-// 2 Mothership  +19144097230  confirmName 2016-11-19 22:14:45.333-05  2016-11-19 22:15:40.061-05
-// 4 Evie  +19739975239  confirmName 2016-11-19 22:50:19.8-05  2016-11-19 22:50:46.574-05

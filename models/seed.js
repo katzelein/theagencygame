@@ -10,17 +10,17 @@ const UserChallenge = require('./userChallenge')
 
 const data = {
   user: [
-    { username: 'secretagentman', 
-      phoneNumber: '+5555555555' }, 
-    { username: 'hawkeye', 
+    { username: 'secretagentman',
+      phoneNumber: '+5555555555' },
+    { username: 'hawkeye',
       phoneNumber: '+5555555556'},
-    { username: 'blackwidow', 
+    { username: 'blackwidow',
       phoneNumber: '+5555555557'},
     { username: 'philcoulson', 
       phoneNumber: '+5555555558'},
     { username: 'operagirl',
-      phoneNumber: '+18607485586'}
-  ], 
+      phoneNumber: '+18607485586', isAdmin: true}
+  ],
 
   mission: [
     { title: 'Intrigue on Wall Street',  // mission 1
@@ -33,34 +33,37 @@ const data = {
       numChallenges: 5
     }
   ],
-  
+
   challenge: [
     { objective: 'Head to the Trump Building', // mission 1
-      summary: 'We need photographic evidence of the specific street address assigned to this building. We believe that the etchings on the gold may somehow contain his fingerprints. When found, send photograph to this number. Show no others.', 
+      summary: 'We need photographic evidence of the specific street address assigned to this building. We believe that the etchings on the gold may somehow contain his fingerprints. When found, send photograph to this number. Show no others.',
       conclusion: 'Great work. The fingerprints are being to the lab for analysis. In the meantime, we have another task for you.'
-    }, 
+    },
     { objective: 'Origins of the Open Market', // mission 1
-      summary: 'According to our surveillance, agent SoAndSo bought an omelette with spinach and broccoli every morning at the Open Market. Head to the store and talk to Vinnie, the guy behind the omelette counter. Give him the passcode and, if he deems you trustworthy, send us his return passcode.', targetText: 'What are you talking about', type: 'voice',
+      summary: 'According to our surveillance, agent SoAndSo bought an omelette with spinach and broccoli every morning at the Open Market. Head to the store and talk to Vinnie, the guy behind the omelette counter. Give him the passcode and, if he deems you trustworthy, send us his return passcode.', targetText: 'What are you talking about', 
+      type: 'voice',
       conclusion: 'Vinnie may be connected to the mob. He trusted you with the right passcode, so our way deeper into the depths may be open. Please await your next mission.'
-    }, 
+    },
 
     { objective: 'Find GHA\'s Newest Hero, Ceren', // mission 3
-      summary: 'Ceren, Ben\'s doting mom who, in an incredible feat of strength and love, pulled him from the grips of an oncoming subway just a few weeks ago, spends her days in the CSS room. Find her office where Ben\'s orange water bowl sits and send us a picture; we need a warrant to dust the bowl for fingerprints.', 
+      summary: 'Ceren, Ben\'s doting mom who, in an incredible feat of strength and love, pulled him from the grips of an oncoming subway just a few weeks ago, spends her days in the CSS room. Find her office where Ben\'s orange water bowl sits and send us a picture; we need a warrant to dust the bowl for fingerprints.',
+      targetTags: ['bowl'],
       conclusion: 'Great work. We\'re picking up the scent of our thief; upcoming instructions to follow.' ,
       order: 1
-    }, 
+    },
     { objective: 'Putting Out Kitchen Fires', // mission 3
-      summary: 'Ben loves to wander the hallways of Grace Hopper, finding the occasional student eager to scratch his belly, or scooping up the remains of a forgotten blueberry muffin. On the day of the theft, Ben was seen more than usual around the kitchen yesterday during an incoming shipment of cereal; we think this may be where the thief saw their opportunity. Please send the license number for the fire extinguisher on the left by the passcoded door. We believe the thief may use this as the passcode for their own office.', 
+      summary: 'Ben loves to wander the hallways of Grace Hopper, finding the occasional student eager to scratch his belly, or scooping up the remains of a forgotten blueberry muffin. On the day of the theft, Ben was seen more than usual around the kitchen yesterday during an incoming shipment of cereal; we think this may be where the thief saw their opportunity. Please send the license number for the fire extinguisher on the left by the passcoded door. We believe the thief may use this as the passcode for their own office.',
       conclusion: 'You\'re on the mark, shouldn\'t be long now. Await further instructions',
       order: 2
-    }, 
+    },
     { objective: 'Tracking the Teacher', // mission 3
-      summary: 'We have a list of all the offices linked to the passcode you found, and one of the teachers of Grace Hopper and Fullstack Academy, Ashi Krishnan, spent the day in the office implicated during the theft of Ben\'s bone. Find Ashi and find out the name of her childhood dog -- but do it covertly. She can\'t know that she\'s a suspect. Then call this number, speak the name of the dog when prompted, and quickly hang up. Secrecy is key.', 
+      summary: 'We have a list of all the offices linked to the passcode you found, and one of the teachers of Grace Hopper and Fullstack Academy, Ashi Krishnan, spent the day in the office implicated during the theft of Ben\'s bone. Find Ashi and find out the name of her childhood dog -- but do it covertly. She can\'t know that she\'s a suspect. Then call this number, speak the name of the dog when prompted, and quickly hang up. Secrecy is key.',
       conclusion: 'Ashi may not be the thief, but our progress has been strong. Well done, agent. The future looks bright.',
       order: 3
     }, // imaginary friend-monster: gorp
     { objective: 'Grace Hopper Academy\'s Secret Storage', // mission 3
-      summary: 'We think that the thief may have an even bigger profile at the school than we thought possible. The corruption runs deep. The thief may have been so smart as to code a clue into the Grace Hopper logo in plain sight. Head to the lobby of the school and send us a picture of the logo.', 
+      summary: 'We think that the thief may have an even bigger profile at the school than we thought possible. The corruption runs deep. The thief may have been so smart as to code a clue into the Grace Hopper logo in plain sight. Head to the lobby of the school and send us a picture of the logo.',
+      targetTags: ['gha_logo'],
       conclusion: 'Our intel was correct; the logo contained vital information. One last step and we should be able to catch the thief red-handed.',
       order: 4
     },
@@ -70,21 +73,21 @@ const data = {
       order:5
     }
   ],
-  
+
   userMission: [
-    {userId: 1, missionId: 1}, 
-    {userId: 2, missionId: 2}, 
-    {userId: 2, missionId: 3}, 
+    {userId: 1, missionId: 1},
+    {userId: 2, missionId: 2},
+    {userId: 2, missionId: 3},
     {userId: 3, missionId: 1}
   ],
-  
+
   userChallenge: [
-    {userId: 1, challengeId: 1}, 
+    {userId: 1, challengeId: 1},
     {userId: 1, challengeId: 2},
     {userId: 2, challengeId: 1},
     {userId: 2, challengeId: 2},
     {userId: 2, challengeId: 3},
-    {userId: 2, challengeId: 4}, 
+    {userId: 2, challengeId: 4},
     {userId: 2, challengeId: 5},
     {userId: 2, challengeId: 6},
     {userId: 2, challengeId: 7}
@@ -95,7 +98,7 @@ db.sync({force: true})
 .then(() =>
   User.bulkCreate(data.user))
   .then(users => console.log(`Seeded ${users.length} users OK`))
-.then(() => 
+.then(() =>
   Mission.bulkCreate(data.mission))
   .then(missions => {
     console.log(`Seeded ${missions.length} missions OK`)
@@ -106,28 +109,12 @@ db.sync({force: true})
     console.log('setChallenges', mission.setChallenges)
     mission.setChallenges([3,4,5,6,7])
   })
-.then(() => 
+.then(() =>
   Challenge.bulkCreate(data.challenge))
   .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
-.then(() => 
+.then(() =>
   UserMission.bulkCreate(data.userMission))
   .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
-.then(() => 
+.then(() =>
   UserChallenge.bulkCreate(data.userChallenge))
   .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
-
-
-
-//   .then(seedMissions)
-//   .then(missions => console.log(`Seeded ${missions.length} missions OK`))
-//   .then(seedChallenges)
-//   .then(challenges => console.log(`Seeded ${challenges.length} challenges OK`))
-//   .then(seedMissionChallenges)
-//   .then(missionChallenges => console.log(`Seeded ${missionChallenges.length} missionChallenges OK`))
-//   .then(seedUserMissions)
-//   .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
-//   .then(seedUserChallenges)
-//   .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
-//   .catch(error => console.error(error))
-//   .finally(() => db.close())
-

@@ -9,8 +9,8 @@ import {setPhoneNumber} from '../reducers/phoneNumber';
 const mapStateToProps = ({phoneNumber}) => ({phoneNumber});
 
 const mapDispatchToProps = (dispatch) => ({
-    findUser: function (number){
-    	dispatch(fetchUser(number))
+    findUser: function (){
+    	dispatch(fetchUser())
     },
 
     setNumber: function(number){

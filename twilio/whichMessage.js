@@ -5,6 +5,7 @@ const {getLocation} = require('./location')
 // const {checkWatsonAPI} = require('./voice')
 
 const Challenge = require('../models/challenge')
+const User = require('../models/user')
 
 const whichMessage = {
 
@@ -21,20 +22,37 @@ const whichMessage = {
 	},
 
 	NEED_USERNAME: (username, userInput) => {
-		let re = new RegExp("^[A-Za-z0-9]+$");
+		//let re = new RegExp("^[A-Za-z0-9]+$");
+		let re = new RegExp("^[\\w\\s]+$", "g");
 		if (re.test(userInput)) {
 		    console.log("Valid username");
+		    return User.findOne({
+				where: {
+					username: userInput
+				}
+			})
+			.then(user => {
+				if(user){
+					return {
+						message: "That username is taken. Please try again."
+					}
+				}
+				else{
+					console.log("NEED_USERNAME")
+					return {
+						state: {
+							username: userInput, 
+							messageState: 'TUTORIAL_MISSION_1'
+						},
+						message: "Welcome to the Agency, Agent "+userInput+"! Would you like to participate in a training mission?"
+					}}	
+			})
+
 		} else {
 		    console.log("Invalid username");
-		}
-	
-		return {
-			state: {
-				username: userInput, 
-				messageState: 'TUTORIAL_MISSION_1'
-			},
-			message: "Welcome to the Agency, Agent "+userInput+"! Would you like to participate in a training mission?"
-		}
+		    return {
+		    	message: "Invalid username. Usernames can include numbers, letters, spaces, and underscores '_'."
+		    }}
 	},
 
 	TUTORIAL_MISSION_1: (username, userInput) => {
@@ -74,8 +92,7 @@ const whichMessage = {
 				return {
 					state: {
 						messageState: 'TUTORIAL_MISSION_3',
-						latitude: coordinates[0],
-						longitude: coordinates[1]
+						location: {type: 'Point', coordinates: coordinates}
 					},
 					message: "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
 				}

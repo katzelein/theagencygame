@@ -1,9 +1,10 @@
-
 constants.js
 liveconstants.js
 npm-debug.log
 node_modules/
 notes
 
-public/bundle.js
-public/bundle.js.map
+*/coverage
+/public/bundle.js
+/public/bundle.js.map
+/models/npm-debug.log

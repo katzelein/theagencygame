@@ -4,8 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha ./models/*.test.js",
+    "coverage": "istanbul cover test",
     "build": "webpack",
+    "build-watch": "webpack -w",
     "start": "node_modules/.bin/webpack & nodemon app.js",
     "seed": "node models/seed.js"
   },
@@ -21,19 +23,28 @@
     "babel-preset-react": "^6.16.0",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
+    "chai": "^3.5.0",
     "clarifai": "^2.0.16",
+    "classnames": "^2.2.5",
     "cookie-parser": "^1.4.3",
+    "epilogue": "^0.7.0",
     "express": "^4.14.0",
     "express-session": "^1.14.2",
+    "flexboxgrid": "^6.3.1",
+    "formsy-react": "^0.18.1",
     "geocoder": "^0.2.2",
+    "material-ui": "^0.16.4",
+    "mocha": "^3.1.2",
     "nodemon": "^1.11.0",
     "path": "^0.12.7",
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
     "react": "^15.4.1",
     "react-dom": "^15.3.2",
+    "react-flexbox-grid": "^0.10.2",
     "react-redux": "^4.4.5",
     "react-router": "^2.8.1",
+    "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.0",
     "redux-thunk": "^2.1.0",
@@ -45,5 +56,11 @@
     "volleyball": "^1.3.0",
     "watson-developer-cloud": "^2.9.0",
     "webpack": "^1.13.2"
+  },
+  "devDependencies": {
+    "css-loader": "^0.26.0",
+    "istanbul": "^0.4.5",
+    "npm": "^4.0.2",
+    "style-loader": "^0.13.1"
   }
 }
