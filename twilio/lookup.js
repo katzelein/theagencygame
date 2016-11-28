@@ -69,29 +69,15 @@ const fetchMessage = (user, message) => {
 			break;
 	}
 
-	//Ask Ashi about this
-	console.log('returnObj instanceof Promise', returnObj instanceof Promise)
-	//console.log("Instance type: ", returnObj.constructor.name)
-
-	// user.update does not need to happen before sending message,
-	if (returnObj && returnObj.state) user.update(returnObj.state);
-	if (returnObj && returnObj.message) {
-		user.update({lastMessageAt: Date()})
-		return returnObj.message;
-	}
-
-
-	if (returnObj instanceof Promise || returnObj.constructor.name === 'Promise') {
-		return returnObj
-		.then(obj => {
-			if (obj && obj.state) user.update(obj.state);
-			if (obj && obj.message) {
-				user.update({lastMessageAt: Date()})
-				return obj.message;
-			}
-		})
-	}
-	else return 'Sorry, The Agency\'s text processor has clearly failed.'
+	return Promise.resolve(returnObj)
+	.then(obj => {
+		if (obj && obj.state) user.update(obj.state);
+		if (obj && obj.message) {
+			user.update({lastMessageAt: Date()})
+			return obj.message;
+		}
+		else return 'Sorry, The Agency\'s text processor has clearly failed.'
+	})
 }
 
 
