@@ -1,4 +1,3 @@
-
 const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
