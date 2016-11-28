@@ -39,6 +39,7 @@ const data = {
     }
   ],
 
+
   challenge: [
     { objective: 'Head to the Trump Building', // mission 1
       summary: 'We need photographic evidence of the specific street address assigned to this building. We believe that the etchings on the gold may somehow contain his fingerprints. When found, send photograph to this number. Show no others.',
@@ -67,6 +68,7 @@ const data = {
       order: 3
     }, // imaginary friend-monster: gorp
     { objective: 'Grace Hopper Academy\'s Secret Storage', // mission 3
+
       summary: 'We think that the thief may have an even bigger profile at the school than we thought possible. The corruption runs deep. The thief may have been so smart as to code a clue into the Grace Hopper logo in plain sight. Head to the lobby of the school and send us a picture of the logo.',
       targetTags: ['gha_logo'],
       conclusion: 'Our intel was correct; the logo contained vital information. One last step and we should be able to catch the thief red-handed.',
@@ -104,6 +106,9 @@ db.sync({force: true})
   User.bulkCreate(data.user))
   .then(users => console.log(`Seeded ${users.length} users OK`))
 .then(() =>
+  Challenge.bulkCreate(data.challenge))
+  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
+.then(() =>
   Mission.bulkCreate(data.mission))
   .then(missions => {
     console.log(`Seeded ${missions.length} missions OK`)
@@ -114,17 +119,6 @@ db.sync({force: true})
     console.log('setChallenges', mission.setChallenges)
     mission.setChallenges([3,4,5,6,7])
   })
-  .then(() =>  
-    Challenge.bulkCreate(data.challenge))
-    .then(() => Challenge.update({
-    missionId: 3
-    },{where: {
-      order: {
-        $between: [1, 6]
-      }
-    }
-  }))
-  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
 .then(() =>
   UserMission.bulkCreate(data.userMission))
   .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
