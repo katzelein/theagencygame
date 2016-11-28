@@ -24,7 +24,7 @@ module.exports = function(phoneNumber, message) {
 const fetchMessage = (user, message) => {
 	
 
-	const simpleInput = "";
+	let simpleInput = "";
 	if (message.Body != undefined) simpleInput = message.Body.toLowerCase();
 	switch(simpleInput) {
 		case 'help':
