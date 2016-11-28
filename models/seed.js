@@ -106,9 +106,6 @@ db.sync({force: true})
   User.bulkCreate(data.user))
   .then(users => console.log(`Seeded ${users.length} users OK`))
 .then(() =>
-  Challenge.bulkCreate(data.challenge))
-  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
-.then(() =>
   Mission.bulkCreate(data.mission))
   .then(missions => {
     console.log(`Seeded ${missions.length} missions OK`)
@@ -119,6 +116,9 @@ db.sync({force: true})
     console.log('setChallenges', mission.setChallenges)
     mission.setChallenges([3,4,5,6,7])
   })
+.then(() =>
+  Challenge.bulkCreate(data.challenge))
+  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
 .then(() =>
   UserMission.bulkCreate(data.userMission))
   .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
