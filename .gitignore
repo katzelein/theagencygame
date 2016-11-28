@@ -1,9 +1,11 @@
-mochaawesome-reports/
 constants.js
 liveconstants.js
 npm-debug.log
 node_modules/
 notes.txt
 key.json
+notes
+*/coverage
 /public/bundle.js
 /public/bundle.js.map
+/models/npm-debug.log

@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "mocha ./models/*.test.js --reporter mochawesome",
+    "test": "mocha ./models/*.test.js",
+    "coverage": "istanbul cover test",
     "build": "webpack",
     "build-watch": "webpack -w",
     "start": "node_modules/.bin/webpack & nodemon app.js",
@@ -58,7 +59,7 @@
   },
   "devDependencies": {
     "css-loader": "^0.26.0",
-    "mochawesome": "^1.5.4",
+    "istanbul": "^0.4.5",
     "npm": "^4.0.2",
     "style-loader": "^0.13.1"
   }
