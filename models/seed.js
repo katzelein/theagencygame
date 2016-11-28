@@ -40,47 +40,54 @@ const data = {
     }
   ],
 
-
   challenge: [
-    { objective: 'Head to the Trump Building', // mission 1
-      summary: 'We need photographic evidence',
-      conclusion: 'Great work. The fingerprints'
-    },
-    { objective: 'Origins of the Open Market', // mission 1
-      summary: 'According to our surveillance', 
-      type: 'voice',
-      conclusion: 'Vinnie may be connected to the mob'
-    },
+      { 
+        objective: 'Head to the Trump Building', // mission 1
+        summary: 'We need photographic evidence',
+        conclusion: 'Great work. The fingerprints',
+        // missionId: missions['Intrigue on Wall Street']
+      },
+      // { 
+      //   objective: 'Origins of the Open Market', // mission 1
+      //   summary: 'According to our surveillance', 
+      //   type: 'voice',
+      //   conclusion: 'Vinnie may be connected to the mob'
+      // },
 
-    { objective: 'Find GHA\'s Newest Hero, Ceren', // mission 3
-      summary: 'Ceren, Ben\'s doting mom',
-      targetTags: ['bowl'],
-      conclusion: 'Great work. We\'re picking up' ,
-      order: 1
-    },
-    { objective: 'Putting Out Kitchen Fires', // mission 3
-      summary: 'Ben loves to wander',
-      conclusion: 'You\'re on the mark',
-      order: 2
-    },
-    { objective: 'Tracking the Teacher', // mission 3
-      summary: 'We have a list of all',
-      conclusion: 'Ashi may not be the',
-      order: 3
-    }, // imaginary friend-monster: gorp
-    { objective: 'Grace Hopper Academy\'s Secret Storage', // mission 3
-
-      summary: 'We think that the thief',
-      targetTags: ['gha_logo'],
-      conclusion: 'Our intel was correct',
-      order: 4
-    },
-    { objective: 'The Voice of Ultimate Betrayal', // mission 3
-      summary: 'This is where the rubber',
-      conclusion: 'We have a match.',
-      order:5
-    }
-  ],
+      // { 
+      //   objective: 'Find GHA\'s Newest Hero, Ceren', // mission 3
+      //   summary: 'Ceren, Ben\'s doting mom',
+      //   targetTags: ['bowl'],
+      //   conclusion: 'Great work. We\'re picking up' ,
+      //   order: 1
+      // },
+      // { 
+      //   objective: 'Putting Out Kitchen Fires', // mission 3
+      //   summary: 'Ben loves to wander',
+      //   conclusion: 'You\'re on the mark',
+      //   order: 2
+      // },
+      // { 
+      //   objective: 'Tracking the Teacher', // mission 3
+      //   summary: 'We have a list of all',
+      //   conclusion: 'Ashi may not be the',
+      //   order: 3
+      // }, // imaginary friend-monster: gorp
+      // { 
+      //   objective: 'Grace Hopper Academy\'s Secret Storage', // mission 3
+      //   summary: 'We think that the thief',
+      //   targetTags: ['gha_logo'],
+      //   conclusion: 'Our intel was correct',
+      //   order: 4
+      // },
+      // { 
+      //   objective: 'The Voice of Ultimate Betrayal', // mission 3
+      //   summary: 'This is where the rubber',
+      //   conclusion: 'We have a match.',
+      //   order:5
+      // }
+    ]
+  ,
 
   userMission: [
     {userId: 1, missionId: 1},
@@ -99,33 +106,83 @@ const data = {
     {userId: 2, challengeId: 5},
     {userId: 2, challengeId: 6},
     {userId: 2, challengeId: 7}
-  ]
+  ],
+
+  missionChallenge: {
+    'Head to the Trump Building': 'Intrigue on Wall Street',
+    'Origins of the Open Market': 'Intrigue on Wall Street',
+    'Find GHA\'s Newest Hero, Ceren': 'Grace Hopper and the Missing Bone',
+    'Putting Out Kitchen Fires': 'Grace Hopper and the Missing Bone',
+    'Tracking the Teacher': 'Grace Hopper and the Missing Bone',
+    'Grace Hopper Academy\'s Secret Storage': 'Grace Hopper and the Missing Bone',
+    'The Voice of Ultimate Betrayal': 'Grace Hopper and the Missing Bone'
+  }
+
 };
 
 db.sync({force: true})
-.then(() =>
-  User.bulkCreate(data.user))
-  .then(users => console.log(`Seeded ${users.length} users OK`))
-.then(() =>
-  Mission.bulkCreate(data.mission))
-  .then(missions => {
-    console.log(`Seeded ${missions.length} missions OK`)
-    return missions[2];
-  })
-  .then(mission => {
-    console.log(mission)
-    console.log('setChallenges', mission.setChallenges)
-    mission.setChallenges([3,4,5,6,7])
-  })
-.then(() =>
-  Challenge.bulkCreate(data.challenge))
-  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
-.then(() =>
-  UserMission.bulkCreate(data.userMission))
-  .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
-.then(() =>
-  UserChallenge.bulkCreate(data.userChallenge))
-  .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
+.then(() => {
+  const users = User.bulkCreate(data.user)
+    .then(users => {
+      console.log(`Seeded ${users.length} users OK`)
+      return users
+    })
+    .then(users => users.reduce((allUsers, user) =>
+      Object.assign({}, allUsers, {[user.phoneNumber]: user}), {}))
+
+  const missions = Mission.bulkCreate(data.mission)
+    .then(missions => {
+      console.log(`Seeded ${missions.length} missions OK`)
+      // console.log(missions)
+      return missions
+    })
+    .then(missions => missions.reduce(
+      (allMissions, mission) =>
+        Object.assign({}, allMissions, {[mission.title]: mission}),
+          {}))
+
+  const challenges = Challenge.bulkCreate(data.challenge)
+    .then(challenges => challenges.reduce(
+      (allChallenges, challenge) =>
+        Object.assign({}, allChallenges, {[challenge.objective]: challenge}),
+          {}))
+
+  Promise.all([missions, challenges, users])
+    .spread((missions, challenges, users) => {/* ... */
+      console.log(challenges)
+    })
+})
+  
+// .then(() =>
+  
+//   .then(
+//     //return missions[2];
+//   })
+//   // .then(mission => {
+//   //   //console.log(mission)
+//   //   //console.log('setChallenges', mission.setChallenges)
+//   //   //mission.setChallenges([3,4,5,6,7])
+//   //   return missions
+//   // })
+//   .then(missions =>
+
+//     return 
+
+//     .then(() => Challenge.update({
+//     missionId: 3
+//     },{where: {
+//       order: {
+//         $between: [1, 6]
+//       }
+//     }
+//   }))
+//   .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
+// .then(() =>
+//   UserMission.bulkCreate(data.userMission))
+//   .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
+// .then(() =>
+//   UserChallenge.bulkCreate(data.userChallenge))
+//   .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
 
 
 /*
@@ -141,16 +198,17 @@ db.sync({force: true})
     }
   ],
 
-
-  challenge: [
+  challenge: missions => [
     { objective: 'Head to the Trump Building', // mission 1
       summary: 'We need photographic evidence of the specific street address assigned to this building. We believe that the etchings on the gold may somehow contain his fingerprints. When found, send photograph to this number. Show no others.',
-      conclusion: 'Great work. The fingerprints are being to the lab for analysis. In the meantime, we have another task for you.'
+      conclusion: 'Great work. The fingerprints are being to the lab for analysis. In the meantime, we have another task for you.',
+      missionId: missions['Intrigue on Wall Street'].id,
     },
     { objective: 'Origins of the Open Market', // mission 1
       summary: 'According to our surveillance, agent SoAndSo bought an omelette with spinach and broccoli every morning at the Open Market. Head to the store and talk to Vinnie, the guy behind the omelette counter. Give him the passcode and, if he deems you trustworthy, send us his return passcode.', targetText: 'What are you talking about', 
       type: 'voice',
-      conclusion: 'Vinnie may be connected to the mob. He trusted you with the right passcode, so our way deeper into the depths may be open. Please await your next mission.'
+      conclusion: 'Vinnie may be connected to the mob. He trusted you with the right passcode, so our way deeper into the depths may be open. Please await your next mission.',
+      missionId: missions['Intrigue on Wall Street'].id,
     },
 
     { objective: 'Find GHA\'s Newest Hero, Ceren', // mission 3
@@ -170,7 +228,6 @@ db.sync({force: true})
       order: 3
     }, // imaginary friend-monster: gorp
     { objective: 'Grace Hopper Academy\'s Secret Storage', // mission 3
-
       summary: 'We think that the thief may have an even bigger profile at the school than we thought possible. The corruption runs deep. The thief may have been so smart as to code a clue into the Grace Hopper logo in plain sight. Head to the lobby of the school and send us a picture of the logo.',
       targetTags: ['gha_logo'],
       conclusion: 'Our intel was correct; the logo contained vital information. One last step and we should be able to catch the thief red-handed.',
@@ -181,5 +238,5 @@ db.sync({force: true})
       conclusion: 'We have a match. David Yang is the thief of the missing bone. It is a dark day for Grace Hopper, but a proud day for the Agency. Well done, agent. Your country, and Ben, thanks you.',
       order:5
     }
-  ]
+  ],
 */
