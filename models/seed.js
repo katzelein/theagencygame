@@ -1,11 +1,4 @@
-const db = require('./index')
-
 const Promise = require('bluebird');
-const User = require('./user')
-const Challenge = require('./challenge')
-const Mission = require('./mission')
-const UserMission = require('./userMission')
-const UserChallenge = require('./userChallenge')
 
 
 const data = {
@@ -20,7 +13,8 @@ const data = {
       phoneNumber: '+5555555558'}, 
     { username: 'Gator',
       phoneNumber: '+19146469702',
-      isAdmin: true
+      isAdmin: true, 
+      location: {type: 'Point', coordinates: []}
     }
   ],
 
@@ -95,7 +89,17 @@ const data = {
   ]
 };
 
-db.sync({force: true})
+const seed = (db) => {
+
+db = db || require('./')
+const User = db.models.users
+const Challenge = db.models.challenges
+const Mission = db.models.missions
+const UserMission = db.models.userMissions
+const UserChallenge = db.models.userChallenges
+
+
+return db.sync({force: true})
 .then(() =>
   User.bulkCreate(data.user))
   .then(users => console.log(`Seeded ${users.length} users OK`))
@@ -128,6 +132,14 @@ db.sync({force: true})
   UserChallenge.bulkCreate(data.userChallenge))
   .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
 
+}
+
+if(module === require.main){
+  const db = require('./')
+  seed(db)
+}
+
+module.exports = seed();
 
 
 //   .then(seedMissions)

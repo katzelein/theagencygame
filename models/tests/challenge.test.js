@@ -5,7 +5,7 @@ const Challenge = require('../challenge')
 const {expect} = require('chai')
 
 describe('Challenge', () => {
-  before('wait for the db', () => db.didSync)
+  before('wait for the db', () => db.sync)
 
   describe('validations', () => {
     let challenge;

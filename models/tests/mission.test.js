@@ -5,15 +5,15 @@ const Mission = require('../mission')
 const {expect} = require('chai')
 
 describe('Mission', () => {
-  before('wait for the db', () => db.didSync)
+  before('wait for the db', () => db.sync)
 
   describe('validations', () => {
     let mission;
-    beforeEach('test challenge', () => {
+    beforeEach('test mission', () => {
       mission = Mission.build({title: "Mission title"});
     })
 
-    it("has valid objective", () => {
+    it("has valid title", () => {
       expect(mission.title).to.be.a('string')
     })
   })
