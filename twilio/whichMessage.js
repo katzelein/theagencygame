@@ -2,8 +2,12 @@ const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
 const getPhotoTags = require('./clarifai')
-
+const {adventureDetails, missionChooser, partnerChooser} = require('./missionChooser')
 const User = require('../models/user')
+const {accountSid, authToken} = require('../constants')
+
+var client = require('twilio')(accountSid, authToken); 
+const UserMission = require('../models/userMission')
 
 const whichMessage = {
 
@@ -55,7 +59,8 @@ const whichMessage = {
 
 	TUTORIAL_MISSION_1: (username, userInput) => {
 		//can't expect just a yes or no
-		var userInput = message.Body.toLowerCase()
+		var userInput = userInput.toLowerCase()
+		console.log("userInput: ", userInput)
 		if(userInput == 'no') {
 			return {
 				state: {
@@ -173,6 +178,20 @@ const whichMessage = {
 		})
 	},
 
+	// STANDBY: (username, userInput) => {
+	// 	if (userInput == 'no') {
+	// 		return {
+	// 			state: {messageState: 'QUERY_HIATUS'},
+	// 			message: "Agent "+username+", you are currently between missions. Do you wish to take a hiatus from missions?"
+	// 		}
+	// 	} else if (userInput == 'new' || userInput == 'new mission') {
+	// 		return {
+	// 			state: {messageState: 'QUERY_MISSION'},
+	// 			message: "Ah, Agent "+username+", good of you to call in! Before we assign you a new mission, please send in your location."
+	// 		}
+	// 	}
+	// },
+
 	STANDBY: (username, userInput) => {
 		if (userInput == 'no') {
 			return {
@@ -181,31 +200,29 @@ const whichMessage = {
 			}
 		} else if (userInput == 'new' || userInput == 'new mission') {
 			return {
-				state: {messageState: 'QUERY_MISSION'},
+				state: {messageState: 'SOLO_YN'},
 				message: "Ah, Agent "+username+", good of you to call in! Before we assign you a new mission, please send in your location."
 			}
 		}
 	},
 
-	QUERY_MISSION: (username, message) => {
-		// assume we were able to access and process location
+
+
+	SOLO_YN: (username, message) => {
 		var coordinatesPromise = getLocation(message)
 		console.log("coordinatesPromise: ", coordinatesPromise)
 		return coordinatesPromise
 		.then(coordinates => {
 			if(typeof coordinates === 'object'){
-				return chooseMission()
-				.then(newMission => {
-					return {
-						state: {
-							messageState: 'FETCH_CHALLENGE', 
-							currentMission: newMission.id
-						},
-						message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+username+"?"
-					}
-				})
-			}
-			else{
+				console.log("found coordinates, .then")
+				return {
+					state: {
+						messageState: 'QUERY_MISSION',
+						location: {type: 'Point', coordinates: coordinates}
+					},
+					message: "Thank you for sending in your location.  Would you prefer to partner up for your next mission, or go it alone? Respond with 'lone wolf' or 'eager beaver'. "
+				}
+			} else {
 				console.log("coordinates is not an array")
 				return {
 					message: "Sorry, The Agency's message processor was not able to parse your location from that message.  Please send in your street address instead."
@@ -213,6 +230,110 @@ const whichMessage = {
 			}
 		})
 	},
+
+	SOLO_OK: (username, location, userInput) => {
+
+	},
+
+// might need to bring in whole user instead of just username
+	QUERY_MISSION: (userId, username, location, userInput) => {
+		// assume we were able to access and process location
+		let coordinates = location.coordinates
+		userInput = userInput.toLowerCase()
+		let soloAdventurePromise, pairAdventurePromise;
+		if(userInput === 'lone wolf'){
+			return missionChooser(coordinates)
+			.then(newMission => {
+					return {
+						state: {
+							messageState: 'FETCH_CHALLENGE', 
+							currentMission: newMission.id,
+						},
+						message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+username+"?"
+					}
+				})
+		}
+
+		else if(userInput = 'eager beaver'){
+			return Promise.all([partnerChooser(location.coordinates), missionChooser(location.coordinates)])
+			.then(response => {
+				let partners = response[0]
+				//console.log("USERS: ", partners)
+				let newMission = response[1];
+				if(!partners){
+					return {message: 'There are no agents available.'}
+				}
+				else{
+					let partner = partners[0]
+
+					console.log("ABOU TO SEND MESSAGE")
+					return client.sendMessage({
+
+		              to: partner.phoneNumber, // Any number Twilio can deliver to
+		              from: '+12027593387', // A number you bought from Twilio and can use for outbound communication
+		              body: `We have found a partner for you. Agent ${username} is ready to go. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.` // body of the SMS message
+
+		          	})
+		          	.then(() => {
+		          		return UserMission.bulkCreate([
+		          			{userId: userId, missionId: newMission.id, partnerId: partner.id},
+		          			{userId: partner.id, missionId: newMission.id , partnerId: userId}])
+		          	})
+					.then(() => {
+						console.log("ABOUT TO UPDATE PARTNER")
+						return partner.update({
+						messageState: 'FETCH_CHALLENGE',
+						currentMission: newMission.id,
+						lastMessageTo: Date()
+					})})
+					.then(() => {
+						return {
+							state: {
+								messageState: 'FETCH_CHALLENGE', 
+								currentMission: newMission.id,
+							},
+							message: `Agent ${partner.username} will be your partner. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.`
+						}
+					})
+					.catch(err => console.log(err))
+				}
+		})}
+
+		else return {
+			message: "We did not recognize your preference, please respond with 'lone wolf' or 'eager beaver'."
+		}
+
+
+		
+	},
+
+	// QUERY_MISSION: (username, message) => {
+	// 	// assume we were able to access and process location
+	// 	var coordinatesPromise = getLocation(message)
+	// 	console.log("coordinatesPromise: ", coordinatesPromise)
+	// 	return coordinatesPromise
+	// 	.then(coordinates => {
+	// 		if(typeof coordinates === 'object'){
+	// 			return chooseMission()
+	// 			.then(newMission => {
+	// 				return {
+	// 					state: {
+	// 						messageState: 'FETCH_CHALLENGE', 
+	// 						currentMission: newMission.id,
+	// 						location: {type: 'Point', coordinates: coordinates}
+	// 					},
+	// 					message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+username+"?"
+	// 				}
+	// 			})
+	// 		}
+	// 		else{
+	// 			console.log("coordinates is not an array")
+	// 			return {
+	// 				message: "Sorry, The Agency's message processor was not able to parse your location from that message.  Please send in your street address instead."
+	// 			}
+	// 		}
+	// 	})
+	// },
 
 	FETCH_CHALLENGE: (currentMissionId, currentChallengeId, userInput) => {
 		// still need to adjust based on userInput

@@ -17,7 +17,11 @@ const data = {
     { username: 'Gator',
       phoneNumber: '+19146469702',
       isAdmin: true, 
-      location: {type: 'Point', coordinates: [0, 0]}
+    },
+    { username: 'Karin',
+      phoneNumber: '+19739975239',
+      isAdmin: true, 
+      location: {type: 'Point', coordinates: [40.705691, -74.009342]}
     }
   ],
 
@@ -29,6 +33,7 @@ const data = {
     { title: 'Grace Hopper and the Missing Bone', // mission 3
       description: 'Ben, one of Grace Hopper Academy\'s proudest members, has had his favorite bone stolen out from under his nose. Can you identify the thief?',
       place: 'Grace Hopper',
+      meetingPlace: '5 Hanover Square by the elevators on the 11th floor',
       numChallenges: 5
     }
   ],

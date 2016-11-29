@@ -48,10 +48,17 @@ const fetchMessage = (user, message) => {
 			break;
 		case 'TUTORIAL_MISSION_2': // need location
 		case 'TUTORIAL_MISSION_3': // need image
-		case 'QUERY_MISSION': // need location
-		// for those that need images or locations
-			returnObj = whichMessage[user.messageState] (user.username, message);
+		// case 'QUERY_MISSION': // need location
+		// // for those that need images or locations
+		// 	returnObj = whichMessage[user.messageState] (user.username, message);
+		// 	console.log("RETURN OBJECT: ", returnObj)
+		// 	break;
+		case 'QUERY_MISSION': 
+			returnObj = whichMessage[user.messageState] (user.id, user.username, user.location, message.Body);
 			console.log("RETURN OBJECT: ", returnObj)
+			break;
+		case 'SOLO_YN':
+			returnObj = whichMessage[user.messageState] (user.username, message);
 			break;
 		case 'FETCH_CHALLENGE':
 			returnObj = whichMessage[user.messageState] (
@@ -76,7 +83,8 @@ const fetchMessage = (user, message) => {
 	// user.update does not need to happen before sending message,
 	if (returnObj && returnObj.state) user.update(returnObj.state);
 	if (returnObj && returnObj.message) {
-		user.update({lastMessageAt: Date()})
+		user.update({lastMessageTo: Date()})
+		console.log("RETURN OBJ MESSAGE: ", returnObj.message)
 		return returnObj.message;
 	}
 
@@ -86,7 +94,7 @@ const fetchMessage = (user, message) => {
 		.then(obj => {
 			if (obj && obj.state) user.update(obj.state);
 			if (obj && obj.message) {
-				user.update({lastMessageAt: Date()})
+				user.update({lastMessageTo: Date()})
 				return obj.message;
 			}
 		})
