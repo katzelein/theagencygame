@@ -1,7 +1,7 @@
 const User = require('../models/user')
 const Sequelize = require('sequelize')
 
-const whichMessage = require('./whichMessage')
+const {whichMessage} = require('./whichMessage')
 
 module.exports = function(phoneNumber, message) {
 	return User.findOne({where: {phoneNumber}})
@@ -23,7 +23,9 @@ module.exports = function(phoneNumber, message) {
 
 const fetchMessage = (user, message) => {
 	
-	const simpleInput = message.Body.toLowerCase();
+
+	let simpleInput = "";
+	if (message.Body != undefined) simpleInput = message.Body.toLowerCase();
 	switch(simpleInput) {
 		case 'help':
 		case 'options':
@@ -77,6 +79,8 @@ const fetchMessage = (user, message) => {
 		user.update({lastMessageAt: Date()})
 		return returnObj.message;
 	}
+
+
 	if (returnObj instanceof Promise || returnObj.constructor.name === 'Promise') {
 		return returnObj
 		.then(obj => {

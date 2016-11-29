@@ -9,8 +9,11 @@ const data = {
       phoneNumber: '+5555555556'},
     { username: 'blackwidow',
       phoneNumber: '+5555555557'},
-    { username: 'philcoulson',
-      phoneNumber: '+5555555558'}, 
+    { username: 'philcoulson', 
+      phoneNumber: '+5555555558'},
+    { username: 'operagirl',
+      phoneNumber: '+18607485586', 
+      isAdmin: true},
     { username: 'Gator',
       phoneNumber: '+19146469702',
       isAdmin: true, 
@@ -30,13 +33,15 @@ const data = {
     }
   ],
 
+
   challenge: [
     { objective: 'Head to the Trump Building', // mission 1
       summary: 'We need photographic evidence of the specific street address assigned to this building. We believe that the etchings on the gold may somehow contain his fingerprints. When found, send photograph to this number. Show no others.',
       conclusion: 'Great work. The fingerprints are being to the lab for analysis. In the meantime, we have another task for you.'
     },
     { objective: 'Origins of the Open Market', // mission 1
-      summary: 'According to our surveillance, agent SoAndSo bought an omelette with spinach and broccoli every morning at the Open Market. Head to the store and talk to Vinnie, the guy behind the omelette counter. Give him the passcode and, if he deems you trustworthy, send us his return passcode.', targetText: 'What are you talking about',
+      summary: 'According to our surveillance, agent SoAndSo bought an omelette with spinach and broccoli every morning at the Open Market. Head to the store and talk to Vinnie, the guy behind the omelette counter. Give him the passcode and, if he deems you trustworthy, send us his return passcode.', targetText: 'What are you talking about', 
+      type: 'voice',
       conclusion: 'Vinnie may be connected to the mob. He trusted you with the right passcode, so our way deeper into the depths may be open. Please await your next mission.'
     },
 
@@ -57,6 +62,7 @@ const data = {
       order: 3
     }, // imaginary friend-monster: gorp
     { objective: 'Grace Hopper Academy\'s Secret Storage', // mission 3
+
       summary: 'We think that the thief may have an even bigger profile at the school than we thought possible. The corruption runs deep. The thief may have been so smart as to code a clue into the Grace Hopper logo in plain sight. Head to the lobby of the school and send us a picture of the logo.',
       targetTags: ['gha_logo'],
       conclusion: 'Our intel was correct; the logo contained vital information. One last step and we should be able to catch the thief red-handed.',
@@ -104,6 +110,9 @@ return db.sync({force: true})
   User.bulkCreate(data.user))
   .then(users => console.log(`Seeded ${users.length} users OK`))
 .then(() =>
+  Challenge.bulkCreate(data.challenge))
+  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
+.then(() =>
   Mission.bulkCreate(data.mission))
   .then(missions => {
     console.log(`Seeded ${missions.length} missions OK`)
@@ -114,23 +123,13 @@ return db.sync({force: true})
     console.log('setChallenges', mission.setChallenges)
     mission.setChallenges([3,4,5,6,7])
   })
-  .then(() =>  
-    Challenge.bulkCreate(data.challenge))
-    .then(() => Challenge.update({
-    missionId: 3
-    },{where: {
-      order: {
-        $between: [1, 6]
-      }
-    }
-  }))
-  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
 .then(() =>
   UserMission.bulkCreate(data.userMission))
   .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
 .then(() =>
   UserChallenge.bulkCreate(data.userChallenge))
   .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
+
 
 }
 
@@ -154,3 +153,4 @@ module.exports = seed();
 //   .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
 //   .catch(error => console.error(error))
 //   .finally(() => db.close())
+

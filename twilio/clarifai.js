@@ -15,27 +15,34 @@ var generalModelId = Clarifai.GENERAL_MODEL;
 /*
 * Function to call from lookup, takes a message and returns the tags array
 */
-function getPhotoTags(message){
+let getPhotoTags = function (message){
   var tags = [];
   if (message.MediaContentType0 === 'image/jpeg' ||
       message.MediaContentType0 === 'image/gif' ||
       message.MediaContentType0 === 'image/png'){
+
       //Make calls to Clarifai for custom model and general model
-      tags.concat(analyzePhoto(customModelId, message.MediaUrl0))
-      tags.concat(analyzePhoto(generalModelId, message.MediaUrl0))
-      return tags;
+      let custom = analyzePhoto(customModelId, message.MediaUrl0)
+      let general = analyzePhoto(generalModelId, message.MediaUrl0)
+      return Promise.all([custom, general])
+      .then(results => {
+        tags = tags.concat(results[0]);
+        tags = tags.concat(results[1]);
+        return tags;
+      })
     } else {
       console.log('There was no media in this message')
+      return tags;
     }
   }
 
-  /*
-  * Function to make Clarifai calls w/specified model
-  */
+/*
+* Function to make Clarifai calls w/specified model
+*/
 function analyzePhoto(modelToUse, mediaUrl){
-  clarifaiAPI.models.predict(modelToUse, mediaUrl).then(
+  return clarifaiAPI.models.predict(modelToUse, mediaUrl).then(
        (res) => {
-         console.log('Clarifai response = ', res);
+         // console.log('Clarifai response = ', res);
          let tags = [];
          for (let i = 0; i<res.data.outputs[0].data.concepts.length; i++) {
            tags.push(res.data.outputs[0].data.concepts[i].name);
@@ -49,4 +56,4 @@ function analyzePhoto(modelToUse, mediaUrl){
      )
 }
 
-module.exports = {getPhotoTags}
+module.exports = getPhotoTags;
