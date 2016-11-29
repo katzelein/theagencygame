@@ -17,9 +17,11 @@ const User = db.define('users', {
   	defaultValue: 'STANDBY'
   },
   location: {
-  	type: Sequelize.GEOMETRY
+  	type: Sequelize.GEOGRAPHY
   },
-  lastMessageAt: Sequelize.DATE
+  lastMessageTo: Sequelize.DATE, 
+  lastMessageFrom: Sequelize.DATE,
+  statusChanged: Sequelize.DATE
 })
 
 module.exports = User

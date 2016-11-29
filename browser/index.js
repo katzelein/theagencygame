@@ -7,7 +7,6 @@ import {SendVerificationContainer} from './containers/VerificationContainer';
 import {VerifyContainer} from './containers/VerificationContainer';
 import DashboardContainer from './containers/DashboardContainer';
 import AdminContainer from './containers/AdminContainer';
-import AddMission from './components/AddMission';
 import EditMissionsContainer from './containers/EditMissionsContainer';
 import EditChallengesContainer from './containers/EditChallengesContainer';
 import injectTapEventPlugin from 'react-tap-event-plugin';
