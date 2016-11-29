@@ -82,7 +82,33 @@ export default class Dashboard extends Component {
                   {
                     missions.map(function (mission) {
                       return (
-                        <DashboardMission missions={this.props.user.userMissions} challenges={this.props.user.userChallenges}
+                        <Card style={styles.card} expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
+                          <CardHeader
+                            title={<h2>{mission.title}</h2>}
+                            subtitle={mission.description}
+                            // actAsExpander={true}
+                            showExpandableButton={true}
+                            style={{margin: 20}} />
+                          <CardText>
+                            <Toggle
+                              toggled={this.state.expanded}
+                              onToggle={this.handleToggle}
+                              labelPosition="right"
+                              label="See this mission's challenges" />
+                          </CardText>
+                          <CardTitle title='Completed Challenges' expandable={true} />
+
+                            {challenges.map(function (challenge) { 
+                              return (
+                                <CardText expandable={true} key={challenge.order}>
+                                  <h3>Summary </h3>
+                                  <p>{challenge.summary} </p>
+                                  <h3>Conclusion</h3>
+                                  <p>{challenge.conclusion} </p>
+                                </CardText>
+                              )
+                            })}
+                        </Card>
                       )
                     })
                   }

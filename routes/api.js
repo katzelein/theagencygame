@@ -4,7 +4,10 @@ var twilio = require('twilio');
 var User = require('../models/user')
 var Mission = require('../models/mission')
 var Challenge = require('../models/challenge')
+var UserMission = require('../models/userMission')
+var UserChallenge = require('../models/userChallenge')
 const {mustBeAdmin, mustBeLoggedIn, selfOnly} = require('./permissions')
+var Promise = require('bluebird')
 
 // router.get('/', function (req, res, next) {
 //   res.send("I'm working!")
@@ -33,23 +36,20 @@ router.get('/user/:id', function(req, res, next){
 
 router.get('/user/:id/data', function(req, res, next){
 	console.log("Req: ", req.session)
-	console.log("getting user")
+	console.log("getting user data")
 	selfOnly("view")(req, res, next)
-	User.findById(req.params.id, {include: [
-		{ 
-			model: userMissions, 
-			where: { 
-				userId: req.params.id
-			}
-		}, {
-			model: userChallenges,
-			where: {
-				userId: req.params.id
-			} 
-		}
-	]})
+
+	var user = User.findById(req.params.id)
+	var missions = UserMission.findAll({where: { userId: req.params.id }}) 
+	var challenges = UserChallenge.findAll({where: {userId: req.params.id}})
+	
+	return Promise.all([missions, challenges, user])
 		.then(data => {
-			res.status(200).send(data)
+			var userMissions = data[0]
+			var userChallenges = data[1]
+			var user = data[2]
+			
+			res.status(200).send({userMissions, userChallenges, user})
 		})
 			.catch(next)
 })
