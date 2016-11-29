@@ -1,4 +1,4 @@
-//const localConst = require('./constants')
+const localConst = require('./constants')
 /*
 * On heroku, use heroku env variables, locally use .gitignored constants
 */
