@@ -4,8 +4,8 @@ const {getLocation} = require('./location')
 const getPhotoTags = require('./clarifai')
 const {adventureDetails, missionChooser, partnerChooser} = require('./missionChooser')
 const User = require('../models/user')
-const {accountSid, authToken} = require('../constants')
-var client = require('twilio')(accountSid, authToken); 
+const {accountSid, authToken} = require('../variables')
+var client = require('twilio')(accountSid, authToken);
 const UserMission = require('../models/userMission')
 const Challenge = require('../models/challenge')
 
@@ -247,7 +247,7 @@ const whichMessage = {
 			.then(newMission => {
 					return {
 						state: {
-							messageState: 'FETCH_CHALLENGE', 
+							messageState: 'FETCH_CHALLENGE',
 							currentMission: newMission.id,
 						},
 						message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+username+"?"
@@ -290,7 +290,7 @@ const whichMessage = {
 					.then(() => {
 						return {
 							state: {
-								messageState: 'FETCH_CHALLENGE', 
+								messageState: 'FETCH_CHALLENGE',
 								currentMission: newMission.id,
 							},
 							message: `Agent ${partner.username} will be your partner. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.`
@@ -305,7 +305,7 @@ const whichMessage = {
 		}
 
 
-		
+
 	},
 
 	// QUERY_MISSION: (username, message) => {
@@ -319,7 +319,7 @@ const whichMessage = {
 	// 			.then(newMission => {
 	// 				return {
 	// 					state: {
-	// 						messageState: 'FETCH_CHALLENGE', 
+	// 						messageState: 'FETCH_CHALLENGE',
 	// 						currentMission: newMission.id,
 	// 						location: {type: 'Point', coordinates: coordinates}
 	// 					},

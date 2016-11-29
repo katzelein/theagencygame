@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const volleyball = require('volleyball');
 const Client = require('authy-client').Client;
-const authyKey = require('./constants').authyKey
-const secret = require('./constants').secret
+const authyKey = require('./variables').authyKey
+const secret = require('./variables').secret
 
 const client = new Client({ key: authyKey });
 var cookieParser = require('cookie-parser');

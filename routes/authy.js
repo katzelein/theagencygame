@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var twilio = require('twilio');
-var constants = require('../constants');
+var constants = require('../variables');
 var User = require('../models/user');
 
 // router.get('/', function (req, res, next) {
@@ -43,7 +43,7 @@ router.post('/verification/verify', function(req, res, next){
 	 var country_code = req.body.countryCode;
     var phone_number = req.body.phoneNumber;
     var token = req.body.token;
-    
+
     if (phone_number && country_code && token) {
         phoneReg.verifyPhoneToken(phone_number, country_code, token, function (err, response) {
             if (err) {

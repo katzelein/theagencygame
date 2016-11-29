@@ -1,4 +1,4 @@
-const constants = require('../liveconstants')
+const constants = require('../variables')
 
 /*to run this script, node twilio/delete.js */
 

@@ -1,6 +1,5 @@
-var clientId = require('../constants').clarifaiClientId
-var clientSecret = require('../constants').clarifaiClientSecret
-var accessToken = require('../constants').clarifaiAccessToken
+var clientId = require('../variables').clarifaiClientId
+var clientSecret = require('../variables').clarifaiClientSecret
 
 var Clarifai = require('clarifai');
 var clarifaiAPI = new Clarifai.App(
