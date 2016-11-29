@@ -259,7 +259,8 @@ const whichMessage = {
 				let partners = response[0]
 				//console.log("USERS: ", partners)
 				let newMission = response[1];
-				if(!partners){
+				console.log(partners);
+				if(!partners || !partners.length){
 					return {message: 'There are no agents currently available.  Please wait a few minutes ...'}
 				}
 				else{
