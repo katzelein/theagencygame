@@ -46,10 +46,10 @@ router.get('/:id/history', function(req, res, next){
   		]
   	})
   	.then(resp => {
-  		let mission = resp[0].mission
+  		let missions = resp[0].mission
   		let challenges = mission.challenges
   		let challengeUsers = challenges[0]
-  		console.log("RESP: ", resp)
+  		console.log("RESP: ", resp) // resp is an array of each mission containing challenges
   		console.log("MISSION: ", resp[0].mission)
   		console.log("CHALLENGES: ", challenges)
   		console.log("CHALLENGE USERS: ", challengeUsers)

@@ -22,7 +22,7 @@ export const fetchUser = () => ((dispatch) => {
   .then(user => {
     //console.log("user from whoami: ", user.username)
     if(user.id){
-      axios.get(`/api/user/${user.id}/data`)
+      axios.get(`/api/user/${user.id}/history`)
       .then(res => res.data)
       .then(data => {
         console.log("This came back in our route: ", data)
