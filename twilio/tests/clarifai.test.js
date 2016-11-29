@@ -1,5 +1,5 @@
 const {expect} = require('chai');
-const getPhotoTags = require('./clarifai')
+const getPhotoTags = require('../clarifai')
 
 describe('Clarifai', () => {
 	it ('should return a promise', () => {

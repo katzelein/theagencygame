@@ -31,7 +31,7 @@ let getPhotoTags = function (message){
         return tags;
       })
     } else {
-      console.log('There was no media in this message')
+      // console.log('Clarifai: There was no media in this message')
       return tags;
     }
   }
@@ -48,7 +48,7 @@ function analyzePhoto(modelToUse, mediaUrl){
            if(res.data.outputs[0].data.concepts[i].value > 0.83){
              tags.push(res.data.outputs[0].data.concepts[i].name);
            }         }
-         console.log("TAGS!!!", tags)
+         // console.log("Clarifai: TAGS!!!", tags)
          return tags;
        },
        (err) => {

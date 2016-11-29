@@ -395,7 +395,7 @@ const whichMessage = {
 
 					return getPhotoTags(message)
 					.then (actualTags => {
-						console.log(actualTags);
+						// console.log(actualTags);
 						if (checkTags(currentChallenge.targetTags, actualTags)) return success;
 						else return fail;
 					})

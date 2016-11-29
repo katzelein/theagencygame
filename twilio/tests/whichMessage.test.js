@@ -1,12 +1,12 @@
 const {expect} = require('chai');
 
-const {getChallenge, chooseMission} = require('./chooser')
-const db = require('../models/index')
-const User = require('../models/user')
-const Mission = require('../models/mission');
-const Challenge = require('../models/challenge');
+const {getChallenge, chooseMission} = require('../chooser')
+const db = require('../../models/index')
+const User = require('../../models/user')
+const Mission = require('../../models/mission');
+const Challenge = require('../../models/challenge');
 
-const {whichMessage, checkTags} = require('./whichMessage');
+const {whichMessage, checkTags} = require('../whichMessage');
 
 describe('Game Logic', () => {
 
