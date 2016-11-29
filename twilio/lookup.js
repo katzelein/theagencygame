@@ -70,6 +70,8 @@ const fetchMessage = (user, message) => {
 			returnObj = whichMessage[user.messageState] (user.username, message.Body);
 			break;
 		case 'TUTORIAL_MISSION_2': // need location
+			returnObj = whichMessage[user.messageState] (user.username, message);
+			break;
 		case 'TUTORIAL_MISSION_3': // need image
 		case 'SOLO_YN': // need location
 		// for those that need images or locations
