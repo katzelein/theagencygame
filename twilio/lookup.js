@@ -31,10 +31,33 @@ const fetchMessage = (user, message) => {
 		case 'options':
 			return "You have reached The Agency\'s automated help menu! Text 'tutorial' to redo the training mission.  Text 'quit' to quit any ongoing mission.  Text 'skip' to skip any particular challenge in a mission. Text 'resign' to retire from The Agency."
 		case 'tutorial':
+			user.update({
+				prevState: user.messageState,
+				messageState: 'QUERY_TUTORIAL',
+				lastMessageAt: Date()
+			})
+			return "You have indicated you wish to redo your training mission.  Are you certain?"
 		case 'skip':
+			user.update({
+				prevState: user.messageState,
+				messageState: 'QUERY_SKIP_CHALLENGE',
+				lastMessageAt: Date()
+			})
+			return "You have indicated you wish to skip this challenge.  Are you certain?"
 		case 'quit':
+			user.update({
+				prevState: user.messageState,
+				messageState: 'QUERY_QUIT_MISSION',
+				lastMessageAt: Date()
+			})
+			return "You have indicated you wish to quit this mission.  Are you certain?"
 		case 'resign':
-			return "You have indicated you wish to ____.  Are you certain?"
+			user.update({
+				prevState: user.messageState,
+				messageState: 'QUERY_RESIGN',
+				lastMessageAt: Date()
+			})
+			return "You have indicated you wish to resign from The Agency.  Are you certain?"
 		default:
 			break;
 	}
@@ -54,6 +77,7 @@ const fetchMessage = (user, message) => {
 			console.log("RETURN OBJECT: ", returnObj)
 			break;
 		case 'FETCH_CHALLENGE':
+		// unique case: needs current mission and current challenge data
 			returnObj = whichMessage[user.messageState] (
 				user.currentMission, 
 				user.currentChallenge, 
@@ -61,6 +85,7 @@ const fetchMessage = (user, message) => {
 			);
 			break;
 		case 'CHALLENGE_ANSWER':
+		// unique case: needs challenge data and all possible messages
 			returnObj = whichMessage[user.messageState] (user.currentChallenge, message)
 			break;
 		default:

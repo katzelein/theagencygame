@@ -294,7 +294,23 @@ const whichMessage = {
 		})
 	},
 
-	QUERY_HIATUS: () =>{return ""}
+	QUERY_HIATUS: () =>{return ""},
+
+	QUERY_TUTORIAL: (user, userInput) => {
+		if (userInput == 'no') return {
+			state: {
+				messageState: user.prevState,
+				prevState: null,
+			},
+			message: "You have declined repeating your training mission."
+		}
+	},
+
+	QUERY_SKIP_CHALLENGE: () => {},
+
+	QUERY_QUIT_MISSION: () => {},
+
+	QUERY_RESIGN: () => {},
 }
 
 const checkTags = (expectedTags, actualTags) => {
