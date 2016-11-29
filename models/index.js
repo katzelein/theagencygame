@@ -18,6 +18,8 @@ Mission.hasMany(Challenge)
 // Mission.hasMany(Challenge, {foreignKey: challenge_id})
 // Challenge.belongsToMany(Mission, {through: MissionChallenges})
 Challenge.belongsTo(Mission)
+UserMissions.belongsTo(Mission)
+UserMissions.belongsTo(User)
 
 // sync the db, creating it if necessary
 function sync(force=appEnv) { //appEnv
