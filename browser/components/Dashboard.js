@@ -5,11 +5,20 @@ import axios from 'axios';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
+import {Card, CardText, CardHeader, CardTitle} from 'material-ui/Card'
+import Toggle from 'material-ui/Toggle'
 
 const styles = {
+  card: {
+    margin: 20,
+    padding: 10,
+    textAlign: 'left'
+  },
   paper: {
-    textAlign: 'center',
-  }
+    height: 500,
+    width: 800,
+    margin: 20
+  },
 };
 
 const mission = {title: 'Grace Hopper and the Missing Bone',
@@ -56,10 +65,11 @@ export default class Dashboard extends Component {
       expanded: false
     };
 
-    this.handleToggle.bind(this)
-    this.handleChange.bind(this)
     this.logout = this.logout.bind(this)
-    this.handleClick.bind(this)
+    this.handleExpand = this.handleExpand.bind(this)
+    this.handleToggle = this.handleToggle.bind(this)
+    this.handleExpandChange = this.handleExpandChange.bind(this)
+    this.handleReduce = this.handleReduce.bind(this)
   }
 
   componentDidMount () {
@@ -75,19 +85,19 @@ export default class Dashboard extends Component {
     })
   }
 
-  handleExpandChange = (expanded) => {
+  handleExpandChange (expanded) {
     this.setState({expanded: expanded});
   };
 
-  handleToggle = (event, toggle) => {
+  handleToggle (event, toggle) {
     this.setState({expanded: toggle});
   };
 
-  handleExpand = () => {
+  handleExpand () {
     this.setState({expanded: true});
   };
 
-  handleReduce = () => {
+  handleReduce () {
     this.setState({expanded: false});
   };
 
@@ -97,21 +107,18 @@ export default class Dashboard extends Component {
     console.log("DASHBOARD USER: ", this.props.user)
     return (
       <div id="main">
-        <Grid>
-          <Row>
-          <Paper style={styles.paper} zDepth={4} >
-              {/* {this.props.user.id ? ( */}
-                <div>
-                  DASHBOARD
-
-
-
-                  <Card expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
+          <Paper zDepth={5} style={{margin: '0 auto', width: 800}}>
+              {this.props.user.id ? (
+                <div id="dashboard">
+                  <h1 className="dashboardHeader">Agency Dashboard</h1>
+                  <h5 className="dashboardHeader">Completed Missions</h5>
+                  <Card style={styles.card} expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
                     <CardHeader
-                      title={mission.title + ', ' + mission.place}
+                      title={<h2>{mission.title}</h2>}
                       subtitle={mission.description}
-                      actAsExpander={true}
+                      // actAsExpander={true}
                       showExpandableButton={true}
+                      style={{margin: 20}}
                     />
                     <CardText>
                       <Toggle
@@ -121,36 +128,49 @@ export default class Dashboard extends Component {
                         label="See this mission's challenges"
                       />
                     </CardText>
-                    <CardTitle title={"Challenge" + challenge.order} subtitle="Card subtitle" expandable={true} />
-                    <CardText expandable={true}>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                      Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                      Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                    </CardText>
+
+                    <CardTitle title='Completed Challenges' expandable={true} />
+
+                    {challenges.map(function (challenge) { 
+                        return (
+                            <CardText expandable={true} key={challenge.order}>
+                              <h3>Summary </h3>
+                              <p>{challenge.summary} </p>
+
+                              <h3>Conclusion</h3>
+                              <p>{challenge.conclusion} </p>
+
+                            </CardText>
+                        )
+                    })}
                   </Card>
 
-
-
                 <div >
-                  <RaisedButton label="Logout" onClick={this.logout} />
+                  <RaisedButton style={{margin: 10}} secondary={true} label="Logout" onClick={this.logout} />
                 </div>
 
-                {/*  {this.props.user && this.props.user.isAdmin ?
-                    (<div>
-                      <Link to="/admin">Admin Page</Link>
+                  {this.props.user && this.props.user.isAdmin ?
+                    (
+                      <div>
+                        <Link to="/admin">
+                          <RaisedButton style={{margin: 10}} secondary={true} label="Admin Page" onClick={this.logout} />
+                        </Link>
                       </div>
                     ) :
                     null   
-                  } */}          
-                </div>{/*
+                  } 
+
+                </div>
+
               ) : (
-                <div> Please <Link to="/">log in</Link> to view your dashboard </div>
+                <div id="blocked">
+                  <Link to="/">
+                    <RaisedButton style={{margin: 10}} secondary={true} label="Access Denied" onClick={this.logout} />
+                  </Link>
+                </div>
               )
-            } */}
+            }
           </Paper>
-          </Row>
-        </Grid>
       </div>
     );
   }

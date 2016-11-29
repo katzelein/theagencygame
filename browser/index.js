@@ -21,7 +21,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Paper from 'material-ui/Paper'
 
 
-import { Grid } from 'react-flexbox-grid/lib/index'
+import { Grid, Row, Col } from 'react-flexbox-grid/lib/index'
 
 
 injectTapEventPlugin();
@@ -31,8 +31,6 @@ ReactDOM.render(
 
   <MuiThemeProvider muiTheme={getMuiTheme(agencyBaseTheme)}>
     <Provider store={store}>
-      <Grid>
-        <Paper>
           <Router history={browserHistory}>
             <Route path="/">
               <Route path="login" component={AppContainer} />
@@ -46,8 +44,6 @@ ReactDOM.render(
               <IndexRoute component={AppContainer}/>
             </Route>
           </Router>
-        </Paper>
-      </Grid>
     </Provider>
   </MuiThemeProvider>,
   document.getElementById('app')

@@ -87,4 +87,15 @@ html, body
   margin: auto;
 }
 
-.dashboard
+#blocked {
+  align-items: center;
+}
+
+#dashboard {
+  margin: 20px;
+}
+
+.dashboardHeader {
+  text-align: center;
+  text-decoration-color: #FFAB00;
+}
