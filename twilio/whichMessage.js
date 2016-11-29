@@ -5,9 +5,10 @@ const getPhotoTags = require('./clarifai')
 const {adventureDetails, missionChooser, partnerChooser} = require('./missionChooser')
 const User = require('../models/user')
 const {accountSid, authToken} = require('../constants')
-
 var client = require('twilio')(accountSid, authToken); 
 const UserMission = require('../models/userMission')
+const Challenge = require('../models/challenge')
+
 
 const whichMessage = {
 
@@ -17,7 +18,7 @@ const whichMessage = {
   			return {
   				state: {
   					messageState: 'NEED_USERNAME'
-				}, 
+				},
 				message: "Ah, it's seems The Agency has a new recruit! And what is your name, Trainee?  Feel free to use an alias, we respect the secrets of our agents."
 			}
 		}
@@ -43,11 +44,11 @@ const whichMessage = {
 					console.log("NEED_USERNAME")
 					return {
 						state: {
-							username: userInput, 
+							username: userInput,
 							messageState: 'TUTORIAL_MISSION_1'
 						},
 						message: "Welcome to the Agency, Agent "+userInput+"! Would you like to participate in a training mission?"
-					}}	
+					}}
 			})
 
 		} else {
@@ -151,7 +152,7 @@ const whichMessage = {
 		// 		return coordinates
 		// 	}
 		// })
-		
+
 	},
 
 	TUTORIAL_MISSION_3: (username, message) => {
@@ -393,7 +394,7 @@ const whichMessage = {
 					 * returns: true / false
 					 */
 					// let actualTags = [] // clarifai stuff
-					
+
 					return getPhotoTags(message)
 					.then (actualTags => {
 						console.log(actualTags);
@@ -415,7 +416,23 @@ const whichMessage = {
 		})
 	},
 
-	QUERY_HIATUS: () =>{return ""}
+	QUERY_HIATUS: () =>{return ""},
+
+	QUERY_TUTORIAL: (user, userInput) => {
+		if (userInput == 'no') return {
+			state: {
+				messageState: user.prevState,
+				prevState: null,
+			},
+			message: "You have declined repeating your training mission."
+		}
+	},
+
+	QUERY_SKIP_CHALLENGE: () => {},
+
+	QUERY_QUIT_MISSION: () => {},
+
+	QUERY_RESIGN: () => {},
 }
 
 const checkTags = (expectedTags, actualTags) => {
