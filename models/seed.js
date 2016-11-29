@@ -52,28 +52,40 @@ const data = {
 
     { objective: 'Find GHA\'s Newest Hero, Ceren', // mission 3
       summary: 'Ceren, Ben\'s doting mom who, in an incredible feat of strength and love, pulled him from the grips of an oncoming subway just a few weeks ago, spends her days in the CSS room. Find her office where Ben\'s orange water bowl sits and send us a picture; we need a warrant to dust the bowl for fingerprints.',
+      type: 'image',
       targetTags: ['bowl'],
       conclusion: 'Great work. We\'re picking up the scent of our thief; upcoming instructions to follow.' ,
-      order: 1
+      order: 1,
+      hasNext: true
     },
     { objective: 'Putting Out Kitchen Fires', // mission 3
       summary: 'Ben loves to wander the hallways of Grace Hopper, finding the occasional student eager to scratch his belly, or scooping up the remains of a forgotten blueberry muffin. On the day of the theft, Ben was seen more than usual around the kitchen yesterday during an incoming shipment of cereal; we think this may be where the thief saw their opportunity. Please send the license number for the fire extinguisher on the left by the passcoded door. We believe the thief may use this as the passcode for their own office.',
+      // type: 'text',
+      // targetText: 'something',
       conclusion: 'You\'re on the mark, shouldn\'t be long now. Await further instructions',
-      order: 2
+      order: 2,
+      hasNext: true
     },
     { objective: 'Tracking the Teacher', // mission 3
       summary: 'We have a list of all the offices linked to the passcode you found, and one of the teachers of Grace Hopper and Fullstack Academy, Ashi Krishnan, spent the day in the office implicated during the theft of Ben\'s bone. Find Ashi and find out the name of her childhood dog -- but do it covertly. She can\'t know that she\'s a suspect. Then call this number, speak the name of the dog when prompted, and quickly hang up. Secrecy is key.',
+      type: 'voice',
+      targetText: 'gorp',
       conclusion: 'Ashi may not be the thief, but our progress has been strong. Well done, agent. The future looks bright.',
-      order: 3
+      order: 3,
+      hasNext: true
     }, // imaginary friend-monster: gorp
     { objective: 'Grace Hopper Academy\'s Secret Storage', // mission 3
       summary: 'We think that the thief may have an even bigger profile at the school than we thought possible. The corruption runs deep. The thief may have been so smart as to code a clue into the Grace Hopper logo in plain sight. Head to the lobby of the school and send us a picture of the logo.',
+      type: 'image',
       targetTags: ['gha_logo'],
       conclusion: 'Our intel was correct; the logo contained vital information. One last step and we should be able to catch the thief red-handed.',
-      order: 4
+      order: 4,
+      hasNext: true
     },
     { objective: 'The Voice of Ultimate Betrayal', // mission 3
       summary: 'This is where the rubber meets the road, agent. You will need to be your most stealthy. Find David Yang; he is never far away. Capture no more than 10 seconds of his voice to confirm his identity. We need to compare your footage to audio surveillance the Agency maintains for our own safety. Be careful.',
+      // type: 'something',
+      // targetText: 'something',
       conclusion: 'We have a match. David Yang is the thief of the missing bone. It is a dark day for Grace Hopper, but a proud day for the Agency. Well done, agent. Your country, and Ben, thanks you.',
       order:5
     }
