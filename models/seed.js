@@ -1,11 +1,4 @@
-const db = require('./index')
-
 const Promise = require('bluebird');
-const User = require('./user')
-const Challenge = require('./challenge')
-const Mission = require('./mission')
-const UserMission = require('./userMission')
-const UserChallenge = require('./userChallenge')
 
 
 const data = {
@@ -23,7 +16,12 @@ const data = {
       isAdmin: true},
     { username: 'Gator',
       phoneNumber: '+19146469702',
-      isAdmin: true
+      isAdmin: true, 
+    },
+    { username: 'Karin',
+      phoneNumber: '+19739975239',
+      isAdmin: true, 
+      location: {type: 'Point', coordinates: [40.705691, -74.009342]}
     }
   ],
 
@@ -35,6 +33,7 @@ const data = {
     { title: 'Grace Hopper and the Missing Bone', // mission 3
       description: 'Ben, one of Grace Hopper Academy\'s proudest members, has had his favorite bone stolen out from under his nose. Can you identify the thief?',
       place: 'Grace Hopper',
+      meetingPlace: '5 Hanover Square by the elevators on the 11th floor',
       numChallenges: 5
     }
   ],
@@ -124,60 +123,78 @@ const data = {
 
 };
 
-/* The problem with using bulkCreate: the array of objects returned
- * do not have id numbers associated with them.  Need to fetch from
- * database in order to get objects with id numbers.  Need the objects
- * to have id numbers in order to create any assocations
- */
-
-db.sync({force: true})
-.then(() => {
-  const users = User.bulkCreate(data.user)
-    .then(users => {
-      console.log(`Seeded ${users.length} users OK`)
-    })
-  const missions = Mission.bulkCreate(data.mission)
-    .then(missions => {
-      console.log(`Seeded ${missions.length} missions OK`)
-    })
-
-  const challenges = Challenge.bulkCreate(data.challenge)
-    .then(challenges => {
-      console.log(`Seeded ${challenges.length} challenges OK`)
-    })
-
-  return Promise.all([missions, challenges, users])
-})
-.then(() => {
-  const users = User.findAll()
-  .then(users =>  {
-    return users.reduce((allUsers, user) =>
-      Object.assign({}, allUsers, {[user.phoneNumber]: user}), {})
-  })
-
-  const challenges = Challenge.findAll()
-  .then(challenges => {
-    return challenges.reduce(
-    (allChallenges, challenge) =>
-      Object.assign({}, allChallenges, {[challenge.objective]: challenge}),
-        {})
-  })
-
-  const missions = Mission.findAll()
+const seed = (db) => {
+if(db){
+  const User = db.models.users
+const Challenge = db.models.challenges
+const Mission = db.models.missions
+const UserMission = db.models.userMissions
+const UserChallenge = db.models.userChallenges
+  db.sync()
+.then(() =>
+  User.bulkCreate(data.user))
+  .then(users => console.log(`Seeded ${users.length} users OK`))
+.then(() =>
+  Challenge.bulkCreate(data.challenge))
+  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
+.then(() =>
+  Mission.bulkCreate(data.mission))
   .then(missions => {
-    return missions.reduce(
-      (allMissions, mission) =>
-        Object.assign({}, allMissions, {[mission.title]: mission}),
-          {})
+    console.log(`Seeded ${missions.length} missions OK`)
+    return missions[2];
   })
-  return Promise.all([challenges, missions, users])
-})
-.then(([challenges, missions, users]) => {
+  .then(mission => {
+    console.log(mission)
+    console.log('setChallenges', mission.setChallenges)
+    mission.setChallenges([3,4,5,6,7])
+  })
+.then(() =>
+  UserMission.bulkCreate(data.userMission))
+  .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
+.then(() =>
+  UserChallenge.bulkCreate(data.userChallenge))
+  .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
+}
 
-  // 
-  let challengeMission = data.challengeMission(missions);
-  let challengeKeys = Object.keys(challenges);
-  challengeKeys.forEach(key => {
-    return challengeMission[key].addChallenge(challenges[key]);
+else{
+db = require('./')
+const User = db.models.users
+const Challenge = db.models.challenges
+const Mission = db.models.missions
+const UserMission = db.models.userMissions
+const UserChallenge = db.models.userChallenges
+
+return db.sync({force: true})
+.then(() =>
+  User.bulkCreate(data.user))
+  .then(users => console.log(`Seeded ${users.length} users OK`))
+.then(() =>
+  Challenge.bulkCreate(data.challenge))
+  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
+.then(() =>
+  Mission.bulkCreate(data.mission))
+  .then(missions => {
+    console.log(`Seeded ${missions.length} missions OK`)
+    return missions[2];
   })
-})
+  .then(mission => {
+    console.log(mission)
+    console.log('setChallenges', mission.setChallenges)
+    mission.setChallenges([3,4,5,6,7])
+  })
+.then(() =>
+  UserMission.bulkCreate(data.userMission))
+  .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
+.then(() =>
+  UserChallenge.bulkCreate(data.userChallenge))
+  .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
+}
+
+}
+
+if(module === require.main){
+  const db = require('./')
+  seed(db)
+}
+
+module.exports = seed();

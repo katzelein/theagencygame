@@ -5,6 +5,7 @@ node_modules/
 notes.txt
 key.json
 notes
+ngrok
 /public/bundle.js
 /public/bundle.js.map
 */coverage
