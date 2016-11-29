@@ -71,17 +71,14 @@ const fetchMessage = (user, message) => {
 			break;
 		case 'TUTORIAL_MISSION_2': // need location
 		case 'TUTORIAL_MISSION_3': // need image
-		// case 'QUERY_MISSION': // need location
-		// // for those that need images or locations
-		// 	returnObj = whichMessage[user.messageState] (user.username, message);
-		// 	console.log("RETURN OBJECT: ", returnObj)
-		// 	break;
-		case 'QUERY_MISSION': 
-			returnObj = whichMessage[user.messageState] (user.id, user.username, user.location, message.Body);
-			console.log("RETURN OBJECT: ", returnObj)
-			break;
-		case 'SOLO_YN':
+		case 'SOLO_YN': // need location
+		// for those that need images or locations
 			returnObj = whichMessage[user.messageState] (user.username, message);
+			break;
+		case 'QUERY_MISSION': 
+		// unique case: need user to get location
+			returnObj = whichMessage[user.messageState] (user, simpleInput);
+			console.log("RETURN OBJECT: ", returnObj)
 			break;
 		case 'FETCH_CHALLENGE':
 		// unique case: needs current mission and current challenge data
