@@ -7,6 +7,7 @@ import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardText, CardHeader, CardTitle} from 'material-ui/Card'
 import Toggle from 'material-ui/Toggle'
+import DashboardMission from './DashboardMission'
 
 const styles = {
   card: {
@@ -82,7 +83,7 @@ export default class Dashboard extends Component {
                   {
                     missions.map(function (mission) {
                       return (
-                        <DashboardMission missions={this.props.user.userMissions} challenges={this.props.user.userChallenges}
+                        <DashboardMission missions={this.props.user.userMissions} challenges={this.props.user.userChallenges} />
                       )
                     })
                   }

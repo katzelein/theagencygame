@@ -38,6 +38,23 @@ router.get('/user/:id/data', function(req, res, next){
 	console.log("getting user data")
 	selfOnly("view")(req, res, next)
 
+	UserChallenge.findAll({
+		include: [ 
+			{ 
+				model: Challenge, 
+				include: [ Mission ]
+			}
+		]
+	})
+		.then(data => {
+			console.log("This is all the stuff we found...", data)
+		})
+
+
+
+
+
+
 	var user = User.findById(req.params.id)
 	var missions = UserMission.findAll({where: { userId: req.params.id }}) 
 	var challenges = UserChallenge.findAll({where: {userId: req.params.id}})
@@ -52,6 +69,26 @@ router.get('/user/:id/data', function(req, res, next){
 		})
 			.catch(next)
 })
+
+// router.get('/user/:id/data', function(req, res, next){
+// 	console.log("Req: ", req.session)
+// 	console.log("getting user data")
+// 	selfOnly("view")(req, res, next)
+
+// 	var user = User.findById(req.params.id)
+// 	var missions = UserMission.findAll({where: { userId: req.params.id }}) 
+// 	var challenges = UserChallenge.findAll({where: {userId: req.params.id}})
+	
+// 	return Promise.all([missions, challenges, user])
+// 		.then(data => {
+// 			var userMissions = data[0]
+// 			var userChallenges = data[1]
+// 			var user = data[2]
+			
+// 			res.status(200).send({userMissions, userChallenges, user})
+// 		})
+// 			.catch(next)
+// })
 
 
 router.get('/user/exists/:number', function(req, res, next){
