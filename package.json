@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-register seed.test.js ./models/tests/*.test.js",
+    "test": "mocha --compilers js:babel-register seed.test.js ./models/tests/*.test.js ./twilio/tests/*.test.js",
     "coverage": "istanbul cover test",
     "build": "webpack",
     "build-watch": "webpack -w",

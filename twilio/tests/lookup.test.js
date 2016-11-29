@@ -1,12 +1,13 @@
 const {expect} = require('chai');
 
-const {getChallenge, chooseMission} = require('./chooser')
-const db = require('../models/index')
-const Mission = require('../models/mission');
-const Challenge = require('../models/challenge');
+const {getChallenge, chooseMission} = require('../chooser')
+const db = require('../../models/index')
+const Mission = require('../../models/mission');
+const Challenge = require('../../models/challenge');
 
-describe('Selecting a mission / challenge', () => {
-	let missionId, challengeId;
+describe('Mission / Challenge selection', () => {
+	
+	let missionId, challengeId, firstChallenge, secondChallenge, newUser;
 
 	before ('create mission and challenges', () => {
 		const newMission = Mission.create({
@@ -32,14 +33,6 @@ describe('Selecting a mission / challenge', () => {
 			order: 2,
 			hasNext: true
 		})
-		// const newChallenge3 = Challenge.create({
-		// 	objective: "Publish your program",
-		// 	summary: "post on github",
-		// 	targetText: "posted",
-		// 	type: "text",
-		// 	order: 3,
-		// 	hasNext: false
-		// })
 		return Promise.all([
 			newMission,
 			newChallenge1,
@@ -47,10 +40,10 @@ describe('Selecting a mission / challenge', () => {
 		])
 		.then(promiseList => {
 			let mission = promiseList[0];
-			let challenge1 = promiseList[1];
-			let challenge2 = promiseList[2];
+			firstChallenge = promiseList[1];
+			secondChallenge = promiseList[2];
 			missionId = mission.id;
-			return mission.setChallenges([challenge1,challenge2])
+			return mission.setChallenges([firstChallenge,secondChallenge])
 		})
 	})
 	

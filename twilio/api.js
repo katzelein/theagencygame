@@ -5,9 +5,9 @@ var geocoder = require('geocoder');
 
 var lookup = require('./lookup')
 var getPhotoTags = require('./clarifai')
-const {accountSid, authToken} = require('../constants')
+const {accountSid, authToken} = require('../variables')
 
-var client = require('twilio')(accountSid, authToken); 
+var client = require('twilio')(accountSid, authToken);
 
 /*
 * Handle data from Twilio
@@ -23,7 +23,7 @@ twilioAPI.post('/messages', function(req, res, next){
 
   var answer = lookup(req.body.From, req.body) // must return a promise
   // console.log("ANSWER: ", answer)
-  
+
   answer
   .then(message => {
     console.log("answer message: ", message)

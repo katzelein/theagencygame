@@ -1,7 +1,7 @@
 const db = require('./models')
 const {expect} = require('chai')
 const Promise = require('bluebird');
-const app = require('./app')
+// const app = require('./app')
 const seed = require('./models/seed')
 
 //console.log("SEED: ", seed)
@@ -21,7 +21,10 @@ const seed = require('./models/seed')
       Mission.findAll()
       .then(missions => {
       	return expect(missions.length).to.equal(3)
-      }))
+      })
+      .catch(err => console.log(err))
+    )
+
 	})
 })
 
