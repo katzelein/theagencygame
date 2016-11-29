@@ -4,7 +4,7 @@
 let localConst;
 
 if (process.env.DATABASE_URL) {
-  console.log('THE ENVIRONMENT IS ', process.env.NODE_ENV)
+  console.log('THE ENVIRONMENT IS ', process.env.DATABASE_URL)
   localConst = null
 } else {
   console.log('THE ENVIRONMENT IS ', process.env.NODE_ENV)
