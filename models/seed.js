@@ -125,39 +125,68 @@ const data = {
 
 const seed = (db) => {
 if(db){
-  const User = db.models.users
+const User = db.models.users
 const Challenge = db.models.challenges
 const Mission = db.models.missions
 const UserMission = db.models.userMissions
 const UserChallenge = db.models.userChallenges
   db.sync()
-.then(() =>
-  User.bulkCreate(data.user))
-  .then(users => console.log(`Seeded ${users.length} users OK`))
-.then(() =>
-  Challenge.bulkCreate(data.challenge))
-  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
-.then(() =>
-  Mission.bulkCreate(data.mission))
+.then(() => {
+  const users = User.bulkCreate(data.user)
+    .then(users => {
+      console.log(`Seeded ${users.length} users OK`)
+    })
+  const missions = Mission.bulkCreate(data.mission)
+    .then(missions => {
+      console.log(`Seeded ${missions.length} missions OK`)
+    })
+
+  const challenges = Challenge.bulkCreate(data.challenge)
+    .then(challenges => {
+      console.log(`Seeded ${challenges.length} challenges OK`)
+    })
+
+  return Promise.all([missions, challenges, users])
+})
+.then(() => {
+  const users = User.findAll()
+  .then(users =>  {
+    return users.reduce((allUsers, user) =>
+      Object.assign({}, allUsers, {[user.phoneNumber]: user}), {})
+  })
+
+  const challenges = Challenge.findAll()
+  .then(challenges => {
+    return challenges.reduce(
+    (allChallenges, challenge) =>
+      Object.assign({}, allChallenges, {[challenge.objective]: challenge}),
+        {})
+  })
+
+  const missions = Mission.findAll()
   .then(missions => {
-    console.log(`Seeded ${missions.length} missions OK`)
-    return missions[2];
+    return missions.reduce(
+      (allMissions, mission) =>
+        Object.assign({}, allMissions, {[mission.title]: mission}),
+          {})
   })
-  .then(mission => {
-    console.log(mission)
-    console.log('setChallenges', mission.setChallenges)
-    mission.setChallenges([3,4,5,6,7])
+  return Promise.all([challenges, missions, users])
+})
+.then(([challenges, missions, users]) => {
+
+  // 
+  let challengeMission = data.challengeMission(missions);
+  let challengeKeys = Object.keys(challenges);
+  challengeKeys.forEach(key => {
+    return challengeMission[key].addChallenge(challenges[key]);
   })
-.then(() =>
-  UserMission.bulkCreate(data.userMission))
-  .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
-.then(() =>
-  UserChallenge.bulkCreate(data.userChallenge))
-  .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
+})
 }
 
 else{
+  console.log("IN ELSE SEED")
 db = require('./')
+//console.log("DATABSE: ", db)
 const User = db.models.users
 const Challenge = db.models.challenges
 const Mission = db.models.missions
@@ -165,32 +194,58 @@ const UserMission = db.models.userMissions
 const UserChallenge = db.models.userChallenges
 
 return db.sync({force: true})
-.then(() =>
-  User.bulkCreate(data.user))
-  .then(users => console.log(`Seeded ${users.length} users OK`))
-.then(() =>
-  Challenge.bulkCreate(data.challenge))
-  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
-.then(() =>
-  Mission.bulkCreate(data.mission))
-  .then(missions => {
-    console.log(`Seeded ${missions.length} missions OK`)
-    return missions[2];
-  })
-  .then(mission => {
-    console.log(mission)
-    console.log('setChallenges', mission.setChallenges)
-    mission.setChallenges([3,4,5,6,7])
-  })
-.then(() =>
-  UserMission.bulkCreate(data.userMission))
-  .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
-.then(() =>
-  UserChallenge.bulkCreate(data.userChallenge))
-  .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
-}
+.then(() => {
+  console.log("SYNCED NOW SEEDING")
+  const users = User.bulkCreate(data.user)
+    .then(users => {
+      console.log(`Seeded ${users.length} users OK`)
+    })
+  const missions = Mission.bulkCreate(data.mission)
+    .then(missions => {
+      console.log(`Seeded ${missions.length} missions OK`)
+    })
 
-}
+  const challenges = Challenge.bulkCreate(data.challenge)
+    .then(challenges => {
+      console.log(`Seeded ${challenges.length} challenges OK`)
+    })
+
+  return Promise.all([missions, challenges, users])
+})
+.then(() => {
+  const users = User.findAll()
+  .then(users =>  {
+    return users.reduce((allUsers, user) =>
+      Object.assign({}, allUsers, {[user.phoneNumber]: user}), {})
+  })
+
+  const challenges = Challenge.findAll()
+  .then(challenges => {
+    return challenges.reduce(
+    (allChallenges, challenge) =>
+      Object.assign({}, allChallenges, {[challenge.objective]: challenge}),
+        {})
+  })
+
+  const missions = Mission.findAll()
+  .then(missions => {
+    return missions.reduce(
+      (allMissions, mission) =>
+        Object.assign({}, allMissions, {[mission.title]: mission}),
+          {})
+  })
+  return Promise.all([challenges, missions, users])
+})
+.then(([challenges, missions, users]) => {
+
+  // 
+  let challengeMission = data.challengeMission(missions);
+  let challengeKeys = Object.keys(challenges);
+  challengeKeys.forEach(key => {
+    return challengeMission[key].addChallenge(challenges[key]);
+  })
+})
+}}
 
 if(module === require.main){
   const db = require('./')

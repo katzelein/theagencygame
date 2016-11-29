@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 const app = require('./app')
 const seed = require('./models/seed')
 
-console.log("SEED: ", seed)
+//console.log("SEED: ", seed)
 
 
   describe('Initialize db before tests', () => {
