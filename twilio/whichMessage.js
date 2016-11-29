@@ -4,6 +4,8 @@ const {getLocation} = require('./location')
 const getPhotoTags = require('./clarifai')
 
 const User = require('../models/user')
+const Challenge = require('../models/challenge')
+
 
 const whichMessage = {
 
