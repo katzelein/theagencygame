@@ -3,7 +3,7 @@
 */
 let localConst;
 
-if (process.env.DATABASE_URL === 'production') {
+if (process.env.DATABASE_URL) {
   console.log('THE ENVIRONMENT IS ', process.env.NODE_ENV)
   localConst = null
 } else {
