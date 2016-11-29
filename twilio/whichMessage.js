@@ -4,8 +4,8 @@ const {getLocation} = require('./location')
 const getPhotoTags = require('./clarifai')
 const {adventureDetails, missionChooser, partnerChooser} = require('./missionChooser')
 const User = require('../models/user')
-const {accountSid, authToken} = require('../constants')
-var client = require('twilio')(accountSid, authToken); 
+const {accountSid, authToken} = require('../variables')
+var client = require('twilio')(accountSid, authToken);
 const UserMission = require('../models/userMission')
 const Challenge = require('../models/challenge')
 
@@ -236,33 +236,31 @@ const whichMessage = {
 
 	},
 
-// might need to bring in whole user instead of just username
-	QUERY_MISSION: (userId, username, location, userInput) => {
+	QUERY_MISSION: (user, userInput) => {
 		// assume we were able to access and process location
-		let coordinates = location.coordinates
-		userInput = userInput.toLowerCase()
+		let coordinates = user.location.coordinates
 		let soloAdventurePromise, pairAdventurePromise;
 		if(userInput === 'lone wolf'){
 			return missionChooser(coordinates)
 			.then(newMission => {
 					return {
 						state: {
-							messageState: 'FETCH_CHALLENGE', 
+							messageState: 'FETCH_CHALLENGE',
 							currentMission: newMission.id,
 						},
-						message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+username+"?"
+						message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+user.username+"?"
 					}
 				})
 		}
 
-		else if(userInput = 'eager beaver'){
-			return Promise.all([partnerChooser(location.coordinates), missionChooser(location.coordinates)])
+		else if(userInput === 'eager beaver'){
+			return Promise.all([partnerChooser(user.location.coordinates), missionChooser(user.location.coordinates)])
 			.then(response => {
 				let partners = response[0]
 				//console.log("USERS: ", partners)
 				let newMission = response[1];
 				if(!partners){
-					return {message: 'There are no agents available.'}
+					return {message: 'There are no agents currently available.  Please wait a few minutes ...'}
 				}
 				else{
 					let partner = partners[0]
@@ -272,13 +270,13 @@ const whichMessage = {
 
 		              to: partner.phoneNumber, // Any number Twilio can deliver to
 		              from: '+12027593387', // A number you bought from Twilio and can use for outbound communication
-		              body: `We have found a partner for you. Agent ${username} is ready to go. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.` // body of the SMS message
+		              body: `We have found a partner for you. Agent ${user.username} is ready to go. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.` // body of the SMS message
 
 		          	})
 		          	.then(() => {
 		          		return UserMission.bulkCreate([
-		          			{userId: userId, missionId: newMission.id, partnerId: partner.id},
-		          			{userId: partner.id, missionId: newMission.id , partnerId: userId}])
+		          			{userId: user.id, missionId: newMission.id, partnerId: partner.id},
+		          			{userId: partner.id, missionId: newMission.id , partnerId: user.id}])
 		          	})
 					.then(() => {
 						console.log("ABOUT TO UPDATE PARTNER")
@@ -290,7 +288,7 @@ const whichMessage = {
 					.then(() => {
 						return {
 							state: {
-								messageState: 'FETCH_CHALLENGE', 
+								messageState: 'FETCH_CHALLENGE',
 								currentMission: newMission.id,
 							},
 							message: `Agent ${partner.username} will be your partner. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.`
@@ -305,7 +303,7 @@ const whichMessage = {
 		}
 
 
-		
+
 	},
 
 	// QUERY_MISSION: (username, message) => {
@@ -319,7 +317,7 @@ const whichMessage = {
 	// 			.then(newMission => {
 	// 				return {
 	// 					state: {
-	// 						messageState: 'FETCH_CHALLENGE', 
+	// 						messageState: 'FETCH_CHALLENGE',
 	// 						currentMission: newMission.id,
 	// 						location: {type: 'Point', coordinates: coordinates}
 	// 					},
@@ -384,12 +382,12 @@ const whichMessage = {
 
 			switch (currentChallenge.type) {
 				case 'text':
-					if (currentChallenge.targetText == message.body) return success;
+					if (currentChallenge.targetText.toLowerCase() == message.body.toLowerCase()) return success;
 					else return fail;
 				case 'image':
 					// put clarifai function here!!!
 					/*
-					 * parameters:	currentChallenge.targetTags // array of target tags
+					 * parameters:	currentChallenge.targetTags // array of tags
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
@@ -397,7 +395,7 @@ const whichMessage = {
 
 					return getPhotoTags(message)
 					.then (actualTags => {
-						console.log(actualTags);
+						// console.log(actualTags);
 						if (checkTags(currentChallenge.targetTags, actualTags)) return success;
 						else return fail;
 					})

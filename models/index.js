@@ -1,7 +1,7 @@
 'use strict'
 const appEnv = typeof global.it === 'function'
 var db = require('./_db');
-var name = appEnv ? "theagencytest" : "agencytest"
+var name = appEnv ? "theagencytest" : "theagency"
 
 const User = require('./user')
 const Mission = require('./mission')

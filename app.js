@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const volleyball = require('volleyball');
 const Client = require('authy-client').Client;
-const authyKey = require('./constants').authyKey
-const secret = require('./constants').secret
+const authyKey = require('./variables').authyKey
+const secret = require('./variables').secret
 
 const client = new Client({ key: authyKey });
 var cookieParser = require('cookie-parser');
@@ -47,7 +47,7 @@ module.exports = app;
 var port = process.env.PORT || 3000; // needs to be used whenever you're not in development
 app.listen(port, function () {
   console.log('The server is listening closely on port', port);
-  db.sync()
+  db.sync({})
   .then(function () {
     console.log('Synchronated the database');
   })
