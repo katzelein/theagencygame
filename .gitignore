@@ -9,3 +9,4 @@ notes
 /public/bundle.js.map
 */coverage
 /models/npm-debug.log
+ngrok*
