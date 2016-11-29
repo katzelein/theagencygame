@@ -40,6 +40,7 @@ router.get('/:id/history', function(req, res, next){
      		{ model: Mission,
      		include: [
      			{model: Challenge,
+     			//where: { sequelize.col(Challenge): },
      			include: [User]
      		}] 
      		}
