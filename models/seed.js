@@ -17,7 +17,7 @@ const data = {
     { username: 'Gator',
       phoneNumber: '+19146469702',
       isAdmin: true, 
-      location: {type: 'Point', coordinates: []}
+      location: {type: 'Point', coordinates: [0, 0]}
     }
   ],
 
@@ -96,14 +96,45 @@ const data = {
 };
 
 const seed = (db) => {
+if(db){
+  const User = db.models.users
+const Challenge = db.models.challenges
+const Mission = db.models.missions
+const UserMission = db.models.userMissions
+const UserChallenge = db.models.userChallenges
+  db.sync()
+.then(() =>
+  User.bulkCreate(data.user))
+  .then(users => console.log(`Seeded ${users.length} users OK`))
+.then(() =>
+  Challenge.bulkCreate(data.challenge))
+  .then(missions => console.log(`Seeded ${missions.length} challenges OK`))
+.then(() =>
+  Mission.bulkCreate(data.mission))
+  .then(missions => {
+    console.log(`Seeded ${missions.length} missions OK`)
+    return missions[2];
+  })
+  .then(mission => {
+    console.log(mission)
+    console.log('setChallenges', mission.setChallenges)
+    mission.setChallenges([3,4,5,6,7])
+  })
+.then(() =>
+  UserMission.bulkCreate(data.userMission))
+  .then(userMissions => console.log(`Seeded ${userMissions.length} userMissions OK`))
+.then(() =>
+  UserChallenge.bulkCreate(data.userChallenge))
+  .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
+}
 
-db = db || require('./')
+else{
+db = require('./')
 const User = db.models.users
 const Challenge = db.models.challenges
 const Mission = db.models.missions
 const UserMission = db.models.userMissions
 const UserChallenge = db.models.userChallenges
-
 
 return db.sync({force: true})
 .then(() =>
@@ -129,7 +160,7 @@ return db.sync({force: true})
 .then(() =>
   UserChallenge.bulkCreate(data.userChallenge))
   .then(userChallenges => console.log(`Seeded ${userChallenges.length} userChallenges OK`))
-
+}
 
 }
 

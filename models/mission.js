@@ -7,8 +7,8 @@ const Mission = db.define('missions', {
   title: Sequelize.STRING,
   description: Sequelize.TEXT,
   place: Sequelize.STRING,
-  location: {
-  	type: Sequelize.GEOMETRY
+  missionLocation: {
+  	type: Sequelize.GEOGRAPHY
   },
   numChallenges: {
   	type: Sequelize.INTEGER,

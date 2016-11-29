@@ -8,7 +8,7 @@ const db = require('./_db')
 const User = db.define('users', {
   username: Sequelize.STRING,
   phoneNumber: Sequelize.STRING, 
-  status: Sequelize.ENUM('active', 'hiatus', 'retired'),
+  status: Sequelize.ENUM('active', 'hiatus', 'retired', 'ready'),
   currentMission: Sequelize.INTEGER,	
   currentChallenge: Sequelize.INTEGER,
   isAdmin: Sequelize.BOOLEAN,

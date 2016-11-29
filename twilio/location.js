@@ -56,13 +56,13 @@ function getLocationAndroid(message){
   // do something with data 
       else{
         LL = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
-        console.log("DATA: ", data)
-        console.log("RES: ", data.results)
-        console.log("RES TYPE: ", typeof data.results)
-        console.log("GEOM: ", data.results[0].geometry.location)
-        console.log("COMP: ", data.results[0])
-        console.log("LL: ", LL)
-        console.log("data type: ", typeof data)
+        // console.log("DATA: ", data)
+        // console.log("RES: ", data.results)
+        // console.log("RES TYPE: ", typeof data.results)
+        // console.log("GEOM: ", data.results[0].geometry.location)
+        // console.log("COMP: ", data.results[0])
+        // console.log("LL: ", LL)
+        // console.log("data type: ", typeof data)
         return LL
       //locationRes = LL
       }
