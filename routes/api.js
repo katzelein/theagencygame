@@ -30,6 +30,31 @@ router.get('/user/:id', function(req, res, next){
 	.catch(next)
 })
 
+
+router.get('/user/:id/data', function(req, res, next){
+	console.log("Req: ", req.session)
+	console.log("getting user")
+	selfOnly("view")(req, res, next)
+	User.findById(req.params.id, {include: [
+		{ 
+			model: userMissions, 
+			where: { 
+				userId: req.params.id
+			}
+		}, {
+			model: userChallenges,
+			where: {
+				userId: req.params.id
+			} 
+		}
+	]})
+		.then(data => {
+			res.status(200).send(data)
+		})
+			.catch(next)
+})
+
+
 router.get('/user/exists/:number', function(req, res, next){
 	console.log("Req: ", req.session)
 	console.log("getting user")

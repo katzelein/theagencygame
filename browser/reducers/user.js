@@ -14,7 +14,7 @@ export const fetchUser = () => ((dispatch) => {
   .then(user => {
     //console.log("user from whoami: ", user.username)
     if(user.id){
-      axios.get(`/api/user/${user.id}`)
+      axios.get(`/api/user/${user.id}/data`)
       .then(res => res.data)
       .then(user => {
         console.log("USER in fetchUser: ", user)
@@ -34,6 +34,4 @@ export const user = (user = {}, action) => {
     default: return user;
   }
 }
-
-//
 
