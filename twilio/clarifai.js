@@ -22,9 +22,14 @@ let getPhotoTags = function (message){
       message.MediaContentType0 === 'image/png'){
 
       //Make calls to Clarifai for custom model and general model
-      tags.concat(analyzePhoto(customModelId, message.MediaUrl0))
-      tags.concat(analyzePhoto(generalModelId, message.MediaUrl0))
-      return tags;
+      let custom = analyzePhoto(customModelId, message.MediaUrl0)
+      let general = analyzePhoto(generalModelId, message.MediaUrl0)
+      return Promise.all([custom, general])
+      .then(results => {
+        tags = tags.concat(results[0]);
+        tags = tags.concat(results[1]);
+        return tags;
+      })
     } else {
       console.log('There was no media in this message')
       return tags;
@@ -35,13 +40,14 @@ let getPhotoTags = function (message){
 * Function to make Clarifai calls w/specified model
 */
 function analyzePhoto(modelToUse, mediaUrl){
-  clarifaiAPI.models.predict(modelToUse, mediaUrl).then(
+  return clarifaiAPI.models.predict(modelToUse, mediaUrl).then(
        (res) => {
-         console.log('Clarifai response = ', res);
+         // console.log('Clarifai response = ', res);
          let tags = [];
          for (let i = 0; i<res.data.outputs[0].data.concepts.length; i++) {
-           tags.push(res.data.outputs[0].data.concepts[i].name);
-         }
+           if(res.data.outputs[0].data.concepts[i].value > 0.83){
+             tags.push(res.data.outputs[0].data.concepts[i].name);
+           }         }
          console.log("TAGS!!!", tags)
          return tags;
        },

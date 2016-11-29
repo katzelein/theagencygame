@@ -3,11 +3,15 @@
 const Mission = require('../models/mission');
 const Challenge = require('../models/challenge');
 
-const chooseMission = (lat, long) => {
+const chooseMission = (location, place) => {
 	// filter all missions based on location
 	// randomly choose a mission
 
-	return Mission.findOne({where: {location: 'Grace Hopper'}})
+
+	// can also fetch mission based on labelled place
+	// set default to return Grace Hopper mission
+	if (!place) place = "Grace Hopper"; 
+	return Mission.findOne({where: {place: place}})
 }
 
 // currentMission and currentChallenge extracted from user
@@ -41,7 +45,8 @@ const getChallenge = (currentMissionId, currentChallengeId) => {
 			if (element.order == chooseOrder) foundIndex = index;
 		})
 
-		return challengeList[foundIndex];
+		if (foundIndex + 1) return challengeList[foundIndex];
+		else return null;
 	})
 }
 

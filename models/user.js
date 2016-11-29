@@ -14,6 +14,7 @@ const User = db.define('users', {
   	type: Sequelize.STRING,
   	defaultValue: 'STANDBY'
   },
+  prevState: Sequelize.STRING,
   location: {
   	type: Sequelize.GEOMETRY
   },

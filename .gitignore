@@ -5,7 +5,8 @@ node_modules/
 notes.txt
 key.json
 notes
-*/coverage
 /public/bundle.js
 /public/bundle.js.map
+*/coverage
 /models/npm-debug.log
+ngrok*
