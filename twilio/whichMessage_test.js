@@ -113,12 +113,52 @@ describe('Game Logic', () => {
 
 	describe('state: CHALLENGE_ANSWER',() => {
 		xdescribe('preceding message: [<Challenge text> Send back a photo, Send back a text, make a voice call]', () => {
-			let missionId, challengeId;
+			let textChallenge, imageChallenge, nightwishMission;
 
-			before('create mission and challenges', () => {
+
+			before('create challenges', () => {
+				let zeroth = Mission.create({
+					title: 'Shudder Before the Beautiful',
+					description: 'Floor Jansen',
+					place: 'Nightwish',
+					numChallenges: 2
+				})
+				let first = Challenge.create({
+					objective: 'The music of this awe',
+					summary: 'Deep silence between the notes',
+					targetText: 'Deafens me with endless love',
+					type: 'text',
+					conclusion: 'This vagrant island earth',
+					order: 1,
+					hasNext: true
+				})
+
+				let second = Challenge.create({
+					object: 'This pilgrim shining bright',
+					summary: 'We are shuddering',
+					targetTags: ['gha_logo'],
+					type: 'image',
+					conclusion: 'Before the beautiful',
+					order: 2,
+					hasNext: false
+				})
+
+				return Promise.all([zeroth, first, second])
+				.spread((zeroth, first, second) => {
+					nightwishMission = zeroth;
+					textChallengeId = first;
+					imageChallengeId = second;
+				})
 			})
 
-			it('should fetch first challenge', () => {
+			it('should check text answers', () => {
+				let answer = {body: 'Deafens me with endless love'}
+				return whichMessage.CHALLENGE_ANSWER(textChallenge.id, answer)
+				.then(result => {
+					let resultConclusion = result.message.slice(0,25);
+					console.log(resultConclusion);
+					expect(resultConclusion).to.be.equal(textChallenge.conclusion)
+				})
 			})
 
 			it('should fetch next challenge', () => {
