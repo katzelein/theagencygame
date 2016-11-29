@@ -49,6 +49,7 @@ router.get('/whoami', (req, res, next) => {
 // 	})
 // 	.catch(next)
 // })
+
 router.get('/missions', function(req, res, next){
 	console.log("getting missions")
 	//mustBeAdmin()(req, res, next)
