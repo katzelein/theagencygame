@@ -45,8 +45,9 @@ function analyzePhoto(modelToUse, mediaUrl){
          // console.log('Clarifai response = ', res);
          let tags = [];
          for (let i = 0; i<res.data.outputs[0].data.concepts.length; i++) {
-           tags.push(res.data.outputs[0].data.concepts[i].name);
-         }
+           if(res.data.outputs[0].data.concepts[i].value > 0.83){
+             tags.push(res.data.outputs[0].data.concepts[i].name);
+           }         }
          console.log("TAGS!!!", tags)
          return tags;
        },

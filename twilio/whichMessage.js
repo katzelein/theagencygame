@@ -4,6 +4,7 @@ const {getLocation} = require('./location')
 const getPhotoTags = require('./clarifai')
 
 const User = require('../models/user')
+const Challenge = require('../models/challenge')
 
 const whichMessage = {
 
@@ -13,7 +14,7 @@ const whichMessage = {
   			return {
   				state: {
   					messageState: 'NEED_USERNAME'
-				}, 
+				},
 				message: "Ah, it's seems The Agency has a new recruit! And what is your name, Trainee?  Feel free to use an alias, we respect the secrets of our agents."
 			}
 		}
@@ -39,11 +40,11 @@ const whichMessage = {
 					console.log("NEED_USERNAME")
 					return {
 						state: {
-							username: userInput, 
+							username: userInput,
 							messageState: 'TUTORIAL_MISSION_1'
 						},
 						message: "Welcome to the Agency, Agent "+userInput+"! Would you like to participate in a training mission?"
-					}}	
+					}}
 			})
 
 		} else {
@@ -146,7 +147,7 @@ const whichMessage = {
 		// 		return coordinates
 		// 	}
 		// })
-		
+
 	},
 
 	TUTORIAL_MISSION_3: (username, message) => {
@@ -198,7 +199,7 @@ const whichMessage = {
 				.then(newMission => {
 					return {
 						state: {
-							messageState: 'FETCH_CHALLENGE', 
+							messageState: 'FETCH_CHALLENGE',
 							currentMission: newMission.id
 						},
 						message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+username+"?"
@@ -272,7 +273,7 @@ const whichMessage = {
 					 * returns: true / false
 					 */
 					// let actualTags = [] // clarifai stuff
-					
+
 					return getPhotoTags(message)
 					.then (actualTags => {
 						console.log(actualTags);
