@@ -45,6 +45,7 @@ module.exports = app;
 
 // listen on a port
 var port = process.env.PORT || 3000; // needs to be used whenever you're not in development
+console.log('~~~THE ENVIRONMENT IS ', process.env.NODE_ENV)
 app.listen(port, function () {
   console.log('The server is listening closely on port', port);
   db.sync()
