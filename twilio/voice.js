@@ -4,13 +4,13 @@ const fs = require('fs');
 const request = require('request');
 
 const SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
-const watsonUsername = require('../constants').watsonUsername
-const watsonPassword = require('../constants').watsonPassword
+const watsonUsername = require('../variables').watsonUsername
+const watsonPassword = require('../variables').watsonPassword
 
-const accountSid = require('../constants').accountSid;
-const authToken = require('../constants').authToken;
-const twilioNum = require('../constants').twilioNum;
-const client = require('twilio')(accountSid, authToken); 
+const accountSid = require('../variables').accountSid;
+const authToken = require('../variables').authToken;
+const twilioNum = require('../variables').twilioNum;
+const client = require('twilio')(accountSid, authToken);
 
 const lookup = require('./lookup')
 
@@ -21,8 +21,8 @@ let speech_to_text = new SpeechToTextV1({
 
 twilioAPI.post('/voice', function (req, res, next) {
   let twiml = new twilio.TwimlResponse();
-  twiml.say('Go ahead agent.', { 
-    voice: 'woman' 
+  twiml.say('Go ahead agent.', {
+    voice: 'woman'
   })
     .record({
       maxLength: 12,
@@ -50,7 +50,7 @@ let checkWatsonAPI = function (body) {
 
   // get the WAV file from twilio
   request(body.RecordingUrl).pipe(fs.createWriteStream('message.wav')).on('end', ok => console.log('wrote message.wav'))
-  
+
   // check it in Watson
   let params = {
     audio: request(body.RecordingUrl),
