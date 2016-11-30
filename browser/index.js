@@ -18,6 +18,26 @@ import agencyBaseTheme from 'material-ui/styles/baseThemes/agencyBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Paper from 'material-ui/Paper'
+import {grey800, amberA700, grey400, amberA400, grey600, amberA100, fullWhite} from 'material-ui/styles/colors'
+
+const muiTheme = getMuiTheme ({
+  palette: {
+    primary1Color: grey400,
+    primary2Color: amberA700,
+    primary3Color: grey400,
+    accent1Color: amberA400,
+    accent2Color: grey800,
+    accent3Color: amberA100,
+    textColor: fullWhite,
+    secondaryTextColor: fullWhite,
+    alternateTextColor: '#303030',
+    canvasColor: '#303030',
+    borderColor: fullWhite,
+    disabledColor: fullWhite,
+    pickerHeaderColor: fullWhite,
+    clockCircleColor: fullWhite
+  }
+});
 
 
 import { Grid } from 'react-flexbox-grid/lib/index'
@@ -28,10 +48,10 @@ injectTapEventPlugin();
 
 ReactDOM.render(
 
-  <MuiThemeProvider muiTheme={getMuiTheme(agencyBaseTheme)}>
+  <MuiThemeProvider muiTheme={muiTheme}>
     <Provider store={store}>
       <Grid>
-        <Paper style={{height: 700, width: 1000}}>
+        <Paper style={{height: 900, width: 1500}}>
           <Router history={browserHistory}>
             <Route path="/">
               <Route path="login" component={AppContainer} />

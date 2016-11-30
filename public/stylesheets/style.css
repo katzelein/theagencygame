@@ -90,3 +90,7 @@ html, body
   text-align: center;
   margin: 20px;
 }
+
+.adminContainer {
+  margin: 50px;
+}

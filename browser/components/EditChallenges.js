@@ -89,7 +89,7 @@ export default class EditChallenges extends Component {
 
   render () {
     return (
-        <MuiThemeProvider>
+
            <div className="container jumbotron">
              <div className="row centered-form">
             <div>
@@ -114,7 +114,7 @@ export default class EditChallenges extends Component {
       
             </div>
             </div>
-          </MuiThemeProvider>
+
     )
   }
 }
