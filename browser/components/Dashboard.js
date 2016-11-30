@@ -17,36 +17,69 @@ const styles = {
   }
 };
 
+// <TableRowColumn>{row.status}</TableRowColumn>
+// <TableRowColumn>{row.id}</TableRowColumn>
+// <TableRowColumn>{row.title}</TableRowColumn>
+// <TableRowColumn>{row.numChallenges}</TableRowColumn>
+// <TableRowColumn>{row.place}</TableRowColumn>
+// <TableRowColumn>{row.start}</TableRowColumn>
+
 const tableData = [
   {
-    name: 'John Smith',
-    status: 'Employed',
-    selected: true,
+    status: 'completed',
+    id: '27',
+    title: 'Grace Hopper and the Missing Bone',
+    numChallenges: '5',
+    place: 'Grace Hopper Academy',
+    start: '',
   },
   {
-    name: 'Randal White',
-    status: 'Unemployed',
+    status: 'completed',
+    id: '4',
+    title: 'Intrigue on Wall Street',
+    numChallenges: '3',
+    place: 'Wall Street',
+    start: '',
   },
   {
-    name: 'Stephanie Sanders',
-    status: 'Employed',
-    selected: true,
+    status: 'completed',
+    id: '3',
+    title: 'The Dark Underbelly of Broadway\'s Bright Lights',
+    numChallenges: '4',
+    place: 'Broadway',
+    start: '',
   },
   {
-    name: 'Steve Brown',
-    status: 'Employed',
+    status: 'completed',
+    id: '19',
+    title: 'Fullstack\'s Disappearing Cereal',
+    numChallenges: '2',
+    place: 'Fullstack Academy',
+    start: '',
   },
   {
-    name: 'Joyce Whitten',
-    status: 'Employed',
+    status: 'completed',
+    id: '16',
+    title: 'In the Shadow of the World Trade Center',
+    numChallenges: '6',
+    place: 'World Trade Center',
+    start: '',
   },
   {
-    name: 'Samuel Roberts',
-    status: 'Employed',
+    status: 'completed',
+    id: '31',
+    title: 'Disappearance in Port Authority',
+    numChallenges: '4',
+    place: 'NYC Metro',
+    start: '',
   },
   {
-    name: 'Adam Moore',
-    status: 'Employed',
+    status: 'incomplete',
+    id: '9',
+    title: 'The Case of the Closed Subway Station',
+    numChallenges: '5',
+    place: 'NYC Metro',
+    start: '',
   },
 ];
 
@@ -111,9 +144,9 @@ export default class Dashboard extends Component {
                   <div>
                       DASHBOARD
                       <Table style={styles.table} >
-                        <TableHeader adjustForCheckbox={false}>
+                        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                           <TableRow>
-                            <TableHeaderColumn colSpan={6} style={{textAlign: 'center'}}>
+                            <TableHeaderColumn colSpan={6} style={{textAlign: 'center', fontSize: 26}}>
                               {this.props.user.username}
                             </TableHeaderColumn>
                           </TableRow>
@@ -121,8 +154,8 @@ export default class Dashboard extends Component {
                           <TableRow>
                             <TableHeaderColumn>Mission Status</TableHeaderColumn>
                             <TableHeaderColumn>Mission ID</TableHeaderColumn>
-                            <TableHeaderColumn>Title</TableHeaderColumn>
-                            <TableHeaderColumn>Description</TableHeaderColumn>
+                            <TableHeaderColumn style={{width: '300px'}}>Title</TableHeaderColumn>
+                            <TableHeaderColumn>Challenges</TableHeaderColumn>
                             <TableHeaderColumn>Location</TableHeaderColumn>
                             <TableHeaderColumn>Begun At</TableHeaderColumn>
                           </TableRow>
@@ -136,13 +169,13 @@ export default class Dashboard extends Component {
                           adjustForCheckbox={false}>
 
                           {tableData.map( (row, index) => (
-                            <TableRow key={index} selected={row.selected} onCellClick={(e) => {e.PreventDefault()}}>
-                              <TableRowColumn>{row.name}</TableRowColumn>
+                            <TableRow key={index} onCellClick={(e) => {e.PreventDefault()}}>
                               <TableRowColumn>{row.status}</TableRowColumn>
-                              <TableRowColumn>{row.name}</TableRowColumn>
-                              <TableRowColumn>{row.name}</TableRowColumn>
-                              <TableRowColumn>{row.name}</TableRowColumn>
-                              <TableRowColumn>{row.name}</TableRowColumn>
+                              <TableRowColumn>{row.id}</TableRowColumn>
+                              <TableRowColumn style={{width: '300px'}}>{row.title}</TableRowColumn>
+                              <TableRowColumn>{row.numChallenges}</TableRowColumn>
+                              <TableRowColumn>{row.place}</TableRowColumn>
+                              <TableRowColumn>{row.start}</TableRowColumn>
                             </TableRow>
                           ))}
 
