@@ -21,7 +21,6 @@ twilioAPI.post('/voice', function (req, res, next) {
   res.send(twiml.toString())
 });
 
-
 twilioAPI.post('/recording', function (req, res, next) {
   console.log("THIS IS THE REQ YOU WANT", req.body)
   // req.body.From still gives us the user phone number
@@ -32,10 +31,6 @@ twilioAPI.post('/recording', function (req, res, next) {
   // result.then(resolved => {
   //   console.log('resolved:', resolved)
   // })
-
-  // KARIN: This is where you would use your game logic, either lookup or whatever new helper function you've written, to incorporate the result. Result will be a string, all lowercase, that you can compare to the targetText
-
-  console.log("From:", req.body.From)
 
   var answer = lookup(req.body.From, req.body)
 
@@ -49,9 +44,11 @@ twilioAPI.post('/recording', function (req, res, next) {
       body: message
     })
   })
+  .then(() => {
+    res.sendStatus(200);
+  })
   .catch(err => console.log(err))
 })
-
 
 module.exports = {twilioAPI}; //,checkWatsonAPI
 
