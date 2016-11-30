@@ -29,8 +29,8 @@ function getLocationiPhone(message){
 function getLocationAndroid(message){
     console.log("looking for location!!")
     var urlString = message.Body.replace(/["']/g, "")
-    //var urlArray = urlString.split(/\r?\n/)
-    var urlArray = urlString.split("HELLO")
+    var urlArray = urlString.split(/\r?\n/)
+    //var urlArray = urlString.split("HELLO")
     console.log("urlArray: ", urlArray)
     var address = urlArray[2]
     console.log

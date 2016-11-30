@@ -320,7 +320,7 @@ const whichMessage = {
 
 			switch (currentChallenge.category) {
 				case 'text':
-					if (currentChallenge.targetText.toLowerCase() == message.body.toLowerCase()) return success;
+					if (currentChallenge.targetText.toLowerCase() == message.Body.toLowerCase()) return success;
 					else return fail;
 				case 'image':
 					// put clarifai function here!!!

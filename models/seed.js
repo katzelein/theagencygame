@@ -147,7 +147,7 @@ const Challenge = db.models.challenges
 const Mission = db.models.missions
 const UserMission = db.models.userMissions
 const UserChallenge = db.models.userChallenges
-  db.sync()
+  db.sync({force: true})
 .then(() => {
   const users = User.bulkCreate(data.user)
     .then(users => {
