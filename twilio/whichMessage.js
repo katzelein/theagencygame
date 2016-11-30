@@ -394,7 +394,7 @@ const whichMessage = {
 			if (currentChallenge.hasNext) {
 				success = {
 					state: {messageState: 'FETCH_CHALLENGE'},
-					message: currentChallenge.conclusion + " | Are you ready for your next challenge?"
+					message: currentChallenge.conclusion + "\n\nAre you ready for your next challenge?"
 				}
 			} else {
 				success = {
@@ -403,10 +403,10 @@ const whichMessage = {
 						currentMission: 0,
 						currentChallenge: 0
 					},
-					message: currentChallenge.conclusion + "| You have completed your mission.  Text 'new mission' to start a new mission"
+					message: currentChallenge.conclusion + "\n\nYou have completed your mission.  Text 'new mission' to start a new mission"
 				}
 			}
-			let fail = {message: "Your answer doesn't quite match ...."}
+			let fail = {message: "Your answer doesn't quite match The Agency's records.  Please try again."}
 
 			switch (currentChallenge.category) {
 				case 'text':
@@ -434,11 +434,6 @@ const whichMessage = {
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
-  // console.log('checkWatsonPromise', checkWatsonPromise)
-  // 					console.log('newly required checkWatsonPromise:',
-  // 						require('./voice').checkWatsonPromise)
-		// 			 let watsonPromise = require('./voice').checkWatsonPromise
-
 					let scriptPromise = checkWatsonPromise(message);
 					return scriptPromise
 					.then((transcript) => {
@@ -446,7 +441,6 @@ const whichMessage = {
 						if (transcript == currentChallenge.targetText) return success;
 						else {
 							let newMessage = "Not quite what we were looking for, but the Agency will manage. " + success.message
-							console.log(newMessage)
 							success.message = newMessage;
 							return success;
 						}

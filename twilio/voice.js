@@ -49,6 +49,9 @@ twilioAPI.post('/recording', function (req, res, next) {
       body: message
     })
   })
+  .then(() => {
+    res.sendStatus(200);
+  })
   .catch(err => console.log(err))
 })
 

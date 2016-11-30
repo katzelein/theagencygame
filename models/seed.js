@@ -59,15 +59,15 @@ const data = {
       summary: 'Ceren, Ben\'s doting mom who, in an incredible feat of strength and love, pulled him from the grips of an oncoming subway just a few weeks ago, spends her days in the CSS room. Find her office where Ben\'s orange water bowl sits and send us a picture; we need a warrant to dust the bowl for fingerprints.',
       category: 'image',
       targetTags: ['bowl'],
-      conclusion: 'Great work. We\'re picking up the scent of our thief; upcoming instructions to follow.' ,
+      conclusion: 'Great work. We\'re picking up the scent of our thief.' ,
       order: 1,
       hasNext: true
     },
     { objective: 'Putting Out Kitchen Fires', // mission 3
       summary: 'Ben loves to wander the hallways of Grace Hopper, finding the occasional student eager to scratch his belly, or scooping up the remains of a forgotten blueberry muffin. On the day of the theft, Ben was seen more than usual around the kitchen yesterday during an incoming shipment of cereal; we think this may be where the thief saw their opportunity. Please send the license number for the fire extinguisher on the left by the passcoded door. We believe the thief may use this as the passcode for their own office.',
-      // category: 'text',
-      // targetText: 'something',
-      conclusion: 'You\'re on the mark, shouldn\'t be long now. Await further instructions',
+      category: 'text',
+      targetText: '133w',
+      conclusion: 'You\'re on the mark, shouldn\'t be long now.',
       order: 2,
       hasNext: true
     },
