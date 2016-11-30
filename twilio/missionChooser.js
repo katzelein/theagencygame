@@ -15,7 +15,7 @@ const adventureDetails = (location, solo) => {
 }
 
 
-const partnerChooser = (coordinates) => {
+const partnerChooser = (userId, coordinates) => {
 // 	db.query("SELECT * FROM users WHERE ST_DWithin(user.location, 'POINT(1000 1000)', 100.0)", 
 // 		{ type: sequelize.QueryTypes.SELECT }).then(function (results) {
 
@@ -30,7 +30,8 @@ return User.findAll({
 			sequelize.col('users.location'), sequelize.fn('ST_GeographyFromText', `SRID=4326;${coordString}`), 2000), true
 		),
 		//sequelize.where(sequelize.col('users.status'), 'ready')
-		{status: 'ready'}
+		{status: 'ready'},
+		{id: {$ne: userId}}
 		)	
 })
 //.then(res => console.log("RES: ", res))
@@ -48,7 +49,7 @@ const missionChooser = (coordinates, place) => {
 	return Mission.findOne({where: {place: place}})
 }
 
-console.log("PARTNER CHOOSER: ", partnerChooser([40, 70]))
+//console.log("PARTNER CHOOSER: ", partnerChooser([40, 70]))
 
 module.exports = {adventureDetails, missionChooser, partnerChooser}
 

@@ -254,7 +254,7 @@ const whichMessage = {
 		}
 
 		else if(userInput === 'eager beaver'){
-			return Promise.all([partnerChooser(user.location.coordinates), missionChooser(user.location.coordinates)])
+			return Promise.all([partnerChooser(user.id, user.location.coordinates), missionChooser(user.location.coordinates)])
 			.then(response => {
 				let partners = response[0]
 				//console.log("USERS: ", partners)
@@ -265,7 +265,7 @@ const whichMessage = {
 				else{
 					let partner = partners[0]
 
-					console.log("ABOU TO SEND MESSAGE")
+					console.log("ABOUT TO SEND MESSAGE")
 					return client.sendMessage({
 
 		              to: partner.phoneNumber, // Any number Twilio can deliver to
