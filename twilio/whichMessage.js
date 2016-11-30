@@ -232,7 +232,24 @@ const whichMessage = {
 		})
 	},
 
-	SOLO_OK: (username, location, userInput) => {
+	SOLO_OK: (user, message) => {
+		
+		if(message === 'wait'){
+			return{
+				state: {
+					status: 'ready'
+				},
+				message: 'Ok, we will contact you when a partner becomes available.'
+			}
+		}
+		else if(message === 'go'){
+			return whichMessage.QUERY_MISSION(user, 'lone wolf')
+		}
+		else{
+			return {
+				message: "We did not recognize that input. Respond with 'wait' or 'go'."
+			}
+		}
 
 	},
 
@@ -262,9 +279,9 @@ const whichMessage = {
 				if(!partners || !partners.length){
 					return {
 							state: {
-								status: 'ready',
+								messageState: 'SOLO_OK',
 							},
-							message: 'There are no agents currently available.  Please wait a few minutes ...'
+							message: "There are no agents currently available.  Text 'wait' if you would like to wait for a partner or 'go' if you would like to fly solo instead."
 						}
 				}
 				else{
