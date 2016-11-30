@@ -18,7 +18,7 @@ const authy = new Client({key: constants.authyKey});
 router.post('/verification/start', function(req, res, next){
 	var phone_number = req.body.phoneNumber;
     var country_code = req.body.countryCode;
-    var via = req.body.method;
+    var via = req.body.via;
 
     console.log("body: ", req.body);
 

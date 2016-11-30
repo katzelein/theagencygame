@@ -2,12 +2,34 @@ import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
 import axios from 'axios'
 
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
+import { Grid, Row, Col } from 'react-flexbox-grid/lib/index'
+import CommunicationPhonelinkRing from 'material-ui/svg-icons/communication/phonelink-ring'
+import CheckCircle from 'material-ui/svg-icons/action/check-circle'
+
+const style = {
+  paper: {
+    textAlign: 'center',
+    display: 'inline-block',
+  }
+};
 
 export class SendVerification extends Component {
   constructor(){
     super();
+    this.state = {
+      via: 1,
+      countryCode: '',
+      number: '',
+      error: ''
+    };
+    this.handleCodeChange = this.handleCodeChange.bind(this)
+    this.handlePhoneChange = this.handlePhoneChange.bind(this)
     this.startVerification = this.startVerification.bind(this)
-    this.state = {};
   }
 
   componentDidMount () {
@@ -19,11 +41,12 @@ export class SendVerification extends Component {
     //1. check db for number
     //2. authy.startverification
 
-
     e.preventDefault()
+    console.log("This is e: ", e.target.country_code.value)
     let countryCode = e.target.country_code.value
     let number = e.target.phone_number.value
-    let method = e.target.via.value
+    let via = 'sms'
+    console.log("These are the countryCode, number" + countryCode + '' + number)
     if(!(countryCode && number)){
       //alert("Please provide your number")
       this.setState({error: "Please provide your number"})
@@ -38,7 +61,7 @@ export class SendVerification extends Component {
     .then(res => res.data)
     .then(user => {
       if(user.found){
-        axios.post('/authy/verification/start', {countryCode, phoneNumber: number, method})
+        axios.post('/authy/verification/start', {countryCode, phoneNumber: number, via})
         .then(() => browserHistory.push('/verify'))
       }
       else{
@@ -52,71 +75,84 @@ export class SendVerification extends Component {
 
   }
 
-  // verifyNumber(e){
-  //   e.preventDefault()
-  //   let token = e.target.token.value;
-  //   let countryCode = this.state.countryCode
-  //   let phoneNumber = this.state.phoneNumber
-  //   axios.post('/authy/verification/verify', {token, countryCode, phoneNumber})
-  //   .then((res) => (res.data))
-  //   .then((data) => {
-  //     console.log("verifyNumber DATA: ", data)
-  //     if(data.number && data.verified){
-  //       this.props.findUser(data.number)
-  //     }
-  //     browserHistory.push('/dashboard')
-  //   })
-  // }
+  handleCodeChange (event, value) {
+    console.log("This is the event: ", event)
+    console.log("This is the value: ", value)
+
+    this.setState({ countryCode: this.state.countryCode });
+
+    console.log("This is the state after CodeChange", this.state)
+  }
+
+  handlePhoneChange (event, value) {
+    console.log("This is the event: ", event)
+    console.log("This is the value: ", value)
+    this.setState({ number: event.target.value });
+    console.log("This is the state after PhoneChange", this.state)
+  }
 
   render () {
     return (
-  <div className="container jumbotron">
-    <div className="row centered-form">
-        <div className="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
-            <div className="panel panel-default">
-                <div className="panel-heading">
-                    <h3 className="panel-title">Authy Phone Verification</h3>
+        <Grid>
+          <Row>
+            <Col xs={12}>
+              <Row center="xs">
+                <h3>Phone Verification</h3>
+              </Row>
+              
+              <Row center="xs">
+                <form role="form" onSubmit={this.startVerification}>
 
-                      <div className="panel-body">
-                    <form role="form" onSubmit={this.startVerification}>
-                        <div className="row">
-                            <div className="col-xs-3 col-sm-3 col-md-3">
-                                <div className="form-group">
-                                    <input type="text" name="country_code" id="country_code"
-                                           className="form-control"
-                                           className="form-control input-sm"
-                                           placeholder="Country Code"/>
-                                </div>
-                            </div>
-                            <div className="col-xs-6 col-sm-6 col-md-6">
-                                <div className="form-group">
-                                    <input type="text" name="phone_number" id="phone_number"
-                                           className="form-control"
-                                           className="form-control input-sm"
-                                           placeholder="Phone #"/>
-                                </div>
-                            </div>
-                            <div className="col-xs-3 col-sm-3 col-md-3">
-                                <div className="form-group">
-                                    <select name="via" id="via" className="form-control">
-                                        <option value="sms" defaultValue="selected">SMS</option>
-                                        <option value="call">CALL</option>
-                                    </select>
-                                </div>
-                            </div>
+                  <Row>
+                    <TextField
+                      name="country_code"
+                      floatingLabelText="Country Code"
+                      hintText="1"
+                      // value={this.state.countryCode}
+                      onChange={this.handleCodeChange} />
+                  </Row>
 
-                        </div>
+                  <Row>
+                    <TextField
+                      name="phone_number"
+                      // value={this.state.number}
+                      floatingLabelText="Phone #"
+                      onChange={this.handlePhoneChange} />
+                  </Row>
 
-                        <input type="submit" value="Request Verification"
-                               className="btn btn-info btn-block"/>
-                    </form>
-                    {this.state.error ? <div className="error">{this.state.error}</div> : null}
-                </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                  {/* <Row>
+                    <SelectField
+                      name="via"
+                      // value={this.state.method}
+                      floatingLabelText="Via"
+                      onChange={this.handleViaChange}
+                      style={{float: 'left', textAlign: 'left'}} >
+                        <MenuItem value={1} primaryText="Text" />
+                        <MenuItem value={2} primaryText="Call" />
+                    </SelectField>
+                  </Row>
+                  */}
+
+                  <br />
+                  <Row center="xs">
+                    <RaisedButton 
+                      type="submit"
+                      style={{float: 'center'}}
+                      icon={<CommunicationPhonelinkRing />}
+                      label="Request Verification" 
+                      secondary={true} />
+                  </Row>
+
+                </form>
+              </Row>
+
+              <Row>
+                {this.state.error ? <div className="error">{this.state.error}</div> : null}
+              </Row>
+
+            </Col>
+          </Row>
+        </Grid>
     );
   }
 }
@@ -177,42 +213,55 @@ export class Verify extends Component {
 
   render () {
     return (
-  <div className="container jumbotron">
-    <div className="row centered-form">
-        <div>
-            <div className="panel panel-default">
-                <div className="panel-heading">
-                    <h3 className="panel-title">Authy Phone Verification</h3>
+      <Grid>
+        <Row>
+          <Col xs={12}>
+            <Row center="xs">
+              <h3>Verify By Token</h3>
+            </Row>
+            
+            <Row center="xs">
+              <form role="form" onSubmit={this.verifyNumber}>
 
-                      <div className="panel-body">
-                    <form role="form" style={{height: '35px'}} onSubmit={this.verifyNumber}>
-                        <div className="row" style={{height: 'inherit'}}>
-                            <div className="col-xs-6 col-sm-6 col-md-6" style={{height: 'inherit'}}>
-                                <div className="form-group">
-                                    <input type="text" name="token"
-                                           id="token"
-                                           className="form-control"
-                                           className="form-control input-sm"
-                                           placeholder="Verification Token"/>
-                                </div>
-                            </div>
-                            <div className="col-xs-6 col-sm-6 col-md-6" style={{height: 'inherit'}}>
-                                <div className="form-group">
-                                    <input type="submit" value="Verify Phone"
-                                           className="btn btn-info btn-block"/>
-                                </div>
-                            </div>
+                <Row>
+                  <TextField
+                    type="text"
+                    name="token"
+                    floatingLabelText="Verification Token"
+                    hintText="Verification Token"
+                    style={{textAlign: 'center'}}
+                    onChange={this.handleTokenChange} />
+                </Row>
 
-                        </div>
-                    </form>
-                    {this.state.error ? <div style={{height: '20px', padding: '2px 0px'}} className="error">{this.state.error}</div> : <div style={{height: '20px', padding: '2px 0px'}}/>}
-                    <div><Link to="/sendVerification">Request new code</Link></div>
-                </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                <br />
+
+                <Row center="xs">
+                  <RaisedButton 
+                    type="submit"
+                    style={{float: 'center'}}
+                    icon={<CheckCircle />}
+                    label="Verify Phone" 
+                    secondary={true} />
+                </Row>
+
+              </form>
+            </Row>
+
+            <Row center="xs">
+              {this.state.error ? 
+                <div style={{height: '20px', padding: '2px 0px'}} className="error">{this.state.error}</div> 
+                : 
+                <div style={{height: '20px', padding: '2px 0px'}}/>
+              }
+            </Row>
+
+            <Row center="xs">
+              <div><Link to="/sendVerification">Request new code</Link></div>
+            </Row>
+
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 }
