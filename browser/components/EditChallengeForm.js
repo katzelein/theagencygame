@@ -44,7 +44,7 @@ export default class ChallengeForm extends Component {
             <label>Conclusion: </label><br/>
             <textArea type="text" name="conclusion" value={this.props.challenge.conclusion} onChange={this.props.onChange}/><br/>
             <label>Type: </label><br/>
-            <select name="type" value={this.props.challenge.type} onChange={this.props.onChange}>
+            <select name="category" value={this.props.challenge.category} onChange={this.props.onChange}>
               <option value="text">Text</option>
               <option value="image">Image</option>
               <option value="voice">Voice</option>

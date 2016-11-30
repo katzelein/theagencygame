@@ -35,7 +35,7 @@ describe('Game Logic', () => {
 					objective: "Fix the errors",
 					summary: "Do testing!",
 					targetText: "fixed",
-					type: "text",
+					category: "text",
 					order: 1,
 					hasNext: true
 				})
@@ -43,7 +43,7 @@ describe('Game Logic', () => {
 					objective: "Run the program",
 					summary: "npm start",
 					targetText: "started",
-					type: "text",
+					category: "text",
 					order: 2,
 					hasNext: true
 				})
@@ -126,7 +126,7 @@ describe('Game Logic', () => {
 					objective: 'The music of this awe',
 					summary: 'Deep silence between the notes',
 					targetText: 'Deafens me with endless love',
-					type: 'text',
+					category: 'text',
 					conclusion: 'This vagrant island earth',
 					order: 1,
 					hasNext: true
@@ -136,7 +136,7 @@ describe('Game Logic', () => {
 					object: 'This pilgrim shining bright',
 					summary: 'We are shuddering',
 					targetTags: ['gha_logo'],
-					type: 'image',
+					category: 'image',
 					conclusion: 'Before the beautiful',
 					order: 2,
 					hasNext: true

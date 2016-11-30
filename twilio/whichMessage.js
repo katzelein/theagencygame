@@ -236,7 +236,24 @@ const whichMessage = {
 		})
 	},
 
-	SOLO_OK: (username, location, userInput) => {
+	SOLO_OK: (user, message) => {
+		
+		if(message === 'wait'){
+			return{
+				state: {
+					status: 'ready'
+				},
+				message: 'Ok, we will contact you when a partner becomes available.'
+			}
+		}
+		else if(message === 'go'){
+			return whichMessage.QUERY_MISSION(user, 'lone wolf')
+		}
+		else{
+			return {
+				message: "We did not recognize that input. Respond with 'wait' or 'go'."
+			}
+		}
 
 	},
 
@@ -263,9 +280,13 @@ const whichMessage = {
 				let partners = response[0]
 				//console.log("USERS: ", partners)
 				let newMission = response[1];
-				console.log(partners);
 				if(!partners || !partners.length){
-					return {message: 'There are no agents currently available.  Please wait a few minutes ...'}
+					return {
+							state: {
+								messageState: 'SOLO_OK',
+							},
+							message: "There are no agents currently available.  Text 'wait' if you would like to wait for a partner or 'go' if you would like to fly solo instead."
+						}
 				}
 				else{
 					let partner = partners[0]
@@ -288,13 +309,15 @@ const whichMessage = {
 						return partner.update({
 						messageState: 'FETCH_CHALLENGE',
 						currentMission: newMission.id,
-						lastMessageTo: Date()
+						lastMessageTo: Date(),
+						status: 'active'
 					})})
 					.then(() => {
 						return {
 							state: {
 								messageState: 'FETCH_CHALLENGE',
 								currentMission: newMission.id,
+								status: 'active'
 							},
 							message: `Agent ${partner.username} will be your partner. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.`
 						}
@@ -385,7 +408,7 @@ const whichMessage = {
 			}
 			let fail = {message: "Your answer doesn't quite match ...."}
 
-			switch (currentChallenge.type) {
+			switch (currentChallenge.category) {
 				case 'text':
 					if (currentChallenge.targetText.toLowerCase() == message.body.toLowerCase()) return success;
 					else return fail;
