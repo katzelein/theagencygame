@@ -387,7 +387,7 @@ const whichMessage = {
 			}
 			let fail = {message: "Your answer doesn't quite match ...."}
 
-			switch (currentChallenge.type) {
+			switch (currentChallenge.category) {
 				case 'text':
 					if (currentChallenge.targetText.toLowerCase() == message.body.toLowerCase()) return success;
 					else return fail;
