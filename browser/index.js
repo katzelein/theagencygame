@@ -40,7 +40,7 @@ const muiTheme = getMuiTheme ({
 });
 
 
-import { Grid } from 'react-flexbox-grid/lib/index'
+import { Grid, Row, Col } from 'react-flexbox-grid/lib/index'
 
 
 injectTapEventPlugin();
@@ -50,7 +50,7 @@ ReactDOM.render(
 
   <MuiThemeProvider muiTheme={muiTheme}>
     <Provider store={store}>
-      <Grid>
+      <Grid fluid>
         <Paper style={{height: 900, width: 1500}}>
           <Router history={browserHistory}>
             <Route path="/">
