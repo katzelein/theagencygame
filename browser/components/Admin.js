@@ -37,7 +37,7 @@ export default class Admin extends Component {
           <Col xs={12}>
             <Row center="xs">
               {this.props.user && this.props.user.isAdmin ? (
-                
+                <div>
                 <h3>Admin Page</h3>
                 <div className="adminContainer">
                   <Tabs
@@ -55,6 +55,7 @@ export default class Admin extends Component {
                       <EditChallengesContainer/> 
                     </Tab>
                   </Tabs>
+                </div>
                 </div>
 
 
