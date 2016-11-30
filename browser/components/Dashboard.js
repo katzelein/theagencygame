@@ -137,12 +137,12 @@ export default class Dashboard extends Component {
 
                           {tableData.map( (row, index) => (
                             <TableRow key={index} selected={row.selected} onCellClick={(e) => {e.PreventDefault()}}>
+                              <TableRowColumn>{row.name}</TableRowColumn>
                               <TableRowColumn>{row.status}</TableRowColumn>
-                              <TableRowColumn>{row.status}</TableRowColumn>
-                              <TableRowColumn>{row.status}</TableRowColumn>
-                              <TableRowColumn>{row.status}</TableRowColumn>
-                              <TableRowColumn>{row.status}</TableRowColumn>
-                              <TableRowColumn>{row.status}</TableRowColumn>
+                              <TableRowColumn>{row.name}</TableRowColumn>
+                              <TableRowColumn>{row.name}</TableRowColumn>
+                              <TableRowColumn>{row.name}</TableRowColumn>
+                              <TableRowColumn>{row.name}</TableRowColumn>
                             </TableRow>
                           ))}
 
