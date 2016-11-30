@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
+import {Grid, Row, Col} from 'react-flexbox-grid';
+import RaisedButton from 'material-ui/RaisedButton';
+import Fingerprint from 'material-ui/svg-icons/action/fingerprint'
+
 export default class App extends Component {
 
   componentDidMount () {
@@ -9,13 +13,25 @@ export default class App extends Component {
 
   render () {
     return (
-      <div className="jumbotron">
-         <div className="row">
-                  <Link to="/sendVerification">
-                    <input type="submit" value="Phone Verification" className="btn btn-info btn-block"/>
-                  </Link>          
-          </div>
-      </div>
+      <Grid>
+        <Row>
+          <Col xs={12}>
+            <Row center="xs">
+              <h3>The Agency</h3>
+            </Row>
+            <br />  
+            <Row center="xs">
+              <RaisedButton 
+                type="submit"
+                style={{float: 'center'}}
+                icon={<Fingerprint />}
+                label="Request Verification" 
+                secondary={true}
+                href="/sendVerification" />
+            </Row>
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 }
