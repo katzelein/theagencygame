@@ -77,6 +77,7 @@ const fetchMessage = (user, message) => {
 		// for those that need images or locations
 			returnObj = whichMessage[user.messageState] (user.username, message);
 			break;
+		case 'SOLO_OK':
 		case 'QUERY_MISSION': 
 		// unique case: need user to get location
 			returnObj = whichMessage[user.messageState] (user, simpleInput);

@@ -26,13 +26,13 @@ export default class ChallengeForm extends Component {
     let targetTags = e.target.targetTags.value.split(",")
     let targetText = e.target.targetText.value
     let conclusion = e.target.conclusion.value
-    let type = e.target.type.value
+    let category = e.target.category.value
     let order = e.target.order.value
 
     if(this.props.missionSpecific || (e.target.mission && e.target.mission.value !== "null")){
       let missionId = (this.props.missionSpecific ? this.props.mission.id : e.target.mission.value)
       console.log("MISSION ID ON SUBMIT: ", missionId)
-      axios.post(`/api/challenge/setMission/${missionId}`, {objective, summary, targetTags, targetText, conclusion, type, order})
+      axios.post(`/api/challenge/setMission/${missionId}`, {objective, summary, targetTags, targetText, conclusion, category, order})
       .then((res) => res.data)
       .then(challenge => {
         console.log("CHALLENGE: ", challenge)
@@ -43,7 +43,7 @@ export default class ChallengeForm extends Component {
     // if(this.props.missionSpecific){
     //   let missionId = this.props.mission.id
     //   console.log("MISSION ID ON SUBMIT: ", missionId)
-    //   axios.post(`/api/challenge/setMission/${missionId}`, {objective, summary, targetTags, targetText, conclusion, type, order})
+    //   axios.post(`/api/challenge/setMission/${missionId}`, {objective, summary, targetTags, targetText, conclusion, category, order})
     //   .then((res) => res.data)
     //   .then(challenge => {
     //     console.log("CHALLENGE: ", challenge)
@@ -56,7 +56,7 @@ export default class ChallengeForm extends Component {
     // }
 
     else{
-      axios.post('/api/challenge', {objective, summary, targetTags, targetText, conclusion, type, order})
+      axios.post('/api/challenge', {objective, summary, targetTags, targetText, conclusion, category, order})
       .then((res) => res.data)
       .then(challenge => {
         console.log("CHALLENGE: ", challenge)
@@ -96,7 +96,7 @@ export default class ChallengeForm extends Component {
             <label>Conclusion: </label><br/>
             <textArea type="text" name="conclusion"/><br/>
             <label>Type: </label><br/>
-            <input type="text" name="type" /><br/>
+            <input type="text" name="category" /><br/>
             <label>Order: </label><br/>
             <input type="text" name="order" /><br/>
           </form>

@@ -10,7 +10,8 @@ const data = {
     { username: 'blackwidow',
       phoneNumber: '+5555555557'},
     { username: 'philcoulson', 
-      phoneNumber: '+5555555558'},
+      phoneNumber: '+5555555558',
+      location: {type: 'Point', coordinates: [0, 0]}},
     { username: 'operagirl',
       phoneNumber: '+18607485586', 
       isAdmin: true},
@@ -20,7 +21,8 @@ const data = {
     },
     { username: 'Karin',
       phoneNumber: '+19739975239',
-      isAdmin: true, 
+      isAdmin: true,
+      status: 'ready',
       location: {type: 'Point', coordinates: [40.705691, -74.009342]}
     }
   ],
@@ -43,15 +45,19 @@ const data = {
       summary: 'We need photographic evidence of the specific street address assigned to this building. We believe that the etchings on the gold may somehow contain his fingerprints. When found, send photograph to this number. Show no others.',
       conclusion: 'Great work. The fingerprints are being to the lab for analysis. In the meantime, we have another task for you.',
     },
+    { objective: 'Dine with the Finest', // mission 1
+      summary: 'Cipriani on Wall St is as classy as it gets. Go to the restaurant and find out what the special of the day is.',
+      conclusion: 'That does sound special. Might as well treat yourself to some grub while you are there'
+    },
     { objective: 'Origins of the Open Market', // mission 1
       summary: 'According to our surveillance, agent SoAndSo bought an omelette with spinach and broccoli every morning at the Open Market. Head to the store and talk to Vinnie, the guy behind the omelette counter. Give him the passcode and, if he deems you trustworthy, send us his return passcode.', targetText: 'What are you talking about', 
-      type: 'voice',
+      category: 'voice',
       conclusion: 'Vinnie may be connected to the mob. He trusted you with the right passcode, so our way deeper into the depths may be open. Please await your next mission.',
     },
 
     { objective: 'Find GHA\'s Newest Hero, Ceren', // mission 3
       summary: 'Ceren, Ben\'s doting mom who, in an incredible feat of strength and love, pulled him from the grips of an oncoming subway just a few weeks ago, spends her days in the CSS room. Find her office where Ben\'s orange water bowl sits and send us a picture; we need a warrant to dust the bowl for fingerprints.',
-      type: 'image',
+      category: 'image',
       targetTags: ['bowl'],
       conclusion: 'Great work. We\'re picking up the scent of our thief; upcoming instructions to follow.' ,
       order: 1,
@@ -59,7 +65,7 @@ const data = {
     },
     { objective: 'Putting Out Kitchen Fires', // mission 3
       summary: 'Ben loves to wander the hallways of Grace Hopper, finding the occasional student eager to scratch his belly, or scooping up the remains of a forgotten blueberry muffin. On the day of the theft, Ben was seen more than usual around the kitchen yesterday during an incoming shipment of cereal; we think this may be where the thief saw their opportunity. Please send the license number for the fire extinguisher on the left by the passcoded door. We believe the thief may use this as the passcode for their own office.',
-      // type: 'text',
+      // category: 'text',
       // targetText: 'something',
       conclusion: 'You\'re on the mark, shouldn\'t be long now. Await further instructions',
       order: 2,
@@ -67,7 +73,7 @@ const data = {
     },
     { objective: 'Tracking the Teacher', // mission 3
       summary: 'We have a list of all the offices linked to the passcode you found, and one of the teachers of Grace Hopper and Fullstack Academy, Ashi Krishnan, spent the day in the office implicated during the theft of Ben\'s bone. Find Ashi and find out the name of her childhood dog -- but do it covertly. She can\'t know that she\'s a suspect. Then call this number, speak the name of the dog when prompted, and quickly hang up. Secrecy is key.',
-      type: 'voice',
+      category: 'voice',
       targetText: 'gorp',
       conclusion: 'Ashi may not be the thief, but our progress has been strong. Well done, agent. The future looks bright.',
       order: 3,
@@ -75,7 +81,7 @@ const data = {
     }, // imaginary friend-monster: gorp
     { objective: 'Grace Hopper Academy\'s Secret Storage', // mission 3
       summary: 'We think that the thief may have an even bigger profile at the school than we thought possible. The corruption runs deep. The thief may have been so smart as to code a clue into the Grace Hopper logo in plain sight. Head to the lobby of the school and send us a picture of the logo.',
-      type: 'image',
+      category: 'image',
       targetTags: ['gha_logo'],
       conclusion: 'Our intel was correct; the logo contained vital information. One last step and we should be able to catch the thief red-handed.',
       order: 4,
@@ -83,7 +89,7 @@ const data = {
     },
     { objective: 'The Voice of Ultimate Betrayal', // mission 3
       summary: 'This is where the rubber meets the road, agent. You will need to be your most stealthy. Find David Yang; he is never far away. Capture no more than 10 seconds of his voice to confirm his identity. We need to compare your footage to audio surveillance the Agency maintains for our own safety. Be careful.',
-      // type: 'something',
+      // category: 'something',
       // targetText: 'something',
       conclusion: 'We have a match. David Yang is the thief of the missing bone. It is a dark day for Grace Hopper, but a proud day for the Agency. Well done, agent. Your country, and Ben, thanks you.',
       order:5
@@ -112,6 +118,7 @@ const data = {
   challengeMission: missions => {
     return {
       'Head to the Trump Building': missions['Intrigue on Wall Street'],
+      'Dine with the Finest': missions['Intrigue on Wall Street'],
       'Origins of the Open Market': missions['Intrigue on Wall Street'],
       'Find GHA\'s Newest Hero, Ceren': missions['Grace Hopper and the Missing Bone'],
       'Putting Out Kitchen Fires': missions['Grace Hopper and the Missing Bone'],
@@ -124,7 +131,17 @@ const data = {
 };
 
 const seed = (db) => {
+let bool;
 if(db){
+    console.log("IF DB")
+    bool = true;
+}
+else{
+  console.log("IF NOT DB")
+  bool = false;
+}
+if(bool){
+console.log("DB PROVIDED")
 const User = db.models.users
 const Challenge = db.models.challenges
 const Mission = db.models.missions
@@ -173,18 +190,42 @@ const UserChallenge = db.models.userChallenges
   return Promise.all([challenges, missions, users])
 })
 .then(([challenges, missions, users]) => {
-
-  // 
-  let challengeMission = data.challengeMission(missions);
-  let challengeKeys = Object.keys(challenges);
-  challengeKeys.forEach(key => {
-    return challengeMission[key].addChallenge(challenges[key]);
-  })
+    User.findOne({
+      where: {
+        username: 'operagirl'
+    }})
+    .then(user => {
+      return user.update({
+        currentMission: 3,
+        currentChallenge: 7
+      })
+    })
+    .then(user => {
+      return user.addChallenges([4, 5, 6, 7])
+      .then(() => {
+        user.addMission(3)
+      })
+    })
+    .then(() => {
+      return UserChallenge.update({
+        status: 'complete'},
+        { where: {
+          challengeId: {$in: [4,5,6]}
+        }}
+        )
+    })
+    .then(() => {
+      let challengeMission = data.challengeMission(missions);
+      let challengeKeys = Object.keys(challenges);
+      challengeKeys.forEach(key => {
+        return challengeMission[key].addChallenge(challenges[key]);
+      })
+    })
 })
 }
 
 else{
-  console.log("IN ELSE SEED")
+console.log("IN ELSE SEED")
 db = require('./')
 //console.log("DATABSE: ", db)
 const User = db.models.users
@@ -237,19 +278,45 @@ return db.sync({force: true})
   return Promise.all([challenges, missions, users])
 })
 .then(([challenges, missions, users]) => {
-
-  // 
-  let challengeMission = data.challengeMission(missions);
-  let challengeKeys = Object.keys(challenges);
-  challengeKeys.forEach(key => {
-    return challengeMission[key].addChallenge(challenges[key]);
-  })
+    User.findOne({
+      where: {
+        username: 'operagirl'
+    }})
+    .then(user => {
+      return user.update({
+        currentMission: 3,
+        currentChallenge: 7
+      })
+    })
+    .then(user => {
+      return user.addChallenges([4, 5, 6, 7])
+      .then(() => {
+        user.addMission(3)
+      })
+    })
+    .then(() => {
+      return UserChallenge.update({
+        status: 'complete'},
+        { where: {
+          challengeId: {$in: [4,5,6]}
+        }}
+        )
+    })
+    .then(() => {
+      let challengeMission = data.challengeMission(missions);
+      let challengeKeys = Object.keys(challenges);
+      challengeKeys.forEach(key => {
+        return challengeMission[key].addChallenge(challenges[key]);
+      })
+    })
 })
+
 }}
 
 if(module === require.main){
+  console.log("MANUALLY CALLED SEED")
   const db = require('./')
   seed(db)
 }
 
-module.exports = seed();
+module.exports = seed;
