@@ -9,7 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib/index'
 import CommunicationPhonelinkRing from 'material-ui/svg-icons/communication/phonelink-ring'
-
+import CheckCircle from 'material-ui/svg-icons/action/check-circle'
 
 const style = {
   paper: {
@@ -213,42 +213,55 @@ export class Verify extends Component {
 
   render () {
     return (
-  <div className="container jumbotron">
-    <div className="row centered-form">
-        <div>
-            <div className="panel panel-default">
-                <div className="panel-heading">
-                    <h3 className="panel-title">Authy Phone Verification</h3>
+      <Grid>
+        <Row>
+          <Col xs={12}>
+            <Row center="xs">
+              <h3>Verify By Token</h3>
+            </Row>
+            
+            <Row center="xs">
+              <form role="form" onSubmit={this.verifyNumber}>
 
-                      <div className="panel-body">
-                    <form role="form" style={{height: '35px'}} onSubmit={this.verifyNumber}>
-                        <div className="row" style={{height: 'inherit'}}>
-                            <div className="col-xs-6 col-sm-6 col-md-6" style={{height: 'inherit'}}>
-                                <div className="form-group">
-                                    <input type="text" name="token"
-                                           id="token"
-                                           className="form-control"
-                                           className="form-control input-sm"
-                                           placeholder="Verification Token"/>
-                                </div>
-                            </div>
-                            <div className="col-xs-6 col-sm-6 col-md-6" style={{height: 'inherit'}}>
-                                <div className="form-group">
-                                    <input type="submit" value="Verify Phone"
-                                           className="btn btn-info btn-block"/>
-                                </div>
-                            </div>
+                <Row>
+                  <TextField
+                    type="text"
+                    name="token"
+                    floatingLabelText="Verification Token"
+                    hintText="Verification Token"
+                    style={{textAlign: 'center'}}
+                    onChange={this.handleTokenChange} />
+                </Row>
 
-                        </div>
-                    </form>
-                    {this.state.error ? <div style={{height: '20px', padding: '2px 0px'}} className="error">{this.state.error}</div> : <div style={{height: '20px', padding: '2px 0px'}}/>}
-                    <div><Link to="/sendVerification">Request new code</Link></div>
-                </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                <br />
+
+                <Row center="xs">
+                  <RaisedButton 
+                    type="submit"
+                    style={{float: 'center'}}
+                    icon={<CheckCircle />}
+                    label="Verify Phone" 
+                    secondary={true} />
+                </Row>
+
+              </form>
+            </Row>
+
+            <Row center="xs">
+              {this.state.error ? 
+                <div style={{height: '20px', padding: '2px 0px'}} className="error">{this.state.error}</div> 
+                : 
+                <div style={{height: '20px', padding: '2px 0px'}}/>
+              }
+            </Row>
+
+            <Row center="xs">
+              <div><Link to="/sendVerification">Request new code</Link></div>
+            </Row>
+
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 }
