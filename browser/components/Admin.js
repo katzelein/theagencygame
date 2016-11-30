@@ -36,7 +36,7 @@ export default class Admin extends Component {
         <Row>
           <Col xs={12}>
             <Row center="xs">
-              {this.props.user && this.props.user.isAdmin ? (
+              {/* {this.props.user.user && this.props.user.user.isAdmin ? ( */}
                 <div>
                 <h3>Admin Page</h3>
                 <div className="adminContainer">
@@ -59,9 +59,9 @@ export default class Admin extends Component {
                 </div>
 
 
-              ) : ( 
+              {/* }) : ( 
                  <div className="adminContainer">You do not have permission to access this page, please contact and administrator</div>
-                )
+                ) */}
               } 
             </Row>
           </Col>     

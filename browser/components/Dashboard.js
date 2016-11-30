@@ -14,15 +14,11 @@ const styles = {
     // width: 800,
     textAlign: 'center',
     display: 'inline-block',
+  },
+  table: {
+    margin: 20,
   }
 };
-
-// <TableRowColumn>{row.status}</TableRowColumn>
-// <TableRowColumn>{row.id}</TableRowColumn>
-// <TableRowColumn>{row.title}</TableRowColumn>
-// <TableRowColumn>{row.numChallenges}</TableRowColumn>
-// <TableRowColumn>{row.place}</TableRowColumn>
-// <TableRowColumn>{row.start}</TableRowColumn>
 
 const tableData = [
   {
@@ -30,56 +26,49 @@ const tableData = [
     id: '27',
     title: 'Grace Hopper and the Missing Bone',
     numChallenges: '5',
-    place: 'Grace Hopper Academy',
-    start: '',
+    place: 'Grace Hopper Academy'
   },
   {
     status: 'completed',
     id: '4',
     title: 'Intrigue on Wall Street',
     numChallenges: '3',
-    place: 'Wall Street',
-    start: '',
+    place: 'Wall Street'
   },
   {
     status: 'completed',
     id: '3',
     title: 'The Dark Underbelly of Broadway\'s Bright Lights',
     numChallenges: '4',
-    place: 'Broadway',
-    start: '',
+    place: 'Broadway'
   },
   {
     status: 'completed',
     id: '19',
     title: 'Fullstack\'s Disappearing Cereal',
     numChallenges: '2',
-    place: 'Fullstack Academy',
-    start: '',
+    place: 'Fullstack Academy'
   },
   {
     status: 'completed',
     id: '16',
     title: 'In the Shadow of the World Trade Center',
     numChallenges: '6',
-    place: 'World Trade Center',
-    start: '',
+    place: 'World Trade Center'
   },
   {
     status: 'completed',
     id: '31',
     title: 'Disappearance in Port Authority',
     numChallenges: '4',
-    place: 'NYC Metro',
-    start: '',
+    place: 'NYC Metro'
   },
   {
     status: 'incomplete',
     id: '9',
     title: 'The Case of the Closed Subway Station',
     numChallenges: '5',
-    place: 'NYC Metro',
-    start: '',
+    place: 'NYC Metro'
   },
 ];
 
@@ -142,22 +131,22 @@ export default class Dashboard extends Component {
               {this.props.user.id ? (
                 <div>
                   <div>
-                      DASHBOARD
+                    <Paper style={{margin: 30}} zDepth={5}>
+                      <h1>DASHBOARD</h1>
                       <Table style={styles.table} >
                         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                           <TableRow>
-                            <TableHeaderColumn colSpan={6} style={{textAlign: 'center', fontSize: 26}}>
+                            <TableHeaderColumn colSpan={10} style={{textAlign: 'center', fontSize: 26}}>
                               {this.props.user.username}
                             </TableHeaderColumn>
                           </TableRow>
 
                           <TableRow>
-                            <TableHeaderColumn>Mission Status</TableHeaderColumn>
-                            <TableHeaderColumn>Mission ID</TableHeaderColumn>
-                            <TableHeaderColumn style={{width: '300px'}}>Title</TableHeaderColumn>
-                            <TableHeaderColumn>Challenges</TableHeaderColumn>
-                            <TableHeaderColumn>Location</TableHeaderColumn>
-                            <TableHeaderColumn>Begun At</TableHeaderColumn>
+                            <TableHeaderColumn colSpan={1} >ID</TableHeaderColumn>
+                            <TableHeaderColumn colSpan={4} >Title</TableHeaderColumn>
+                            <TableHeaderColumn colSpan={2} >Location</TableHeaderColumn>
+                            <TableHeaderColumn colSpan={1} >Challenges</TableHeaderColumn>
+                            <TableHeaderColumn colSpan={2} >Status</TableHeaderColumn>
                           </TableRow>
 
                         </TableHeader>
@@ -170,12 +159,11 @@ export default class Dashboard extends Component {
 
                           {tableData.map( (row, index) => (
                             <TableRow key={index} onCellClick={(e) => {e.PreventDefault()}}>
-                              <TableRowColumn>{row.status}</TableRowColumn>
-                              <TableRowColumn>{row.id}</TableRowColumn>
-                              <TableRowColumn style={{width: '300px'}}>{row.title}</TableRowColumn>
-                              <TableRowColumn>{row.numChallenges}</TableRowColumn>
-                              <TableRowColumn>{row.place}</TableRowColumn>
-                              <TableRowColumn>{row.start}</TableRowColumn>
+                              <TableRowColumn colSpan={1} >{row.id}</TableRowColumn>
+                              <TableRowColumn colSpan={4} >{row.title}</TableRowColumn>
+                              <TableRowColumn colSpan={2} >{row.place}</TableRowColumn>
+                              <TableRowColumn colSpan={1} >{row.numChallenges}</TableRowColumn>
+                              <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
                             </TableRow>
                           ))}
 
@@ -183,12 +171,14 @@ export default class Dashboard extends Component {
 
                       </Table>
 
-                      <div ><RaisedButton label="Logout" onClick={this.logout} /></div>
+                      <div ><RaisedButton secondary={true} label="Logout" onClick={this.logout} style={{margin: 20}}/></div>
+                    </Paper>
                   </div>
 
                   {this.props.user && this.props.user.isAdmin ?
-                    (<div>
-                      <Link to="/admin">Admin Page</Link>
+                    (
+                      <div>
+                        <RaisedButton href='/admin' primary={true} label="Admin Page" onClick={this.logout} style={{margin: 20}}/>
                       </div>
                     ) :
                     null   
