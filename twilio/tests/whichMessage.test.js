@@ -113,8 +113,7 @@ describe('Game Logic', () => {
 
 	describe('state: CHALLENGE_ANSWER',() => {
 		describe('preceding message: [<Challenge text> Send back a photo, Send back a text, make a voice call]', () => {
-			let textChallenge, imageChallenge, nightwishMission;
-
+			let textChallenge, imageChallenge, voiceChallenge, nightwishMission;
 
 			before('create challenges', () => {
 				let zeroth = Mission.create({
@@ -140,14 +139,24 @@ describe('Game Logic', () => {
 					type: 'image',
 					conclusion: 'Before the beautiful',
 					order: 2,
-					hasNext: false
+					hasNext: true
 				})
 
-				return Promise.all([zeroth, first, second])
+				let third = Challenge.create({
+					object: 'Before the plentiful',
+					summary: 'We the voyagers',
+					targetText: 'hello',
+					type: 'voice',
+					conclusion: 'The deepest solace lies in understanding',
+					order: 3,
+					hasNext: false
+				})
+								return Promise.all([zeroth, first, second, third])
 				.then((promiseAnswers) => {
 					nightwishMission = promiseAnswers[0];
 					textChallenge = promiseAnswers[1];
 					imageChallenge = promiseAnswers[2];
+					voiceChallenge = promiseAnswers[3];
 					// console.log(promiseAnswers)
 				})
 
@@ -176,7 +185,7 @@ describe('Game Logic', () => {
 				})
 			})
 
-			describe ('image input:', () => {
+			xdescribe ('image input: (success - don\'t overuse Clarifai in testing)', () => {
 				it('should return conclusion if image is correct', () => {
 					let message = {
 						MediaUrl0: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Messages/MM28717150f4aa31afbfceb4d7e15af8e0/Media/MEf55921bbfc74d012ca5ecc11a472493d',
@@ -202,6 +211,29 @@ describe('Game Logic', () => {
 						let resultConclusion = result.message.slice();
 						// console.log(resultConclusion);
 						expect(resultConclusion).to.be.equal("Your answer doesn't quite match ....")
+					})
+				})
+			})
+
+			describe('voice input:', () => {
+				it('should return conclusion if voice message is correct', () => {
+					let message = {RecordingUrl: "https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE75eed5e89a494ce14683e246b38a3928"} // 'hello'
+					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)
+					.then(result => {
+						let resultConclusion = result.message.slice(0,40);
+						console.log(resultConclusion);
+						expect(resultConclusion).to.be.equal(voiceChallenge.conclusion)
+					})
+				})
+
+				it('should return error message if voice message is incorrect', () => {
+					let message = {RecordingUrl: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/REe4ae4c77a5aa2c7d866a6494ff8a3318'}
+					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)
+					.then(result => {
+						console.log(result)
+						let resultConclusion = result.message.slice(0,34);
+						console.log(resultConclusion);
+						expect(resultConclusion).to.be.equal("Not quite what we were looking for")
 					})
 				})
 			})
@@ -317,8 +349,8 @@ describe('Game Logic', () => {
   RecordingDuration: '9' }
 
 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE75eed5e89a494ce14683e246b38a3928',
-  ToState: 'NJ',
+// hello
 
 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/REe4ae4c77a5aa2c7d866a6494ff8a3318',
-
+// welcome to the agents
 */

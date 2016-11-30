@@ -13,6 +13,7 @@ const authToken = require('../variables').authToken;
 const twilioNum = require('../variables').twilioNum;
 const client = require('twilio')(accountSid, authToken);
 
+const {checkWatsonPromise} = require('./watson')
 const lookup = require('./lookup')
 
 let speech_to_text = new SpeechToTextV1({
@@ -43,43 +44,27 @@ twilioAPI.post('/recording', function (req, res, next) {
   // result.then(resolved => {
   //   console.log('resolved:', resolved)
   // })
+
   // KARIN: This is where you would use your game logic, either lookup or whatever new helper function you've written, to incorporate the result. Result will be a string, all lowercase, that you can compare to the targetText
+
+  console.log("From:", req.body.From)
 
   var answer = lookup(req.body.From, req.body)
 
-  
-  
-
+  // this doesn't work. Help
+  return answer
+  .then(message => {
+    console.log("answer message: ",message)
+    return client.sendMessage({
+      to: req.body.From,
+      from: twilioNum,
+      body: message
+    })
+  })
+  .catch(err => console.log(err))
 })
 
-let checkWatsonPromise = function (body) {
-
-  // get the WAV file from twilio
-  request(body.RecordingUrl).pipe(fs.createWriteStream('message.wav')).on('end', ok => console.log('wrote message.wav'))
-
-  // check it in Watson
-  let params = {
-    audio: request(body.RecordingUrl),
-    content_type: 'audio/wav',
-    model: 'en-US_NarrowbandModel'
-  }
-  
-  let speechTextPromise = Q.denodeify(speech_to_text.recognize.bind(speech_to_text))
-
-  return speechTextPromise(params)
-  .then((result) => {
-    console.log("Message transcript detected")
-    // returns a string to match, ex: "how are you today"
-    // console.log(res);
-    console.log(result[0])
-    let transcript = result[0].results[0].alternatives[0].transcript.toLowerCase()
-    console.log(transcript)
-    return transcript;
-  })
-}
-
-
-
+/*
 let checkWatsonAPI = function (body) {
 
   // get the WAV file from twilio
@@ -104,7 +89,7 @@ let checkWatsonAPI = function (body) {
       // returns a string to match, ex: "how are you today"
       console.log(res);
       console.log(res.results[0])
-      result = res.results[0].alternatives[0].transcript.toLowerCase()
+      result = res.results[0].alternatives[0].transcript.toLowerCase().trim();
       console.log(result)
       return result;
     }
@@ -112,5 +97,7 @@ let checkWatsonAPI = function (body) {
 
   return result;
 }
+*/
 
-module.exports = {twilioAPI, checkWatsonPromise} //,checkWatsonAPI
+module.exports = {twilioAPI}; //,checkWatsonAPI
+
