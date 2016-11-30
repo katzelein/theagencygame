@@ -259,8 +259,13 @@ const whichMessage = {
 				let partners = response[0]
 				//console.log("USERS: ", partners)
 				let newMission = response[1];
-				if(!partners){
-					return {message: 'There are no agents currently available.  Please wait a few minutes ...'}
+				if(!partners || !partners.length){
+					return {
+							state: {
+								status: 'ready',
+							},
+							message: 'There are no agents currently available.  Please wait a few minutes ...'
+						}
 				}
 				else{
 					let partner = partners[0]
@@ -283,13 +288,15 @@ const whichMessage = {
 						return partner.update({
 						messageState: 'FETCH_CHALLENGE',
 						currentMission: newMission.id,
-						lastMessageTo: Date()
+						lastMessageTo: Date(),
+						status: 'active'
 					})})
 					.then(() => {
 						return {
 							state: {
 								messageState: 'FETCH_CHALLENGE',
 								currentMission: newMission.id,
+								status: 'active'
 							},
 							message: `Agent ${partner.username} will be your partner. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.`
 						}

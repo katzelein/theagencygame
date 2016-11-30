@@ -50,3 +50,9 @@ TESTS ***************
 	adding chalenge on challenge page
 		- leave challenge unassigned
 		- assign challenge
+
+
+EACH MISSION should have an array of potential meeting places so that lots of
+pairs don't all show up at the same place
+
+- make sure search for partners excludes current user
