@@ -34,23 +34,23 @@ export default class ChallengeForm extends Component {
           <form id="challenge-form"> 
             {this.props.missionSpecific ? null : <MissionDropDown onChange={this.props.onChange} missions={this.props.missions} challenge={this.props.challenge}/>}
             <label>Objective:</label><br/>
-            <input type="text" name="objective" value={this.props.challenge.objective} onChange={this.props.onChange}/><br/>
+            <input type="text" style={{color: 'black'}} name="objective" value={this.props.challenge.objective} onChange={this.props.onChange}/><br/>
             <label>Summary: </label><br/>
-            <textArea style={{color: black}} type="text" name="summary" value={this.props.challenge.summary} onChange={this.props.onChange}/><br/>
+            <textArea style={{color: 'black'}} type="text" name="summary" value={this.props.challenge.summary} onChange={this.props.onChange}/><br/>
             <label>Target Tags: </label><br/>
-            <input type="text" name="targetTags" value={this.props.challenge.targetTags} onChange={this.props.onChange}/><br/>
+            <input type="text" style={{color: 'black'}} name="targetTags" value={this.props.challenge.targetTags} onChange={this.props.onChange}/><br/>
             <label>Target Text: </label><br/>
-            <input type="text" name="targetText" value={this.props.challenge.targetText} onChange={this.props.onChange}/><br/>
+            <input type="text" style={{color: 'black'}} name="targetText" value={this.props.challenge.targetText} onChange={this.props.onChange}/><br/>
             <label>Conclusion: </label><br/>
-            <textArea type="text" name="conclusion" value={this.props.challenge.conclusion} onChange={this.props.onChange}/><br/>
+            <textArea type="text" style={{color: 'black'}} name="conclusion" value={this.props.challenge.conclusion} onChange={this.props.onChange}/><br/>
             <label>Type: </label><br/>
-            <select name="category" value={this.props.challenge.category} onChange={this.props.onChange}>
+            <select name="category" style={{color: 'black'}} value={this.props.challenge.category} onChange={this.props.onChange}>
               <option value="text">Text</option>
               <option value="image">Image</option>
               <option value="voice">Voice</option>
             </select><br/>
             <label>Order: </label><br/>
-            <input type="text" name="order" value={this.props.challenge.order} onChange={this.props.onChange}/><br/>
+            <input type="text" style={{color: 'black'}} name="order" value={this.props.challenge.order} onChange={this.props.onChange}/><br/>
           </form>
         </CardText>
         </Card>   

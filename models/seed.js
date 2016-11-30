@@ -88,9 +88,9 @@ const data = {
       hasNext: true
     },
     { objective: 'The Voice of Ultimate Betrayal', // mission 3
-      summary: 'This is where the rubber meets the road, agent. You will need to be your most stealthy. Find David Yang; he is never far away. Capture no more than 10 seconds of his voice to confirm his identity. We need to compare your footage to audio surveillance the Agency maintains for our own safety. Be careful.',
-      // category: 'something',
-      // targetText: 'something',
+      summary: "This is where the rubber meets the road, agent. You will need to be your most stealthy. Find David Yang; he is never far away. We believe his taste in cereal could confirm whether or not he was interested in Ben's bone. Find out which cereal he is most excited to see in the Grace Hopper kitchen, and text it to us.",
+      category: 'text',
+      targetText: 'fruity pebbles',
       conclusion: 'We have a match. David Yang is the thief of the missing bone. It is a dark day for Grace Hopper, but a proud day for the Agency. Well done, agent. Your country, and Ben, thanks you.',
       order:5
     }
@@ -147,7 +147,7 @@ const Challenge = db.models.challenges
 const Mission = db.models.missions
 const UserMission = db.models.userMissions
 const UserChallenge = db.models.userChallenges
-  db.sync()
+  db.sync({force: true})
 .then(() => {
   const users = User.bulkCreate(data.user)
     .then(users => {
