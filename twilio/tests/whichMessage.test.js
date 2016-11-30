@@ -215,7 +215,32 @@ describe('Game Logic', () => {
 				})
 			})
 
-			describe('voice input:', () => {
+			xdescribe('voice input:', () => {
+				it('should return conclusion if voice message is correct', () => {
+					let message = {RecordingUrl: "https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE75eed5e89a494ce14683e246b38a3928"} // 'hello'
+					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)
+					.then(result => {
+						let resultConclusion = result.message.slice(0,40);
+						console.log(resultConclusion);
+						expect(resultConclusion).to.be.equal(voiceChallenge.conclusion)
+					})
+				})
+
+				it('should return error message if voice message is incorrect', () => {
+					let message = {RecordingUrl: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/REe4ae4c77a5aa2c7d866a6494ff8a3318'}
+					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)
+					.then(result => {
+						console.log(result)
+						let resultConclusion = result.message.slice(0,34);
+						console.log(resultConclusion);
+						expect(resultConclusion).to.be.equal("Not quite what we were looking for")
+					})
+				})
+			})
+
+			describe('voice input: (trying something different)', () => {
+
+				// need to replace checkWatsonPromise with a spy
 				it('should return conclusion if voice message is correct', () => {
 					let message = {RecordingUrl: "https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE75eed5e89a494ce14683e246b38a3928"} // 'hello'
 					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)

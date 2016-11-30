@@ -1,25 +1,13 @@
 const twilioAPI = require('express').Router()
 const twilio = require('twilio')
-const fs = require('fs');
-const request = require('request');
-const Q = require('q');
-
-const SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
-const watsonUsername = require('../variables').watsonUsername
-const watsonPassword = require('../variables').watsonPassword
 
 const accountSid = require('../variables').accountSid;
 const authToken = require('../variables').authToken;
 const twilioNum = require('../variables').twilioNum;
 const client = require('twilio')(accountSid, authToken);
 
-const {checkWatsonPromise} = require('./watson')
+const checkWatsonPromise = require('./watson')
 const lookup = require('./lookup')
-
-let speech_to_text = new SpeechToTextV1({
-  username: watsonUsername,
-  password: watsonPassword
-});
 
 twilioAPI.post('/voice', function (req, res, next) {
   let twiml = new twilio.TwimlResponse();
@@ -64,40 +52,6 @@ twilioAPI.post('/recording', function (req, res, next) {
   .catch(err => console.log(err))
 })
 
-/*
-let checkWatsonAPI = function (body) {
-
-  // get the WAV file from twilio
-  request(body.RecordingUrl).pipe(fs.createWriteStream('message.wav')).on('end', ok => console.log('wrote message.wav'))
-
-  // check it in Watson
-  let params = {
-    audio: request(body.RecordingUrl),
-    content_type: 'audio/wav',
-    model: 'en-US_NarrowbandModel'
-  }
-  
-  let result;
-
-  speech_to_text.recognize(params, function (err, res) {
-    if (err) {
-      console.log("Watson cannot detect transcript", err)
-      return '';
-    }
-    else {
-      console.log("Message transcript detected")
-      // returns a string to match, ex: "how are you today"
-      console.log(res);
-      console.log(res.results[0])
-      result = res.results[0].alternatives[0].transcript.toLowerCase().trim();
-      console.log(result)
-      return result;
-    }
-  });
-
-  return result;
-}
-*/
 
 module.exports = {twilioAPI}; //,checkWatsonAPI
 
