@@ -26,7 +26,7 @@ export default class ChallengeForm extends Component {
     console.log("CHALLENGE MISSION ID IN RENDER: ", this.props.challenge.missionId, " type ", typeof this.props.challenge.missionId)
     return (
       <Card id="new-challenge-form" style={{padding: '10px', margin: '10px'}}>
-        <CardHeader style={{position: 'relative', padding: '10px 16px 10px 16px', height: '50px'}} title="NEW CHALLENGE"
+        <CardHeader style={{position: 'relative', padding: '10px 16px 10px 16px', height: '50px'}} title="EDIT CHALLENGE"
             titleStyle={{fontWeight: "bold", 'verticalAlign': 'center'}}>
            {/* <div className="mui-button" style={{'padding-right': '0px', top: '0px', height: '21.25px', position: 'absolute'}}>*/}
         </CardHeader>
@@ -36,7 +36,7 @@ export default class ChallengeForm extends Component {
             <label>Objective:</label><br/>
             <input type="text" name="objective" value={this.props.challenge.objective} onChange={this.props.onChange}/><br/>
             <label>Summary: </label><br/>
-            <textArea type="text" name="summary" value={this.props.challenge.summary} onChange={this.props.onChange}/><br/>
+            <textArea style={{color: black}} type="text" name="summary" value={this.props.challenge.summary} onChange={this.props.onChange}/><br/>
             <label>Target Tags: </label><br/>
             <input type="text" name="targetTags" value={this.props.challenge.targetTags} onChange={this.props.onChange}/><br/>
             <label>Target Text: </label><br/>

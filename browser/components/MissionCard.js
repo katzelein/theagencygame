@@ -117,7 +117,6 @@ export default class MissionCard extends Component{
                   <div className="card-header"> {this.props.mission.description} </div>
                 </CardHeader>
                 <CardText expandable={true}>
-                  <div> IT WORKED </div>
                   <div> Challenges </div>
                   {this.props.mission.challenges.map((challenge, i) => {
                     return(
