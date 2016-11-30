@@ -111,52 +111,6 @@ const whichMessage = {
 				}
 			}
 		})
-
-
-		// THIS WORKS FOR APPLE AND GOOGLE PHONES WHEN THERE IS A RESULT
-		// console.log("coordinates: ", coordinates)
-		// 	if(typeof coordinates === 'object'){
-		// 		return user.update({
-		// 				messageState: 'TUTORIAL_MISSION_3',
-		// 				latitude: coordinates[0],
-		// 				longitude: coordinates[1]
-		// 		})
-		// 		.then(user => {
-		// 			console.log("found coordinates, .then")
-		// 			return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
-		// 		})
-		// 	}
-		// 	else{
-		// 		console.log("coordinates is not an array")
-		// 		return user.update({})
-		// 		.then(user => {
-		// 			return coordinates
-		// 		})
-		// 	}
-
-
-		// return coordinatesPromise
-		// .then(coordinates => {
-		// 	console.log("res from getLocation: ", coordinates)
-		// 	console.log("type of coordinates: ", typeof coordinates)
-		// 	if(typeof coordinates === "object"){
-		// 		console.log("coordinates is an array")
-		// 		return user.update({
-		// 			messageState: 'TUTORIAL_MISSION_3',
-		// 			latitude: coordinates[0],
-		// 			longitude: coordinates[1]
-		// 		})
-		// 		.then(user => {
-		// 			console.log("found coordinates, .then")
-		// 			return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
-		// 		})
-		// 	}
-		// 	else{
-		// 		console.log("coordinates is not an array")
-		// 		return coordinates
-		// 	}
-		// })
-
 	},
 
 	TUTORIAL_MISSION_3: (username, message) => {
@@ -183,20 +137,6 @@ const whichMessage = {
 		})
 	},
 
-	// STANDBY: (username, userInput) => {
-	// 	if (userInput == 'no') {
-	// 		return {
-	// 			state: {messageState: 'QUERY_HIATUS'},
-	// 			message: "Agent "+username+", you are currently between missions. Do you wish to take a hiatus from missions?"
-	// 		}
-	// 	} else if (userInput == 'new' || userInput == 'new mission') {
-	// 		return {
-	// 			state: {messageState: 'QUERY_MISSION'},
-	// 			message: "Ah, Agent "+username+", good of you to call in! Before we assign you a new mission, please send in your location."
-	// 		}
-	// 	}
-	// },
-
 	STANDBY: (username, userInput) => {
 		if (userInput == 'no') {
 			return {
@@ -210,8 +150,6 @@ const whichMessage = {
 			}
 		}
 	},
-
-
 
 	SOLO_YN: (username, message) => {
 		var coordinatesPromise = getLocation(message)
@@ -333,34 +271,6 @@ const whichMessage = {
 
 
 	},
-
-	// QUERY_MISSION: (username, message) => {
-	// 	// assume we were able to access and process location
-	// 	var coordinatesPromise = getLocation(message)
-	// 	console.log("coordinatesPromise: ", coordinatesPromise)
-	// 	return coordinatesPromise
-	// 	.then(coordinates => {
-	// 		if(typeof coordinates === 'object'){
-	// 			return chooseMission()
-	// 			.then(newMission => {
-	// 				return {
-	// 					state: {
-	// 						messageState: 'FETCH_CHALLENGE',
-	// 						currentMission: newMission.id,
-	// 						location: {type: 'Point', coordinates: coordinates}
-	// 					},
-	// 					message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+username+"?"
-	// 				}
-	// 			})
-	// 		}
-	// 		else{
-	// 			console.log("coordinates is not an array")
-	// 			return {
-	// 				message: "Sorry, The Agency's message processor was not able to parse your location from that message.  Please send in your street address instead."
-	// 			}
-	// 		}
-	// 	})
-	// },
 
 	FETCH_CHALLENGE: (currentMissionId, currentChallengeId, userInput) => {
 		// still need to adjust based on userInput
