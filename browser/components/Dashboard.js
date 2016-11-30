@@ -75,7 +75,7 @@ export default class Dashboard extends Component {
     let challenges = this.props.user.userChallenges || []
     return (
       <div id="main">
-          <Paper zDepth={5} style={{margin: '0 auto', width: 800}}>
+          
               {user ? (
                 <div id="dashboard">
                   <h1 className="dashboardHeader">Agency Dashboard</h1>
@@ -87,11 +87,12 @@ export default class Dashboard extends Component {
                       )
                     })
                   }
+
                   <div>
                     <RaisedButton style={{margin: 10}} secondary={true} label="Logout" onClick={this.logout} />
                   </div>
 
-                  {user && user.isAdmin ?
+                  {user.isAdmin ?
                     (
                       <div>
                         <Link to="/admin">
@@ -112,7 +113,6 @@ export default class Dashboard extends Component {
                 </div>
               )
             }
-          </Paper>
       </div>
     );
   }

@@ -3,9 +3,13 @@ const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
 const getPhotoTags = require('./clarifai')
 const {adventureDetails, missionChooser, partnerChooser} = require('./missionChooser')
+
+//const {checkWatsonPromise} = require('./voice')
+const {checkWatsonPromise} = require('./watson');
+
 const User = require('../models/user')
 const {accountSid, authToken} = require('../variables')
-var client = require('twilio')(accountSid, authToken);
+const client = require('twilio')(accountSid, authToken);
 const UserMission = require('../models/userMission')
 const Challenge = require('../models/challenge')
 
@@ -107,52 +111,6 @@ const whichMessage = {
 				}
 			}
 		})
-
-
-		// THIS WORKS FOR APPLE AND GOOGLE PHONES WHEN THERE IS A RESULT
-		// console.log("coordinates: ", coordinates)
-		// 	if(typeof coordinates === 'object'){
-		// 		return user.update({
-		// 				messageState: 'TUTORIAL_MISSION_3',
-		// 				latitude: coordinates[0],
-		// 				longitude: coordinates[1]
-		// 		})
-		// 		.then(user => {
-		// 			console.log("found coordinates, .then")
-		// 			return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
-		// 		})
-		// 	}
-		// 	else{
-		// 		console.log("coordinates is not an array")
-		// 		return user.update({})
-		// 		.then(user => {
-		// 			return coordinates
-		// 		})
-		// 	}
-
-
-		// return coordinatesPromise
-		// .then(coordinates => {
-		// 	console.log("res from getLocation: ", coordinates)
-		// 	console.log("type of coordinates: ", typeof coordinates)
-		// 	if(typeof coordinates === "object"){
-		// 		console.log("coordinates is an array")
-		// 		return user.update({
-		// 			messageState: 'TUTORIAL_MISSION_3',
-		// 			latitude: coordinates[0],
-		// 			longitude: coordinates[1]
-		// 		})
-		// 		.then(user => {
-		// 			console.log("found coordinates, .then")
-		// 			return "Thank you for sending in your location.  Next step: Ensure your phone has a functioning camera.  This is important as many of the challenges in our missions require taking a picture of something and sending it to The Agency for processing.  Go on and take of picture of something - anything you like - and send it in."
-		// 		})
-		// 	}
-		// 	else{
-		// 		console.log("coordinates is not an array")
-		// 		return coordinates
-		// 	}
-		// })
-
 	},
 
 	TUTORIAL_MISSION_3: (username, message) => {
@@ -179,20 +137,6 @@ const whichMessage = {
 		})
 	},
 
-	// STANDBY: (username, userInput) => {
-	// 	if (userInput == 'no') {
-	// 		return {
-	// 			state: {messageState: 'QUERY_HIATUS'},
-	// 			message: "Agent "+username+", you are currently between missions. Do you wish to take a hiatus from missions?"
-	// 		}
-	// 	} else if (userInput == 'new' || userInput == 'new mission') {
-	// 		return {
-	// 			state: {messageState: 'QUERY_MISSION'},
-	// 			message: "Ah, Agent "+username+", good of you to call in! Before we assign you a new mission, please send in your location."
-	// 		}
-	// 	}
-	// },
-
 	STANDBY: (username, userInput) => {
 		if (userInput == 'no') {
 			return {
@@ -206,8 +150,6 @@ const whichMessage = {
 			}
 		}
 	},
-
-
 
 	SOLO_YN: (username, message) => {
 		var coordinatesPromise = getLocation(message)
@@ -232,7 +174,24 @@ const whichMessage = {
 		})
 	},
 
-	SOLO_OK: (username, location, userInput) => {
+	SOLO_OK: (user, message) => {
+		
+		if(message === 'wait'){
+			return{
+				state: {
+					status: 'ready'
+				},
+				message: 'Ok, we will contact you when a partner becomes available.'
+			}
+		}
+		else if(message === 'go'){
+			return whichMessage.QUERY_MISSION(user, 'lone wolf')
+		}
+		else{
+			return {
+				message: "We did not recognize that input. Respond with 'wait' or 'go'."
+			}
+		}
 
 	},
 
@@ -259,8 +218,13 @@ const whichMessage = {
 				let partners = response[0]
 				//console.log("USERS: ", partners)
 				let newMission = response[1];
-				if(!partners){
-					return {message: 'There are no agents currently available.  Please wait a few minutes ...'}
+				if(!partners || !partners.length){
+					return {
+							state: {
+								messageState: 'SOLO_OK',
+							},
+							message: "There are no agents currently available.  Text 'wait' if you would like to wait for a partner or 'go' if you would like to fly solo instead."
+						}
 				}
 				else{
 					let partner = partners[0]
@@ -283,13 +247,15 @@ const whichMessage = {
 						return partner.update({
 						messageState: 'FETCH_CHALLENGE',
 						currentMission: newMission.id,
-						lastMessageTo: Date()
+						lastMessageTo: Date(),
+						status: 'active'
 					})})
 					.then(() => {
 						return {
 							state: {
 								messageState: 'FETCH_CHALLENGE',
 								currentMission: newMission.id,
+								status: 'active'
 							},
 							message: `Agent ${partner.username} will be your partner. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.`
 						}
@@ -305,34 +271,6 @@ const whichMessage = {
 
 
 	},
-
-	// QUERY_MISSION: (username, message) => {
-	// 	// assume we were able to access and process location
-	// 	var coordinatesPromise = getLocation(message)
-	// 	console.log("coordinatesPromise: ", coordinatesPromise)
-	// 	return coordinatesPromise
-	// 	.then(coordinates => {
-	// 		if(typeof coordinates === 'object'){
-	// 			return chooseMission()
-	// 			.then(newMission => {
-	// 				return {
-	// 					state: {
-	// 						messageState: 'FETCH_CHALLENGE',
-	// 						currentMission: newMission.id,
-	// 						location: {type: 'Point', coordinates: coordinates}
-	// 					},
-	// 					message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+username+"?"
-	// 				}
-	// 			})
-	// 		}
-	// 		else{
-	// 			console.log("coordinates is not an array")
-	// 			return {
-	// 				message: "Sorry, The Agency's message processor was not able to parse your location from that message.  Please send in your street address instead."
-	// 			}
-	// 		}
-	// 	})
-	// },
 
 	FETCH_CHALLENGE: (currentMissionId, currentChallengeId, userInput) => {
 		// still need to adjust based on userInput
@@ -366,7 +304,7 @@ const whichMessage = {
 			if (currentChallenge.hasNext) {
 				success = {
 					state: {messageState: 'FETCH_CHALLENGE'},
-					message: currentChallenge.conclusion + " | Are you ready for your next challenge?"
+					message: currentChallenge.conclusion + "\n\nAre you ready for your next challenge?"
 				}
 			} else {
 				success = {
@@ -375,12 +313,12 @@ const whichMessage = {
 						currentMission: 0,
 						currentChallenge: 0
 					},
-					message: currentChallenge.conclusion + "| You have completed your mission.  Text 'new mission' to start a new mission"
+					message: currentChallenge.conclusion + "\n\nYou have completed your mission.  Text 'new mission' to start a new mission"
 				}
 			}
-			let fail = {message: "Your answer doesn't quite match ...."}
+			let fail = {message: "Your answer doesn't quite match The Agency's records.  Please try again."}
 
-			switch (currentChallenge.type) {
+			switch (currentChallenge.category) {
 				case 'text':
 					if (currentChallenge.targetText.toLowerCase() == message.body.toLowerCase()) return success;
 					else return fail;
@@ -406,8 +344,19 @@ const whichMessage = {
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
-					 if(true) return success;
-					 else return fail;
+					let scriptPromise = checkWatsonPromise(message);
+					return scriptPromise
+					.then((transcript) => {
+						console.log('transcript',transcript);
+						if (transcript == currentChallenge.targetText) return success;
+						else {
+							let newMessage = "Not quite what we were looking for, but the Agency will manage. " + success.message
+							success.message = newMessage;
+							return success;
+						}
+					})
+					// if(true) return success;
+					// else return fail;
 				default:
 					return success;
 			}

@@ -91,11 +91,13 @@ html, body
   align-items: center;
 }
 
-#dashboard {
-  margin: 20px;
-}
-
 .dashboardHeader {
   text-align: center;
   text-decoration-color: #FFAB00;
+=======
+}
+
+#dashboard {
+  text-align: center;
+  margin: 20px;
 }

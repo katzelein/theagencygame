@@ -88,6 +88,7 @@ router.get('/user/:id', function(req, res, next){
 
 router.get('/user/exists/:number', function(req, res, next){
 	console.log("Req: ", req.session)
+	console.log("This is the phone number coming in: ", req.params.number)
 	console.log("getting user")
 	User.findOne({
 		where: {
@@ -95,6 +96,7 @@ router.get('/user/exists/:number', function(req, res, next){
 		}
 	})
 	.then(user => {
+		console.log("This is the found user:", user)
 		if(user){
 			res.status(200).json({found: true})
 		}

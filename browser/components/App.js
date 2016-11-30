@@ -17,15 +17,13 @@ export default class App extends Component {
         <Grid>
           <Row>
             <Col xs={12}>
-              <Paper style={{width: 1500, minHeight: 500}}>
-                <Row center="xs" middle="xs">
-                  <Col>
-                    <Link to="/sendVerification">
-                      <FlatButton label="The Agency"/>
-                    </Link>
-                  </Col>
-                </Row>          
-              </Paper>
+              <Row center="xs" middle="xs">
+                <Col>
+                  <Link to="/sendVerification">
+                    <FlatButton label="The Agency"/>
+                  </Link>
+                </Col>
+              </Row>          
             </Col>
           </Row>
         </Grid>

@@ -20,6 +20,7 @@ export const fetchUser = () => ((dispatch) => {
   axios.get('/api/whoami')
   .then(res => res.data)
   .then(user => {
+    dispatch(setUser(user))
     //console.log("user from whoami: ", user.username)
     if(user.id){
       axios.get(`/api/user/${user.id}/history`)

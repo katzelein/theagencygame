@@ -19,7 +19,7 @@ const Challenge = db.define('challenges', {
   targetTags: Sequelize.ARRAY(Sequelize.STRING),
   targetText: Sequelize.TEXT,
   conclusion: Sequelize.TEXT,
-  type: Sequelize.ENUM('text', 'image', 'voice'),
+  category: Sequelize.ENUM('text', 'image', 'voice'),
   order: Sequelize.INTEGER,
   hasNext: Sequelize.BOOLEAN
 }

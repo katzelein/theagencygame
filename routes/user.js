@@ -5,6 +5,7 @@ var User = require('../models/user')
 var Mission = require('../models/mission')
 var Challenge = require('../models/challenge')
 var UserMission = require('../models/userMission')
+var UserChallenge = require('../models/userChallenge')
 const {mustBeAdmin, mustBeLoggedIn, selfOnly} = require('./permissions')
 
 router.get('/:id', function(req, res, next){
@@ -32,27 +33,40 @@ router.get('/exists/:number', function(req, res, next){
 })
 
 router.get('/:id/history', function(req, res, next){
-	UserMission.findAll({
+	let user_challenges;
+	UserChallenge.findAll({
+		where: {
+			userId: req.params.id,
+		},
+		attributes:['challengeId']
+	})
+	.then(challenges => {
+	console.log("CHALLENGES: ", challenges)
+		user_challenges = challenges.map(function(i){
+			return i.challengeId
+		})
+		console.log("USER_CHALLENGES: ", user_challenges)
+	return UserMission.findAll({
 		where: {
 			userId: req.params.id
 		}, 
 		include: [
-     		{ model: Mission,
-     		include: [
-     			{model: Challenge,
-     			include: [User]
-     		}] 
-     		}
-  		]
+   		{ 
+        model: Mission,
+        include: [
+   			  {
+            model: Challenge,
+            where: {
+   					  id:  {$in: user_challenges}
+            }
+          }
+        ] 
+   		}
+  	]
   	})
+  })
   	.then(resp => {
-  		let missions = resp[0].mission
-  		let challenges = mission.challenges
-  		let challengeUsers = challenges[0]
-  		console.log("RESP: ", resp) // resp is an array of each mission containing challenges
-  		console.log("MISSION: ", resp[0].mission)
-  		console.log("CHALLENGES: ", challenges)
-  		console.log("CHALLENGE USERS: ", challengeUsers)
+      console.log("This is the response that will be sent: ", resp)
   		res.json(resp)
 	})
 })

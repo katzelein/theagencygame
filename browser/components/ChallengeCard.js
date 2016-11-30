@@ -169,7 +169,7 @@ export default class ChallengeCard extends Component{
           <div><h5> Text: </h5>{this.props.challenge.tagetText} </div>
         </div>
         <div><h5> Conclusion </h5> {this.props.challenge.conclusion} </div>
-        <div><h5> Type </h5> {this.props.challenge.type} </div>
+        <div><h5> Type </h5> {this.props.challenge.category} </div>
         {this.props.missionSpecific ? null : (this.props.challenge.mission ? 
           <div><h5> Mission </h5> {this.props.challenge.mission.title} </div>
           : <div><h5> Not assigned to mission </h5></div>)}

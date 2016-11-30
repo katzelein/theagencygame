@@ -35,7 +35,7 @@ describe('Game Logic', () => {
 					objective: "Fix the errors",
 					summary: "Do testing!",
 					targetText: "fixed",
-					type: "text",
+					category: "text",
 					order: 1,
 					hasNext: true
 				})
@@ -43,7 +43,7 @@ describe('Game Logic', () => {
 					objective: "Run the program",
 					summary: "npm start",
 					targetText: "started",
-					type: "text",
+					category: "text",
 					order: 2,
 					hasNext: true
 				})
@@ -113,8 +113,7 @@ describe('Game Logic', () => {
 
 	describe('state: CHALLENGE_ANSWER',() => {
 		describe('preceding message: [<Challenge text> Send back a photo, Send back a text, make a voice call]', () => {
-			let textChallenge, imageChallenge, nightwishMission;
-
+			let textChallenge, imageChallenge, voiceChallenge, nightwishMission;
 
 			before('create challenges', () => {
 				let zeroth = Mission.create({
@@ -127,7 +126,7 @@ describe('Game Logic', () => {
 					objective: 'The music of this awe',
 					summary: 'Deep silence between the notes',
 					targetText: 'Deafens me with endless love',
-					type: 'text',
+					category: 'text',
 					conclusion: 'This vagrant island earth',
 					order: 1,
 					hasNext: true
@@ -137,17 +136,27 @@ describe('Game Logic', () => {
 					object: 'This pilgrim shining bright',
 					summary: 'We are shuddering',
 					targetTags: ['gha_logo'],
-					type: 'image',
+					category: 'image',
 					conclusion: 'Before the beautiful',
 					order: 2,
-					hasNext: false
+					hasNext: true
 				})
 
-				return Promise.all([zeroth, first, second])
+				let third = Challenge.create({
+					object: 'Before the plentiful',
+					summary: 'We the voyagers',
+					targetText: 'hello',
+					category: 'voice',
+					conclusion: 'The deepest solace lies in understanding',
+					order: 3,
+					hasNext: false
+				})
+								return Promise.all([zeroth, first, second, third])
 				.then((promiseAnswers) => {
 					nightwishMission = promiseAnswers[0];
 					textChallenge = promiseAnswers[1];
 					imageChallenge = promiseAnswers[2];
+					voiceChallenge = promiseAnswers[3];
 					// console.log(promiseAnswers)
 				})
 
@@ -176,7 +185,7 @@ describe('Game Logic', () => {
 				})
 			})
 
-			describe ('image input:', () => {
+			xdescribe ('image input: (success - don\'t overuse Clarifai in testing)', () => {
 				it('should return conclusion if image is correct', () => {
 					let message = {
 						MediaUrl0: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Messages/MM28717150f4aa31afbfceb4d7e15af8e0/Media/MEf55921bbfc74d012ca5ecc11a472493d',
@@ -202,6 +211,54 @@ describe('Game Logic', () => {
 						let resultConclusion = result.message.slice();
 						// console.log(resultConclusion);
 						expect(resultConclusion).to.be.equal("Your answer doesn't quite match ....")
+					})
+				})
+			})
+
+			xdescribe('voice input:', () => {
+				it('should return conclusion if voice message is correct', () => {
+					let message = {RecordingUrl: "https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE75eed5e89a494ce14683e246b38a3928"} // 'hello'
+					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)
+					.then(result => {
+						let resultConclusion = result.message.slice(0,40);
+						console.log(resultConclusion);
+						expect(resultConclusion).to.be.equal(voiceChallenge.conclusion)
+					})
+				})
+
+				it('should return error message if voice message is incorrect', () => {
+					let message = {RecordingUrl: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/REe4ae4c77a5aa2c7d866a6494ff8a3318'}
+					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)
+					.then(result => {
+						console.log(result)
+						let resultConclusion = result.message.slice(0,34);
+						console.log(resultConclusion);
+						expect(resultConclusion).to.be.equal("Not quite what we were looking for")
+					})
+				})
+			})
+
+			describe('voice input: (trying something different)', () => {
+
+				// need to replace checkWatsonPromise with a spy
+				it('should return conclusion if voice message is correct', () => {
+					let message = {RecordingUrl: "https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE75eed5e89a494ce14683e246b38a3928"} // 'hello'
+					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)
+					.then(result => {
+						let resultConclusion = result.message.slice(0,40);
+						console.log(resultConclusion);
+						expect(resultConclusion).to.be.equal(voiceChallenge.conclusion)
+					})
+				})
+
+				it('should return error message if voice message is incorrect', () => {
+					let message = {RecordingUrl: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/REe4ae4c77a5aa2c7d866a6494ff8a3318'}
+					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)
+					.then(result => {
+						console.log(result)
+						let resultConclusion = result.message.slice(0,34);
+						console.log(resultConclusion);
+						expect(resultConclusion).to.be.equal("Not quite what we were looking for")
 					})
 				})
 			})
@@ -255,3 +312,70 @@ describe('Game Logic', () => {
 //   MessageSid: 'MMf83db10bb0caba9a75aeee2e3d8a5612',
 //   MediaUrl0: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Messages/MMf83db10bb0caba9a75aeee2e3d8a5612/Media/ME217735d4d981bcb4ad9c314455319b82',
 //   ApiVersion: '2010-04-01' }
+
+// this is for voice
+/*
+{ Called: '+19738745304',
+  Digits: 'hangup',
+  RecordingUrl: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE65d3b4f9b3872b4db9f5d914d8b36473',
+  ToState: 'NJ',
+  CallerCountry: 'US',
+  Direction: 'inbound',
+  CallerState: 'NJ',
+  ToZip: '07004',
+  CallSid: 'CA5a0fca87480147e7a1d94b166c455d89',
+  To: '+19738745304',
+  CallerZip: '07416',
+  ToCountry: 'US',
+  ApiVersion: '2010-04-01',
+  CalledZip: '07004',
+  CalledCity: 'FAIRFIELD',
+  CallStatus: 'completed',
+  RecordingSid: 'RE65d3b4f9b3872b4db9f5d914d8b36473',
+  From: '+19739975239',
+  CalledCountry: 'US',
+  CallerCity: 'FRANKLIN',
+  Caller: '+19739975239',
+  FromCountry: 'US',
+  ToCity: 'FAIRFIELD',
+  FromCity: 'FRANKLIN',
+  CalledState: 'NJ',
+  FromZip: '07416',
+  FromState: 'NJ',
+  RecordingDuration: '5' }
+
+{ Called: '+19738745304',
+  Digits: 'hangup',
+  RecordingUrl: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/REec02618bc904e81bc06227dfa21581d8',
+  ToState: 'NJ',
+  CallerCountry: 'US',
+  Direction: 'inbound',
+  CallerState: 'NJ',
+  ToZip: '07004',
+  CallSid: 'CA4308c8a1d6af09c7d9747f7f461e02cb',
+  To: '+19738745304',
+  CallerZip: '07416',
+  ToCountry: 'US',
+  ApiVersion: '2010-04-01',
+  CalledZip: '07004',
+  CalledCity: 'FAIRFIELD',
+  CallStatus: 'completed',
+  RecordingSid: 'REec02618bc904e81bc06227dfa21581d8',
+  From: '+19739975239',
+  CalledCountry: 'US',
+  CallerCity: 'FRANKLIN',
+  Caller: '+19739975239',
+  FromCountry: 'US',
+  ToCity: 'FAIRFIELD',
+  FromCity: 'FRANKLIN',
+  CalledState: 'NJ',
+  FromZip: '07416',
+  FromState: 'NJ',
+  RecordingDuration: '9' }
+
+'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE75eed5e89a494ce14683e246b38a3928',
+// hello
+
+'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/REe4ae4c77a5aa2c7d866a6494ff8a3318',
+// welcome to the agents
+*/

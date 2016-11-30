@@ -4,8 +4,11 @@ const Sequelize = require('sequelize')
 const db = require('./_db')
 
 const UserMissions = db.define('userMissions', {
-  status: Sequelize.ENUM('complete', 'incomplete'),
-  partnerId: Sequelize.INTEGER
+	status: {
+		type: Sequelize.ENUM('complete', 'incomplete'),
+		defaultValue: 'incomplete'
+	},
+  	partnerId: Sequelize.INTEGER
 })
 
 module.exports = UserMissions
