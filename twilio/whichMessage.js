@@ -3,9 +3,13 @@ const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
 const getPhotoTags = require('./clarifai')
 const {adventureDetails, missionChooser, partnerChooser} = require('./missionChooser')
+
+//const {checkWatsonPromise} = require('./voice')
+const {checkWatsonPromise} = require('./watson');
+
 const User = require('../models/user')
 const {accountSid, authToken} = require('../variables')
-var client = require('twilio')(accountSid, authToken);
+const client = require('twilio')(accountSid, authToken);
 const UserMission = require('../models/userMission')
 const Challenge = require('../models/challenge')
 
@@ -430,8 +434,25 @@ const whichMessage = {
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
-					 if(true) return success;
-					 else return fail;
+  // console.log('checkWatsonPromise', checkWatsonPromise)
+  // 					console.log('newly required checkWatsonPromise:',
+  // 						require('./voice').checkWatsonPromise)
+		// 			 let watsonPromise = require('./voice').checkWatsonPromise
+
+					let scriptPromise = checkWatsonPromise(message);
+					return scriptPromise
+					.then((transcript) => {
+						console.log('transcript',transcript);
+						if (transcript == currentChallenge.targetText) return success;
+						else {
+							let newMessage = "Not quite what we were looking for, but the Agency will manage. " + success.message
+							console.log(newMessage)
+							success.message = newMessage;
+							return success;
+						}
+					})
+					// if(true) return success;
+					// else return fail;
 				default:
 					return success;
 			}

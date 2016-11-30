@@ -24,7 +24,7 @@ twilioAPI.post('/messages', function(req, res, next){
   var answer = lookup(req.body.From, req.body) // must return a promise
   // console.log("ANSWER: ", answer)
 
-  answer
+  return answer
   .then(message => {
     console.log("answer message: ", message)
     var twiml = new twilio.TwimlResponse();
