@@ -105,7 +105,7 @@ export default class Dashboard extends Component {
       <div id="main">
         <Grid>
           <Row>
-          <Paper style={styles.paper} zDepth={4} >
+          <div id="dashboard" >
               {this.props.user.id ? (
                 <div>
                   <div>
@@ -165,7 +165,7 @@ export default class Dashboard extends Component {
                 <div> Please <Link to="/">log in</Link> to view your dashboard </div>
               )
             }
-          </Paper>
+          </div>
           </Row>
         </Grid>
       </div>

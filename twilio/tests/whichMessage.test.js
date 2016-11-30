@@ -146,7 +146,7 @@ describe('Game Logic', () => {
 					object: 'Before the plentiful',
 					summary: 'We the voyagers',
 					targetText: 'hello',
-					type: 'voice',
+					category: 'voice',
 					conclusion: 'The deepest solace lies in understanding',
 					order: 3,
 					hasNext: false

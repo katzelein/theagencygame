@@ -31,7 +31,7 @@ ReactDOM.render(
   <MuiThemeProvider muiTheme={getMuiTheme(agencyBaseTheme)}>
     <Provider store={store}>
       <Grid>
-        <Paper>
+        <Paper style={{height: 700, width: 1000}}>
           <Router history={browserHistory}>
             <Route path="/">
               <Route path="login" component={AppContainer} />
