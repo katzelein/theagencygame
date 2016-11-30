@@ -1,7 +1,7 @@
 const {expect} = require('chai');
 const getPhotoTags = require('../clarifai')
-
-describe('Clarifai', () => {
+ 
+xdescribe('Clarifai (success - don\'t overuse Clarifai in testing)', () => {
 	it ('should return a promise', () => {
 		let message = {
 			MediaUrl0: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Messages/MMf83db10bb0caba9a75aeee2e3d8a5612/Media/ME217735d4d981bcb4ad9c314455319b82',

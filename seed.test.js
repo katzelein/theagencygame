@@ -8,7 +8,7 @@ const seed = require('./models/seed')
 
   describe('Initialize db before tests', () => {
 	
-  before('Before running any tests, seed db', () => seed)
+  before('Before running any tests, seed db', () => seed())
 
   describe('seeds database: ', () => {
   	const User = db.models.users

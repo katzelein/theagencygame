@@ -3,9 +3,13 @@ const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
 const getPhotoTags = require('./clarifai')
 const {adventureDetails, missionChooser, partnerChooser} = require('./missionChooser')
+
+//const {checkWatsonPromise} = require('./voice')
+const {checkWatsonPromise} = require('./watson');
+
 const User = require('../models/user')
 const {accountSid, authToken} = require('../variables')
-var client = require('twilio')(accountSid, authToken);
+const client = require('twilio')(accountSid, authToken);
 const UserMission = require('../models/userMission')
 const Challenge = require('../models/challenge')
 
@@ -232,7 +236,24 @@ const whichMessage = {
 		})
 	},
 
-	SOLO_OK: (username, location, userInput) => {
+	SOLO_OK: (user, message) => {
+		
+		if(message === 'wait'){
+			return{
+				state: {
+					status: 'ready'
+				},
+				message: 'Ok, we will contact you when a partner becomes available.'
+			}
+		}
+		else if(message === 'go'){
+			return whichMessage.QUERY_MISSION(user, 'lone wolf')
+		}
+		else{
+			return {
+				message: "We did not recognize that input. Respond with 'wait' or 'go'."
+			}
+		}
 
 	},
 
@@ -259,8 +280,13 @@ const whichMessage = {
 				let partners = response[0]
 				//console.log("USERS: ", partners)
 				let newMission = response[1];
-				if(!partners){
-					return {message: 'There are no agents currently available.  Please wait a few minutes ...'}
+				if(!partners || !partners.length){
+					return {
+							state: {
+								messageState: 'SOLO_OK',
+							},
+							message: "There are no agents currently available.  Text 'wait' if you would like to wait for a partner or 'go' if you would like to fly solo instead."
+						}
 				}
 				else{
 					let partner = partners[0]
@@ -283,13 +309,15 @@ const whichMessage = {
 						return partner.update({
 						messageState: 'FETCH_CHALLENGE',
 						currentMission: newMission.id,
-						lastMessageTo: Date()
+						lastMessageTo: Date(),
+						status: 'active'
 					})})
 					.then(() => {
 						return {
 							state: {
 								messageState: 'FETCH_CHALLENGE',
 								currentMission: newMission.id,
+								status: 'active'
 							},
 							message: `Agent ${partner.username} will be your partner. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.`
 						}
@@ -380,7 +408,7 @@ const whichMessage = {
 			}
 			let fail = {message: "Your answer doesn't quite match ...."}
 
-			switch (currentChallenge.type) {
+			switch (currentChallenge.category) {
 				case 'text':
 					if (currentChallenge.targetText.toLowerCase() == message.body.toLowerCase()) return success;
 					else return fail;
@@ -406,8 +434,25 @@ const whichMessage = {
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
-					 if(true) return success;
-					 else return fail;
+  // console.log('checkWatsonPromise', checkWatsonPromise)
+  // 					console.log('newly required checkWatsonPromise:',
+  // 						require('./voice').checkWatsonPromise)
+		// 			 let watsonPromise = require('./voice').checkWatsonPromise
+
+					let scriptPromise = checkWatsonPromise(message);
+					return scriptPromise
+					.then((transcript) => {
+						console.log('transcript',transcript);
+						if (transcript == currentChallenge.targetText) return success;
+						else {
+							let newMessage = "Not quite what we were looking for, but the Agency will manage. " + success.message
+							console.log(newMessage)
+							success.message = newMessage;
+							return success;
+						}
+					})
+					// if(true) return success;
+					// else return fail;
 				default:
 					return success;
 			}
