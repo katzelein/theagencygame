@@ -2,10 +2,10 @@
 * On heroku, use heroku env variables, locally use .gitignored constants
 */
 let localConst
-if (process.env.NODE_EVN === 'production'){
-  console.log('!!!!the environment is', process.env.NODE_EVN)
+if (process.env.IS_HEROKU === true){
+  console.log('!!!!the environment is', process.env.IS_HEROKU)
 } else {
-  console.log('*****the environment is', process.env.NODE_EVN)
+  console.log('*****the environment is', process.env.IS_HEROKU)
   localConst = require('./constants')
 
 }
