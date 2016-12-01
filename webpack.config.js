@@ -24,14 +24,14 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style!css!postcss',
-        include: path.join(__dirname, 'node_modules'), // oops, this also includes flexboxgrid
-        exclude: /flexboxgrid/, // so we have to exclude it
+        loader: 'style!css?modules',
+        include: /flexboxgrid/
       },
       {
         test: /\.css$/,
-        loader: 'style!css?modules',
-        include: /flexboxgrid/,
+        loader: 'style!css!postcss',
+        include: path.join(__dirname, 'node_modules'), // oops, this also includes flexboxgrid
+        exclude: /flexboxgrid/ // so we have to exclude it
       }
     ]
   },
