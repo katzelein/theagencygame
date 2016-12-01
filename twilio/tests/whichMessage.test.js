@@ -265,6 +265,15 @@ describe('Game Logic', () => {
 		})
 	})
 
+	describe ('QUERY_QUIT_MISSION', () => {
+		describe('state is reached by texting in \'quit\'', () => {
+			it ('should send back error message if user texts quit when not on a mission', () => {
+				
+			})
+		})
+	})
+
+
 	describe('helper functions:', () => {
 		describe('checkTags', () => {
 			xit('returns false if inputs are not arrays', () => {

@@ -11,7 +11,10 @@ module.exports = function(phoneNumber, message) {
 			console.log("Did not find user")
 			return User.create({
 				phoneNumber,
-				messageState: 'CONFIRM_JOIN'
+				messageState: 'CONFIRM_JOIN',
+				lastMessageFrom: Date(),
+				lastMessageTo: Date(),
+				status: 'standby'
 			})
 			.then (newUser => {
 				return "The Agency has no record of you in our system. Would you like to join our forces? If so, text 'join'"
@@ -22,7 +25,8 @@ module.exports = function(phoneNumber, message) {
 }
 
 const fetchMessage = (user, message) => {
-	
+
+	user.update({lastMessageFrom: Date()})	
 
 	let simpleInput = "";
 	if (message.Body != undefined) simpleInput = message.Body.toLowerCase();
@@ -34,28 +38,28 @@ const fetchMessage = (user, message) => {
 			user.update({
 				prevState: user.messageState,
 				messageState: 'QUERY_TUTORIAL',
-				lastMessageAt: Date()
+				lastMessageTo: Date()
 			})
 			return "You have indicated you wish to redo your training mission.  Are you certain?"
 		case 'skip':
 			user.update({
 				prevState: user.messageState,
 				messageState: 'QUERY_SKIP_CHALLENGE',
-				lastMessageAt: Date()
+				lastMessageTo: Date()
 			})
 			return "You have indicated you wish to skip this challenge.  Are you certain?"
 		case 'quit':
 			user.update({
 				prevState: user.messageState,
 				messageState: 'QUERY_QUIT_MISSION',
-				lastMessageAt: Date()
+				lastMessageTo: Date()
 			})
 			return "You have indicated you wish to quit this mission.  Are you certain?"
 		case 'resign':
 			user.update({
 				prevState: user.messageState,
 				messageState: 'QUERY_RESIGN',
-				lastMessageAt: Date()
+				lastMessageTo: Date()
 			})
 			return "You have indicated you wish to resign from The Agency.  Are you certain?"
 		default:
@@ -70,8 +74,6 @@ const fetchMessage = (user, message) => {
 			returnObj = whichMessage[user.messageState] (user.username, message.Body);
 			break;
 		case 'TUTORIAL_MISSION_2': // need location
-			returnObj = whichMessage[user.messageState] (user.username, message);
-			break;
 		case 'TUTORIAL_MISSION_3': // need image
 		case 'SOLO_YN': // need location
 		// for those that need images or locations
@@ -105,7 +107,7 @@ const fetchMessage = (user, message) => {
 	.then(obj => {
 		if (obj && obj.state) user.update(obj.state);
 		if (obj && obj.message) {
-			user.update({lastMessageAt: Date()})
+			user.update({lastMessageTo: Date()})
 			return obj.message;
 		}
 		else return 'Sorry, The Agency\'s text processor has clearly failed.'
