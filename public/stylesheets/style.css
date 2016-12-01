@@ -89,7 +89,7 @@ html, body
 
 #dashboard {
   text-align: center;
-  margin: 20px;
+  margin: 10px 10px 10px 10px;
 }
 
 .adminContainer {
@@ -97,6 +97,6 @@ html, body
 }
 
 #missionDataBox{
-  margin: 20px;
-  padding: 20px;
+  margin: 20px 20px 20px 20px;
+  padding: 10px 10px 10px 10px;
 }
