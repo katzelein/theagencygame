@@ -4,6 +4,7 @@ npm-debug.log
 node_modules/
 !/node_modules/material-ui/*
 !/node_modules/react-flexbox-grid/*
+!/node_modules/flexboxgrid/*
 notes.txt
 key.json
 notes
