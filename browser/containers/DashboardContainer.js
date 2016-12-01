@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 import Dashboard from '../components/Dashboard';
 import {fetchUser} from '../reducers/user';
 import {setUser} from '../reducers/user';
+import {fetchUserData} from '../reducers/userData';
+import {getUserData} from '../reducers/userData';
 
 //******** FIX TO BE IN ES6 LIKE WE"RE USED TO
-const mapStateToProps = ({user}) => ({user})
+const mapStateToProps = ({user, userData}) => ({user, userData})
 
 const mapDispatchToProps = (dispatch) => ({
 	findUser: function (){
@@ -13,6 +15,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   logoutUser: function(){
   	dispatch(setUser({}))
+  },
+  findUserData: function () {
+    dispatch(fetchUserData())
   }
 });
 

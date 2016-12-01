@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
 import axios from 'axios';
+import MissionDataBox from './MissionDataBox'
 
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import Paper from 'material-ui/Paper';
@@ -13,67 +14,16 @@ import FlatButton from 'material-ui/FlatButton';
 const styles = {
   paper: {
     margin: 30,
+    padding: 10
   },
   table: {
     margin: 20,
-    width: 700,
+    width: 900,
   },
   raisedButton: {
     margin: 20
   }
 };
-
-const tableData = [
-  {
-    status: 'completed',
-    id: '27',
-    title: 'Grace Hopper and the Missing Bone',
-    numChallenges: '5',
-    place: 'Grace Hopper Academy'
-  },
-  {
-    status: 'completed',
-    id: '4',
-    title: 'Intrigue on Wall Street',
-    numChallenges: '3',
-    place: 'Wall Street'
-  },
-  {
-    status: 'completed',
-    id: '3',
-    title: 'The Dark Underbelly of Broadway\'s Bright Lights',
-    numChallenges: '4',
-    place: 'Broadway'
-  },
-  {
-    status: 'completed',
-    id: '19',
-    title: 'Fullstack\'s Disappearing Cereal',
-    numChallenges: '2',
-    place: 'Fullstack Academy'
-  },
-  {
-    status: 'completed',
-    id: '16',
-    title: 'In the Shadow of the World Trade Center',
-    numChallenges: '6',
-    place: 'World Trade Center'
-  },
-  {
-    status: 'completed',
-    id: '31',
-    title: 'Disappearance in Port Authority',
-    numChallenges: '4',
-    place: 'NYC Metro'
-  },
-  {
-    status: 'incomplete',
-    id: '9',
-    title: 'The Case of the Closed Subway Station',
-    numChallenges: '5',
-    place: 'NYC Metro'
-  },
-];
 
 export default class Dashboard extends Component {
 
@@ -81,7 +31,8 @@ export default class Dashboard extends Component {
     super(props);
 
     this.state = {
-      open: false
+      open: false,
+      data: false
     };
     this.handleChange.bind(this)
     this.logout = this.logout.bind(this)
@@ -104,7 +55,14 @@ export default class Dashboard extends Component {
   }
 
   componentDidMount () {
-    this.props.findUser()   
+    this.props.findUser()
+    this.props.findUserData()
+    this.setState({
+      data: true
+    })
+  }
+
+  componentWillReceiveProps() {
   }
 
   logout(){
@@ -127,6 +85,7 @@ export default class Dashboard extends Component {
     ];
 
     return (
+
       <div id="main">
         <Grid>
           <Row>
@@ -136,15 +95,15 @@ export default class Dashboard extends Component {
                     <div>
                       <Paper style={styles.paper} zDepth={5}>
                         <h1>DOSSIER</h1>
-                        <h4>Agent: {this.props.user.username}</h4>
+                        <h4>{this.props.user.username}</h4>
                         <Table style={styles.table} selectable={false} >
                           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                             <TableRow>
                               <TableHeaderColumn colSpan={1} >ID</TableHeaderColumn>
                               <TableHeaderColumn colSpan={4} >Title</TableHeaderColumn>
                               <TableHeaderColumn colSpan={2} >Location</TableHeaderColumn>
-                              <TableHeaderColumn colSpan={2} >Challenges</TableHeaderColumn>
                               <TableHeaderColumn colSpan={2} >Status</TableHeaderColumn>
+                              <TableHeaderColumn style={{textAlign: 'center'}} colSpan={2} >Actions</TableHeaderColumn>
                             </TableRow>
                           </TableHeader>
 
@@ -152,33 +111,37 @@ export default class Dashboard extends Component {
                             displayRowCheckbox={false}
                             deselectOnClickaway={true}
                             showRowHover={true} 
-                            adjustForCheckbox={false}>
+                            adjustForCheckbox={false} >
 
-                            {tableData.map( (row, index) => (
-                              <TableRow key={index} onCellClick={(e) => {e.PreventDefault()}}>
-                                <TableRowColumn colSpan={1} >{row.id}</TableRowColumn>
-                                <TableRowColumn colSpan={4} >{row.title}</TableRowColumn>
-                                <TableRowColumn colSpan={2} >{row.place}</TableRowColumn>
-                                <TableRowColumn colSpan={2} >
+                            {this.props.userData ? (
+                              this.props.userData.map(row => (
+                                <TableRow key={row.missionId}>
+                                  <TableRowColumn colSpan={1} >{row.missionId}</TableRowColumn>
+                                  <TableRowColumn colSpan={4} >{row.mission.title}</TableRowColumn>
+                                  <TableRowColumn colSpan={2} >{row.mission.place}</TableRowColumn>
+                                  <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
+                                  <TableRowColumn colSpan={2} >
 
-                                  <RaisedButton 
-                                    label="Open" 
-                                    onTouchTap={this.handleOpen} />
-                                  <Dialog
-                                    title="Completed Challenges"
-                                    actions={actions}
-                                    modal={false}
-                                    open={this.state.open}
-                                    onRequestClose={this.handleClose}
-                                    autoScrollBodyContent={true} >
-
-                                    This is the stuff I have contained in the Dialog
-
-                                  </Dialog>
-                                </TableRowColumn>
-                                <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
-                              </TableRow>
-                            ))}
+                                    <RaisedButton 
+                                      label="Challenges"
+                                      primary={true} 
+                                      onTouchTap={this.handleOpen} />
+                                    <Dialog
+                                      title="Challenges"
+                                      actions={actions}
+                                      modal={false}
+                                      open={this.state.open}
+                                      onRequestClose={this.handleClose}
+                                      autoScrollBodyContent={true} >
+                                        <MissionDataBox styl={{margin: 20}} userMission={row} userChallenges={row.mission.challenges}/>
+                                    </Dialog>
+                                  </TableRowColumn>
+                                </TableRow>
+                              ))) : (
+                                <TableRow>
+                                  <TableRowColumn style={{textAlign: 'center'}} colSpan={11}> No data to display for this agent</TableRowColumn>
+                                </TableRow>
+                              )}
 
                           </TableBody>
                         </Table>

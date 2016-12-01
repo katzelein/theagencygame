@@ -94,3 +94,8 @@ html, body
 .adminContainer {
   margin: 50px;
 }
+
+#missionDataBox{
+  margin: 20px;
+  padding: 20px;
+}
