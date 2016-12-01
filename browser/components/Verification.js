@@ -10,6 +10,7 @@ import Paper from 'material-ui/Paper';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib/index'
 import CommunicationPhonelinkRing from 'material-ui/svg-icons/communication/phonelink-ring'
 import CheckCircle from 'material-ui/svg-icons/action/check-circle'
+import constants from "../../variables"
 
 const style = {
   paper: {
@@ -40,8 +41,8 @@ export class SendVerification extends Component {
     //dispatcher
     //1. check db for number
     //2. authy.startverification
-
     e.preventDefault()
+    console.log('THIS IS JUST A TEST')
     console.log("This is e: ", e.target.country_code.value)
     let countryCode = e.target.country_code.value
     let number = e.target.phone_number.value
@@ -51,7 +52,7 @@ export class SendVerification extends Component {
       //alert("Please provide your number")
       this.setState({error: "Please provide your number"})
     }
-   
+
     else{
     this.setState({countryCode, number})
     let fullNumber = "+" + countryCode + number
@@ -70,7 +71,7 @@ export class SendVerification extends Component {
       }
     })
   }
-    
+
     // don't send text if user is not in database
 
   }
@@ -99,7 +100,7 @@ export class SendVerification extends Component {
               <Row center="xs">
                 <h3>Phone Verification</h3>
               </Row>
-              
+
               <Row center="xs">
                 <form role="form" onSubmit={this.startVerification}>
 
@@ -135,11 +136,11 @@ export class SendVerification extends Component {
 
                   <br />
                   <Row center="xs">
-                    <RaisedButton 
+                    <RaisedButton
                       type="submit"
                       style={{float: 'center'}}
                       icon={<CommunicationPhonelinkRing />}
-                      label="Request Verification" 
+                      label="Request Verification"
                       secondary={true} />
                   </Row>
 
@@ -179,7 +180,7 @@ export class Verify extends Component {
   //   let method = e.target.via.value
   //   console.log("STATE: ", this.state)
   //   console.log("THIS: ", this)
-  //   this.setState({showVerification: true, 
+  //   this.setState({showVerification: true,
   //     countryCode, phoneNumber})
   //   console.log("AFTER SET STATE: ", this.state)
   //   axios.post('/authy/verification/start', {countryCode, phoneNumber, method})
@@ -219,7 +220,7 @@ export class Verify extends Component {
             <Row center="xs">
               <h3>Verify By Token</h3>
             </Row>
-            
+
             <Row center="xs">
               <form role="form" onSubmit={this.verifyNumber}>
 
@@ -236,11 +237,11 @@ export class Verify extends Component {
                 <br />
 
                 <Row center="xs">
-                  <RaisedButton 
+                  <RaisedButton
                     type="submit"
                     style={{float: 'center'}}
                     icon={<CheckCircle />}
-                    label="Verify Phone" 
+                    label="Verify Phone"
                     secondary={true} />
                 </Row>
 
@@ -248,9 +249,9 @@ export class Verify extends Component {
             </Row>
 
             <Row center="xs">
-              {this.state.error ? 
-                <div style={{height: '20px', padding: '2px 0px'}} className="error">{this.state.error}</div> 
-                : 
+              {this.state.error ?
+                <div style={{height: '20px', padding: '2px 0px'}} className="error">{this.state.error}</div>
+                :
                 <div style={{height: '20px', padding: '2px 0px'}}/>
               }
             </Row>
