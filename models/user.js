@@ -8,13 +8,13 @@ const db = require('./_db')
 const User = db.define('users', {
   username: Sequelize.STRING,
   phoneNumber: Sequelize.STRING, 
-  status: Sequelize.ENUM('standby', 'ready', 'active', 'retired'),
+  status: Sequelize.ENUM('standby', 'ready', 'active_solo', 'active_pair', 'retired'),
     /*
      * standy: between missions
      * ready: waiting for a partner
-     * active: on a mission
+     * active_solo: on a mission alone
+     * active_pair: on a mission with a partner
      * retired: user has permanently quit
-     *    maybe have a separate status 'partnered' for being on a mission with a partner????
      */
   currentMission: Sequelize.INTEGER,	
   currentChallenge: Sequelize.INTEGER,

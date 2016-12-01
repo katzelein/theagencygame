@@ -4,13 +4,13 @@ const {getLocation} = require('./location')
 const getPhotoTags = require('./clarifai')
 const {adventureDetails, missionChooser, partnerChooser} = require('./missionChooser')
 
-//const {checkWatsonPromise} = require('./voice')
 const {checkWatsonPromise} = require('./watson');
 
 const User = require('../models/user')
 const {accountSid, authToken} = require('../variables')
 const client = require('twilio')(accountSid, authToken);
 const UserMission = require('../models/userMission')
+const UserChallenge = require('../models/userChallenge')
 const Challenge = require('../models/challenge')
 
 
@@ -197,14 +197,20 @@ const whichMessage = {
 		if(userInput === 'lone wolf'){
 			return missionChooser(coordinates)
 			.then(newMission => {
-					return {
-						state: {
-							messageState: 'FETCH_CHALLENGE',
-							currentMission: newMission.id,
-						},
-						message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+user.username+"?"
-					}
+				UserMission.create({
+					userId: user.id,
+					missionId: newMission.id,
+					partnerId: null
 				})
+				return {
+					state: {
+						messageState: 'FETCH_CHALLENGE',
+						currentMission: newMission.id,
+						status: 'active_solo'
+					},
+					message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+user.username+"?"
+				}
+			})
 		}
 
 		else if(userInput === 'eager beaver'){
@@ -243,7 +249,7 @@ const whichMessage = {
 						messageState: 'FETCH_CHALLENGE',
 						currentMission: newMission.id,
 						lastMessageTo: Date(),
-						status: 'active',
+						status: 'active_pair',
 						readyAt: null
 					})})
 					.then(() => {
@@ -251,7 +257,7 @@ const whichMessage = {
 							state: {
 								messageState: 'FETCH_CHALLENGE',
 								currentMission: newMission.id,
-								status: 'active',
+								status: 'active_pair',
 								readyAt: null
 							},
 							message: `Agent ${partner.username} will be your partner. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.`
@@ -266,17 +272,24 @@ const whichMessage = {
 		}
 	},
 
-	FETCH_CHALLENGE: (currentMissionId, currentChallengeId, userInput) => {
+	FETCH_CHALLENGE: (user, currentMissionId, currentChallengeId, userInput) => {
 		// still need to adjust based on userInput
-		return getChallenge(currentMissionId, currentChallengeId)
+		return getChallenge(user.currentMissionId, user.currentChallengeId)
 		.then(newChallenge => {
 			if (newChallenge) {
+				UserChallenge.create({
+					userId: user.id,
+					challengeId: newChallenge.id
+				})
+				if(user.status == 'active_pair') {
+					fetchPartnerFromUserMission(user,{})
+				}
 				return {
 					state:{
 						messageState: 'CHALLENGE_ANSWER',
 						currentChallenge: newChallenge.id
 					},
-					message: newChallenge.objective+": "+newChallenge.summary
+					message: newChallenge.objective+": "+newChallenge.summary,
 				}
 			} else {
 				return {
@@ -298,7 +311,8 @@ const whichMessage = {
 			if (currentChallenge.hasNext) {
 				success = {
 					state: {messageState: 'FETCH_CHALLENGE'},
-					message: currentChallenge.conclusion + "\n\nAre you ready for your next challenge?"
+					message: currentChallenge.conclusion + "\n\nAre you ready for your next challenge?",
+					userChallengeState: {status: 'complete'}
 				}
 			} else {
 				success = {
@@ -308,7 +322,8 @@ const whichMessage = {
 						currentChallenge: 0,
 						status: 'standby'
 					},
-					message: currentChallenge.conclusion + "\n\nYou have completed your mission.  Text 'new mission' to start a new mission"
+					message: currentChallenge.conclusion + "\n\nYou have completed your mission.  Text 'new mission' to start a new mission",
+					userMissionState: {status: 'complete'}
 				}
 			}
 			let fail = {message: "Your answer doesn't quite match The Agency's records.  Please try again."}
@@ -405,5 +420,59 @@ const checkTags = (expectedTags, actualTags) => {
 	return tagExists
 }
 
+/* 
+ * allTheStates:
+ * 		{
+ *			user: {} // update state of  partner's user model
+ *			userMission: {} // update state of partner's userMission model
+ *			userChallenge: {} // update state of partner's userChallenge model
+ *		 }
+ */
+const fetchPartnerFromUserMission = (user, allTheStates) => {
+	return UserMission.findOne({
+		where: {
+			userId: user.id,
+			missionId: user.currentMission
+		}
+	})
+	.then(foundUserMission => {
+		// console.log(foundUserMission)
+		return User.findById(foundUserMission.partnerId)
+	})
+	.then(partner => {
+		let allUpdates = [];
+		let temp;
 
-module.exports = {whichMessage, checkTags};
+		if (allTheStates.user) {
+			temp = partner.update(allTheStates.user);
+			allUpdates.push(temp);
+		}
+		if (allTheStates.userMission) {
+			temp = UserMission.findOne({
+				where: {
+					userId: partner.id,
+					missionId: user.currentMission
+				}
+			})
+			.then(foundPartnerMission => {
+				foundPartnerMission.update(allTheStates.userMission)
+			})
+			allUpdates.push(temp);
+		}
+		if (allTheStates.userChallenge) {
+			temp = UserChallenge.findOrCreate({
+				where: {
+					userId: partner.id,
+					challengeId: user.currentChallenge
+				}
+			})
+			.then(foundPartnerChallenge => {
+				foundPartnerChallenge.update(allTheStates.userChallenge)
+			})
+			allUpdates.push(temp);
+		}
+		return Promise.all(allUpdates)
+	})
+}
+
+module.exports = {whichMessage, checkTags, fetchPartnerFromUserMission};

@@ -88,6 +88,7 @@ const fetchMessage = (user, message) => {
 		case 'FETCH_CHALLENGE':
 		// unique case: needs current mission and current challenge data
 			returnObj = whichMessage[user.messageState] (
+				user,
 				user.currentMission, 
 				user.currentChallenge, 
 				simpleInput
@@ -95,7 +96,7 @@ const fetchMessage = (user, message) => {
 			break;
 		case 'CHALLENGE_ANSWER':
 		// unique case: needs challenge data and all possible messages
-			returnObj = whichMessage[user.messageState] (user.currentChallenge, message)
+			returnObj = whichMessage[user.messageState] (user, user.currentChallenge, message)
 			break;
 		default:
 		// text with all lowercase
