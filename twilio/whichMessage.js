@@ -213,7 +213,7 @@ const whichMessage = {
 		}
 
 		else if(userInput === 'eager beaver'){
-			return Promise.all([partnerChooser(user.id, user.location.coordinates), missionChooser(user.location.coordinates)])
+			return Promise.all([partnerChooser(user.id, user.location.coordinates), missionChooser(user, user.location.coordinates)])
 			.then(response => {
 				let partners = response[0]
 				//console.log("USERS: ", partners)

@@ -29,14 +29,18 @@ const data = {
 
   mission: [
     { title: 'Intrigue on Wall Street',  // mission 1
-      description: 'One of our agents disappeared somewhere into the depths of the Trump Building on Wall Street. We need you to investigate his disappearance, which may be ever more dire with the upcoming inauguration.'},
+      description: 'One of our agents disappeared somewhere into the depths of the Trump Building on Wall Street. We need you to investigate his disappearance, which may be ever more dire with the upcoming inauguration.',
+        location: {type: 'Point', coordinates: [40.705691, -74.009342]}
+    },
     { title: 'The Dark Underbelly of Broadway\'s Bright Lights', // mission 2
-      description: 'Agent Natasha Klimikov was a rising star in the 1950s during Rodgers and Hammerstein\'s golden age. You\'ll be heading towards 42nd Street to retrace Natasha\'s steps and to see if her mission remains active.'},
+      description: 'Agent Natasha Klimikov was a rising star in the 1950s during Rodgers and Hammerstein\'s golden age. You\'ll be heading towards 42nd Street to retrace Natasha\'s steps and to see if her mission remains active.'
+    },
     { title: 'Grace Hopper and the Missing Bone', // mission 3
       description: 'Ben, one of Grace Hopper Academy\'s proudest members, has had his favorite bone stolen out from under his nose. Can you identify the thief?',
       place: 'Grace Hopper',
       meetingPlace: '5 Hanover Square by the elevators on the 11th floor',
-      numChallenges: 5
+      numChallenges: 5,
+      location: {type: 'Point', coordinates: [40.705691, -74.009342]}
     }
   ],
 
@@ -192,7 +196,7 @@ const UserChallenge = db.models.userChallenges
 .then(([challenges, missions, users]) => {
     User.findOne({
       where: {
-        username: 'operagirl'
+        username: 'Gator'
     }})
     .then(user => {
       return user.update({
@@ -280,7 +284,7 @@ return db.sync({force: true})
 .then(([challenges, missions, users]) => {
     User.findOne({
       where: {
-        username: 'operagirl'
+        username: 'Gator'
     }})
     .then(user => {
       return user.update({
