@@ -41,7 +41,6 @@ export class SendVerification extends Component {
     //dispatcher
     //1. check db for number
     //2. authy.startverification
-    console.log('THIS IS THE KEY', constants.authyKey)
     e.preventDefault()
     console.log("This is e: ", e.target.country_code.value)
     let countryCode = e.target.country_code.value
