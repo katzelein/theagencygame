@@ -10,13 +10,13 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 const styles = {
   paper: {
-    // height: 100,
-    // width: 800,
-    textAlign: 'center',
-    display: 'inline-block',
+    margin: 30,
   },
   table: {
     margin: 20,
+  },
+  raisedButton: {
+    margin: 20
   }
 };
 
@@ -78,16 +78,7 @@ export default class Dashboard extends Component {
     super(props);
 
     this.state = {
-      fixedHeader: true,
-      fixedFooter: true,
-      stripedRows: false,
-      showRowHover: false,
       selectable: true,
-      multiSelectable: false,
-      enableSelectAll: false,
-      deselectOnClickaway: true,
-      showCheckboxes: true,
-      height: '300px',
     };
 
     this.handleToggle.bind(this)
@@ -108,8 +99,7 @@ export default class Dashboard extends Component {
   }
 
   componentDidMount () {
-    this.props.findUser()
-   
+    this.props.findUser()   
   }
 
   logout(){
@@ -122,73 +112,76 @@ export default class Dashboard extends Component {
   }
 
   render () {
-    console.log("DASHBOARD USER: ", this.props.user)
     return (
       <div id="main">
         <Grid>
           <Row>
-          <div id="dashboard" >
-              {this.props.user.id ? (
-                <div>
+            <div id="dashboard">
+                {this.props.user.id ? (
                   <div>
-                    <Paper style={{margin: 30}} zDepth={5}>
-                      <h1>DASHBOARD</h1>
-                      <Table style={styles.table} >
-                        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                          <TableRow>
-                            <TableHeaderColumn colSpan={10} style={{textAlign: 'center', fontSize: 26}}>
-                              {this.props.user.username}
-                            </TableHeaderColumn>
-                          </TableRow>
-
-                          <TableRow>
-                            <TableHeaderColumn colSpan={1} >ID</TableHeaderColumn>
-                            <TableHeaderColumn colSpan={4} >Title</TableHeaderColumn>
-                            <TableHeaderColumn colSpan={2} >Location</TableHeaderColumn>
-                            <TableHeaderColumn colSpan={1} >Challenges</TableHeaderColumn>
-                            <TableHeaderColumn colSpan={2} >Status</TableHeaderColumn>
-                          </TableRow>
-
-                        </TableHeader>
-
-                        <TableBody
-                          displayRowCheckbox={false}
-                          deselectOnClickaway={true}
-                          showRowHover={true} 
-                          adjustForCheckbox={false}>
-
-                          {tableData.map( (row, index) => (
-                            <TableRow key={index} onCellClick={(e) => {e.PreventDefault()}}>
-                              <TableRowColumn colSpan={1} >{row.id}</TableRowColumn>
-                              <TableRowColumn colSpan={4} >{row.title}</TableRowColumn>
-                              <TableRowColumn colSpan={2} >{row.place}</TableRowColumn>
-                              <TableRowColumn colSpan={1} >{row.numChallenges}</TableRowColumn>
-                              <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
+                    <div>
+                      <Paper style={styles.paper} zDepth={5}>
+                        <h1>DOSSIER</h1>
+                        <h4>Agent: {this.props.user.username}</h4>
+                        <h4>Phone: {this.props.user.phoneNumber}</h4>
+                        <Table style={styles.table} >
+                          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                            <TableRow>
+                              <TableHeaderColumn colSpan={1} >ID</TableHeaderColumn>
+                              <TableHeaderColumn colSpan={4} >Title</TableHeaderColumn>
+                              <TableHeaderColumn colSpan={2} >Location</TableHeaderColumn>
+                              <TableHeaderColumn colSpan={1} >Challenges</TableHeaderColumn>
+                              <TableHeaderColumn colSpan={2} >Status</TableHeaderColumn>
                             </TableRow>
-                          ))}
+                          </TableHeader>
 
-                        </TableBody>
+                          <TableBody
+                            displayRowCheckbox={false}
+                            deselectOnClickaway={true}
+                            showRowHover={true} 
+                            adjustForCheckbox={false}>
 
-                      </Table>
+                            {tableData.map( (row, index) => (
+                              <TableRow key={index} onCellClick={(e) => {e.PreventDefault()}}>
+                                <TableRowColumn colSpan={1} >{row.id}</TableRowColumn>
+                                <TableRowColumn colSpan={4} >{row.title}</TableRowColumn>
+                                <TableRowColumn colSpan={2} >{row.place}</TableRowColumn>
+                                <TableRowColumn colSpan={1} >{row.numChallenges}</TableRowColumn>
+                                <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
+                              </TableRow>
+                            ))}
 
-                      <div ><RaisedButton secondary={true} label="Logout" onClick={this.logout} style={{margin: 20}}/></div>
-                    </Paper>
+                          </TableBody>
+                        </Table>
+
+                        <div >
+                          <RaisedButton 
+                            secondary={true} 
+                            label="Logout" 
+                            onClick={this.logout} 
+                            style={styles.raisedButton}/>
+                        </div>
+                      </Paper>
+                    </div>
+
+                    {this.props.user && this.props.user.isAdmin ?
+                      (
+                        <div>
+                          <RaisedButton 
+                            href='/admin' 
+                            primary={true} 
+                            label="Admin Page" 
+                            onClick={this.logout} 
+                            style={styles.raisedButton}/>
+                        </div>
+                      ) : null   
+                    }           
                   </div>
-
-                  {this.props.user && this.props.user.isAdmin ?
-                    (
-                      <div>
-                        <RaisedButton href='/admin' primary={true} label="Admin Page" onClick={this.logout} style={{margin: 20}}/>
-                      </div>
-                    ) :
-                    null   
-                  }           
-                </div>
-              ) : (
-                <div> Please <Link to="/">log in</Link> to view your dashboard </div>
-              )
-            }
-          </div>
+                ) : (
+                  <div> Please <Link to="/">log in</Link> to view your dashboard </div>
+                )
+              }
+            </div>
           </Row>
         </Grid>
       </div>
