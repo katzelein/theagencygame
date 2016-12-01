@@ -10,6 +10,7 @@ import Paper from 'material-ui/Paper';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib/index'
 import CommunicationPhonelinkRing from 'material-ui/svg-icons/communication/phonelink-ring'
 import CheckCircle from 'material-ui/svg-icons/action/check-circle'
+import constants from "../../variables"
 
 const style = {
   paper: {
@@ -33,9 +34,7 @@ export class SendVerification extends Component {
   }
 
   startVerification(e) {
-
     e.preventDefault()
-    
     let countryCode = e.target.country_code.value
     let number = e.target.phone_number.value
     let via = 'sms'
@@ -79,7 +78,7 @@ export class SendVerification extends Component {
               <Row center="xs">
                 <h3>Phone Verification</h3>
               </Row>
-              
+
               <Row center="xs">
                 <form role="form" onSubmit={this.startVerification}>
 
@@ -114,20 +113,20 @@ export class SendVerification extends Component {
 
                   <br />
                   <Row center="xs">
-                    <RaisedButton 
+                    <RaisedButton
                       type="submit"
                       style={{float: 'center'}}
                       icon={<CommunicationPhonelinkRing />}
-                      label="Request Verification" 
+                      label="Request Verification"
                       secondary={true} />
                   </Row>
+
+                  <Row>
+                    {this.state.error ? <div className="error">{this.state.error}</div> : null}
+                  </Row>
+
                 </form>
               </Row>
-
-              <Row>
-                {this.state.error ? <div className="error">{this.state.error}</div> : null}
-              </Row>
-
             </Col>
           </Row>
         </Grid>
@@ -141,6 +140,10 @@ export class Verify extends Component {
     super();
     this.verifyNumber = this.verifyNumber.bind(this)
     this.state = {};
+  }
+
+  componentDidMount () {
+
   }
 
   verifyNumber(e){
@@ -172,7 +175,7 @@ export class Verify extends Component {
             <Row center="xs">
               <h3>Verify By Token</h3>
             </Row>
-            
+
             <Row center="xs">
               <form role="form" onSubmit={this.verifyNumber}>
 
@@ -189,11 +192,11 @@ export class Verify extends Component {
                 <br />
 
                 <Row center="xs">
-                  <RaisedButton 
+                  <RaisedButton
                     type="submit"
                     style={{float: 'center'}}
                     icon={<CheckCircle />}
-                    label="Verify Phone" 
+                    label="Verify Phone"
                     secondary={true} />
                 </Row>
 
@@ -201,9 +204,9 @@ export class Verify extends Component {
             </Row>
 
             <Row center="xs">
-              {this.state.error ? 
-                <div style={{height: '20px', padding: '2px 0px'}} className="error">{this.state.error}</div> 
-                : 
+              {this.state.error ?
+                <div style={{height: '20px', padding: '2px 0px'}} className="error">{this.state.error}</div>
+                :
                 <div style={{height: '20px', padding: '2px 0px'}}/>
               }
             </Row>
