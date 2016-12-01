@@ -4,6 +4,7 @@ const Mission = require('../models/mission');
 const Challenge = require('../models/challenge');
 const db = require('../models')
 const User = db.models.users
+const UserMission = db.models.userMissions
 
 const adventureDetails = (location, solo) => {
 	console.log("location in ADVENTURE DETAILS: ", location)
@@ -32,9 +33,15 @@ return User.findAll({
 		//sequelize.where(sequelize.col('users.status'), 'ready')
 		{status: 'ready'},
 		{id: {$ne: userId}}
-		)	
+		),
+	include: [{
+		model: UserMission,
+		attributes:['missionId']}],
+	order: [['readyAt', 'ASC']]	
 })
-//.then(res => console.log("RES: ", res))
+// .then(res => {console.log("RES: ", res)
+// 	console.log("OPERAGIRL MISSIONS: ", res[0].userMissions)
+// })
 .catch(err => console.log(err))
 }
 
@@ -97,4 +104,9 @@ module.exports = {adventureDetails, missionChooser, partnerChooser}
 // console.log("MISSION CHOOSER TEST: ", User.findById(5)
 // .then(user => {
 // 	return missionChooser(user, user.location.coordinates)
+// }))
+
+// console.log("PARTNER CHOOSER TEST: ", User.findById(6)
+// .then(user => {
+// 	return partnerChooser(user.id, user.location.coordinates)
 // }))
