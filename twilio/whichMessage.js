@@ -64,14 +64,13 @@ const whichMessage = {
 
 	TUTORIAL_MISSION_1: (username, userInput) => {
 		//can't expect just a yes or no
-		var userInput = userInput.toLowerCase()
 		console.log("userInput: ", userInput)
 		if(userInput == 'no') {
 			return {
 				state: {
-					messageState: 'TUTORIAL_MISSION_0'
+					messageState: 'STANDBY'
 				},
-				message: "A little busy at the moment? We understand, no need to blow your cover.  Well, whenever you have a free hour, just text us ‘mission’ and we can get started."
+				message: `Agent ${username}, you have chosen to skip the training mission.  If you wish to do the training mission at any point, just text 'tutorial'.  If you wish to start real missions immediately, text 'new mission'.`
 			}
 		} else if (userInput == 'yes') {
 			return {
@@ -80,13 +79,6 @@ const whichMessage = {
 				},
 				message: "The main purpose of this training mission is to get you, our newest recruit, used to our system.  Now first things first, before every mission you will be encouraged to send in your location. This enables us to tailor our missions to your location, perhaps even assign you missions that require interactions with other agents.  Most smartphones have the ability to send or share your current location through text.  Please send your current location to The Agency now."
 			}
-		}
-	},
-
-	TUTORIAL_MISSION_0: (username) => {
-		return {
-			state: {messageState: 'TUTORIAL_MISSION_1'},
-			message: "Ready for your training mission, Trainee "+username+"?"
 		}
 	},
 
@@ -179,7 +171,10 @@ const whichMessage = {
 		if(message === 'wait'){
 			return{
 				state: {
-					status: 'ready'
+					status: 'ready',
+					readyAt: Date()
+					// ask team what to do if user decides to quit waiting???
+					// set new messagestate????
 				},
 				message: 'Ok, we will contact you when a partner becomes available.'
 			}
@@ -248,14 +243,16 @@ const whichMessage = {
 						messageState: 'FETCH_CHALLENGE',
 						currentMission: newMission.id,
 						lastMessageTo: Date(),
-						status: 'active'
+						status: 'active',
+						readyAt: null
 					})})
 					.then(() => {
 						return {
 							state: {
 								messageState: 'FETCH_CHALLENGE',
 								currentMission: newMission.id,
-								status: 'active'
+								status: 'active',
+								readyAt: null
 							},
 							message: `Agent ${partner.username} will be your partner. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.`
 						}
@@ -267,9 +264,6 @@ const whichMessage = {
 		else return {
 			message: "We did not recognize your preference, please respond with 'lone wolf' or 'eager beaver'."
 		}
-
-
-
 	},
 
 	FETCH_CHALLENGE: (currentMissionId, currentChallengeId, userInput) => {
@@ -311,7 +305,8 @@ const whichMessage = {
 					state: {
 						messageState: 'STANDBY',
 						currentMission: 0,
-						currentChallenge: 0
+						currentChallenge: 0,
+						status: 'standby'
 					},
 					message: currentChallenge.conclusion + "\n\nYou have completed your mission.  Text 'new mission' to start a new mission"
 				}
@@ -375,9 +370,24 @@ const whichMessage = {
 		}
 	},
 
-	QUERY_SKIP_CHALLENGE: () => {},
+	QUERY_SKIP_CHALLENGE: (prevState, userInput) => {
 
-	QUERY_QUIT_MISSION: () => {},
+	},
+
+	QUERY_QUIT_MISSION: () => {
+		if (userInput == 'yes') return {
+			state: {
+				messageState: 'STANDBY'
+			},
+			message: "Skipping mission ...."
+		}
+		else return {
+			state: {
+				messageState: prevState
+			},
+			message: "Returning ..."
+		}
+	},
 
 	QUERY_RESIGN: () => {},
 }
