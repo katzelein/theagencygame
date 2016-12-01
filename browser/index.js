@@ -14,7 +14,6 @@ import store from './store';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 // Adding Material-UI
-import agencyBaseTheme from 'material-ui/styles/baseThemes/agencyBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Paper from 'material-ui/Paper'
