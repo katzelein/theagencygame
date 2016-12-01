@@ -7,6 +7,8 @@ import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}
   from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 const styles = {
   paper: {
@@ -14,6 +16,7 @@ const styles = {
   },
   table: {
     margin: 20,
+    width: 700,
   },
   raisedButton: {
     margin: 20
@@ -74,28 +77,30 @@ const tableData = [
 
 export default class Dashboard extends Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
-      selectable: true,
+      open: false
     };
-
-    this.handleToggle.bind(this)
     this.handleChange.bind(this)
     this.logout = this.logout.bind(this)
-  }
-
-  handleToggle (event, toggled) {
-    this.setState({
-      [event.target.name]: toggled,
-    });
+    this.handleOpen = this.handleOpen.bind(this)
+    this.handleClose = this.handleClose.bind(this)
   }
 
   handleChange (event) { 
     this.setState({
       height: event.target.value
     });
+  }
+
+  handleOpen () {
+    this.setState({open: true})
+  }
+
+  handleClose () {
+    this.setState({open: false})
   }
 
   componentDidMount () {
@@ -112,6 +117,15 @@ export default class Dashboard extends Component {
   }
 
   render () {
+
+    const actions = [
+      <FlatButton
+        label="OK"
+        primary={true}
+        onTouchTap={this.handleClose}
+      />,
+    ];
+
     return (
       <div id="main">
         <Grid>
@@ -123,14 +137,13 @@ export default class Dashboard extends Component {
                       <Paper style={styles.paper} zDepth={5}>
                         <h1>DOSSIER</h1>
                         <h4>Agent: {this.props.user.username}</h4>
-                        <h4>Phone: {this.props.user.phoneNumber}</h4>
-                        <Table style={styles.table} >
+                        <Table style={styles.table} selectable={false} >
                           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                             <TableRow>
                               <TableHeaderColumn colSpan={1} >ID</TableHeaderColumn>
                               <TableHeaderColumn colSpan={4} >Title</TableHeaderColumn>
                               <TableHeaderColumn colSpan={2} >Location</TableHeaderColumn>
-                              <TableHeaderColumn colSpan={1} >Challenges</TableHeaderColumn>
+                              <TableHeaderColumn colSpan={2} >Challenges</TableHeaderColumn>
                               <TableHeaderColumn colSpan={2} >Status</TableHeaderColumn>
                             </TableRow>
                           </TableHeader>
@@ -146,7 +159,23 @@ export default class Dashboard extends Component {
                                 <TableRowColumn colSpan={1} >{row.id}</TableRowColumn>
                                 <TableRowColumn colSpan={4} >{row.title}</TableRowColumn>
                                 <TableRowColumn colSpan={2} >{row.place}</TableRowColumn>
-                                <TableRowColumn colSpan={1} >{row.numChallenges}</TableRowColumn>
+                                <TableRowColumn colSpan={2} >
+
+                                  <RaisedButton 
+                                    label="Open" 
+                                    onTouchTap={this.handleOpen} />
+                                  <Dialog
+                                    title="Completed Challenges"
+                                    actions={actions}
+                                    modal={false}
+                                    open={this.state.open}
+                                    onRequestClose={this.handleClose}
+                                    autoScrollBodyContent={true} >
+
+                                    This is the stuff I have contained in the Dialog
+
+                                  </Dialog>
+                                </TableRowColumn>
                                 <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
                               </TableRow>
                             ))}

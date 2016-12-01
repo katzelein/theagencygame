@@ -9,13 +9,12 @@ const mapStateToProps = ({user}) => ({user})
 
 const mapDispatchToProps = (dispatch) => ({
 	findUser: function (){
-    	dispatch(fetchUser())
-    },
-    logoutUser: function(){
-    	dispatch(setUser({}))
-    }
-  
- });
+    dispatch(fetchUser())
+  },
+  logoutUser: function(){
+  	dispatch(setUser({}))
+  }
+});
 
 
 const DashboardContainer = connect(mapStateToProps, mapDispatchToProps)(Dashboard);
