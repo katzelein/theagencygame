@@ -8,7 +8,7 @@
     "coverage": "istanbul cover test",
     "build": "webpack",
     "build-watch": "webpack -w",
-    "start": "node_modules/.bin/webpack & nodemon app.js",
+    "start": "node_modules/.bin/webpack & set NODE_EVN=productiongit && nodemon app.js",
     "seed": "node models/seed.js"
   },
   "author": "",
