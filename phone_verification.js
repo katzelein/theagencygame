@@ -7,6 +7,7 @@ module.exports = function (apiKey, apiUrl) {
 };
 
 function PhoneVerification(apiKey, apiUrl) {
+    console.log('THIS IS THE KEY', apiKey)
     this.apiKey = apiKey;
     this.apiURL = apiUrl || "https://api.authy.com";
     this.user_agent = "PhoneVerificationRegNode/" + VERSION + " (node " + process.version + ")";
