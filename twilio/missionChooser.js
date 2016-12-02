@@ -53,7 +53,8 @@ const missionChooser = (user, coordinates) => {
 	// can also fetch mission based on labelled place
 	// set default to return Grace Hopper mission
 	// if (!place) place = "Grace Hopper"; 
-	// return Mission.findOne({where: {place: place}})
+	return Mission.findOne({where: {place: 'Grace Hopper'}})
+
 	let coordString = `POINT(${coordinates[0]} ${coordinates[1]})`
 	return user.getMissions()
 	.then(missions => {
@@ -66,10 +67,10 @@ const missionChooser = (user, coordinates) => {
 				sequelize.where(sequelize.fn(
 					'ST_DWithin',
 					sequelize.col('missions.location'), sequelize.fn('ST_GeographyFromText', `SRID=4326;${coordString}`), 2000), true
-			),
+				),
 			//sequelize.where(sequelize.col('users.status'), 'ready')
 			{id: {$notIn: missionIds}}
-			)	
+			)
 		})
 		//.then(res => console.log("RES: ", res))
 		.catch(err => console.log(err))	

@@ -179,7 +179,7 @@ const whichMessage = {
 					// ask team what to do if user decides to quit waiting???
 					// set new messagestate????
 				},
-				message: 'Ok, we will contact you when a partner becomes available.'
+				message: 'Ok, we will contact you when a partner becomes available. Text \'go\' if you run out of patience and would rather go it alone.'
 			}
 		}
 		else if(message === 'go'){
@@ -198,7 +198,7 @@ const whichMessage = {
 		let coordinates = user.location.coordinates
 		let soloAdventurePromise, pairAdventurePromise;
 		if(userInput === 'lone wolf'){
-			return missionChooser(coordinates)
+			return missionChooser(user,coordinates)
 			.then(newMission => {
 				UserMission.create({
 					userId: user.id,

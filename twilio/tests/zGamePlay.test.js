@@ -10,7 +10,7 @@ const UserChallenge = require('../../models/userChallenge')
 const {fetchMessage} = require('../lookup')
 
 describe('Game Play', () => {
-	describe('single player', () => {
+	xdescribe('single player', () => {
 		let spiderUser, missionId, challengeIds;
 
 		before('Create user, fetch important id\'s', () => {
@@ -19,7 +19,7 @@ describe('Game Play', () => {
 				status: 'standby',
 				currentMission: 0,
 				currentChallenge: 0,
-				messageState: 'QUERY_MISSION',
+				messageState: 'STANDBY',
 				location: {type: 'Point', coordinates: [40.705691, -74.009342]}
 			})
 			.then(newUser => {
@@ -32,13 +32,11 @@ describe('Game Play', () => {
 			.then(foundMission => {
 				// console.log(foundMission)
 				missionId = foundMission.id;
-				challengeIds = [
-					foundMission.challenges[0].id,
-					foundMission.challenges[1].id,
-					foundMission.challenges[2].id,
-					foundMission.challenges[3].id,
-					foundMission.challenges[4].id
-				]
+				challengeIds = [0,0,0,0,0]
+				foundMission.challenges.forEach(element => {
+					challengeIds[element.order-1] = element.id
+				})
+				console.log(challengeIds)
 			})
 		})
 
@@ -400,7 +398,7 @@ describe('Game Play', () => {
 
 // ===============================================================================
 
-	xdescribe('pair player', () => {
+	describe('pair player', () => {
 		let spiderUser, spiderPartner, missionId, challengeIds;
 
 		before('Create user, fetch important id\'s, set all users in table to status standby', () => {
@@ -436,17 +434,15 @@ describe('Game Play', () => {
 			.then(foundMission => {
 				// console.log(foundMission)
 				missionId = foundMission.id;
-				challengeIds = [
-					foundMission.challenges[0].id,
-					foundMission.challenges[1].id,
-					foundMission.challenges[2].id,
-					foundMission.challenges[3].id,
-					foundMission.challenges[4].id
-				]
+				challengeIds = [0,0,0,0,0]
+				foundMission.challenges.forEach(element => {
+					challengeIds[element.order-1] = element.id
+				})
+				console.log(challengeIds)
 			})
 		})
 
-		beforeEach('Fetch fresh copy of user', () => {
+		beforeEach('Fetch fresh copy of user and partner', () => {
 			return User.findById(spiderUser.id)
 			.then(foundUser => {
 				spiderUser = foundUser;
@@ -489,15 +485,15 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user texts in\'eager beaver\' | server asks wait or go solo', () => {
+		it('user texts in \'eager beaver\' | server asks wait or go solo', () => {
 			return fetchMessage(spiderUser, {Body: 'eager beaver'})
 			.then(message => {
 				expect(message).to.be.equal("There are no agents currently available.  Text \'wait\' if you would like to wait for a partner or \'go\' if you would like to fly solo instead.")
 			})
 		})
 
-		it('user messageState at SOLO_YN / partner messageState at QUERY_MISSION', () => {
-			expect(spiderUser.messageState).to.be.equal('QUERY_MISSION')
+		it('user messageState at SOLO_OK / partner messageState at QUERY_MISSION', () => {
+			expect(spiderUser.messageState).to.be.equal('SOLO_OK')
 			expect(spiderUser.status).to.be.equal('standby');
 			expect(spiderUser.currentMission).to.be.equal(0)
 			expect(spiderUser.currentChallenge).to.be.equal(0)
@@ -528,15 +524,15 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user texts in\'wait\' | server will contact when a partner shows up', () => {
+		it('user texts in \'wait\' | server will contact when a partner shows up', () => {
 			return fetchMessage(spiderUser, {Body: 'wait'})
 			.then(message => {
-				expect(message).to.be.equal("There are no agents currently available.  Text \'wait\' if you would like to wait for a partner or \'go\' if you would like to fly solo instead.")
+				expect(message).to.be.equal("Ok, we will contact you when a partner becomes available. Text \'go\' if you run out of patience and would rather go it alone.")
 			})
 		})
 
-		it('user messageState at SOLO_YN / partner messageState at QUERY_MISSION', () => {
-			expect(spiderUser.messageState).to.be.equal('QUERY_MISSION')
+		it('user messageState at SOLO_OK / partner messageState at QUERY_MISSION', () => {
+			expect(spiderUser.messageState).to.be.equal('SOLO_OK')
 			expect(spiderUser.status).to.be.equal('ready');
 			expect(spiderUser.currentMission).to.be.equal(0)
 			expect(spiderUser.currentChallenge).to.be.equal(0)
@@ -567,8 +563,8 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('partner texts in\'eager beaver\' | server ', () => {
-			return fetchMessage(spiderUser, {Body: 'eager beaver'})
+		it('partner texts in \'eager beaver\' | server sends message to both user and partner', () => {
+			return fetchMessage(spiderPartner, {Body: 'eager beaver'})
 			.then(message => {
 				expect(message).to.be.equal("There are no agents currently available.  Text \'wait\' if you would like to wait for a partner or \'go\' if you would like to fly solo instead.")
 			})
@@ -577,14 +573,14 @@ describe('Game Play', () => {
 
 
 
-		it('user / partner texts in \'ready\' | server sends mission description: Grace Hopper', () => {
+		xit('user / partner texts in \'ready\' | server sends mission description: Grace Hopper', () => {
 			return fetchMessage(spiderUser, {Body: 'eager beaver'})
 			.then(message => {
 				expect(message).to.be.equal("Grace Hopper and the Missing Bone: Ben, one of Grace Hopper Academy's proudest members, has had his favorite bone stolen out from under his nose. Can you identify the thief? Do you accept this mission, Agent Natalia Romanova?")
 			})
 		})
 
-		it('user messageState at FETCH_CHALLENGE', () => {
+		xit('user messageState at FETCH_CHALLENGE', () => {
 			expect(spiderUser.messageState).to.be.equal('FETCH_CHALLENGE')
 			expect(spiderUser.status).to.be.equal('active_solo');
 			expect(spiderUser.currentMission).to.be.equal(missionId)
@@ -613,7 +609,7 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user texts in to accept mission | server sends challenge description: Ben\'s Bowl', () => {
+		xit('user texts in to accept mission | server sends challenge description: Ben\'s Bowl', () => {
 			return fetchMessage(spiderUser, {Body: 'yes'})
 			.then(message => {
 				expect(message).to.be.equal("Find GHA\'s Newest Hero, Ceren: Ceren, Ben\'s doting mom who, in an incredible feat of strength and love, pulled him from the grips of an oncoming subway just a few weeks ago, spends her days in the CSS room. Find her office where Ben\'s orange water bowl sits and send us a picture; we need a warrant to dust the bowl for fingerprints.")
