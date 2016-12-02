@@ -34,7 +34,8 @@ app.use(express.static(resolve(__dirname, 'public')));
 console.log("public: ", resolve(__dirname, 'public'))
 //app.get('/bundle.js', (_, res) => res.sendFile(resolve(__dirname, 'index.html')));
 app.use('/', routes);
-app.get('/*', (_, res) => res.sendFile(resolve(__dirname, 'public', 'index.html')))
+//app.get('/*', (_, res) => res.sendFile(resolve(__dirname, 'public', 'index.html')))
+app.get('/*', (_, res) => res.sendFile(resolve(__dirname, 'index.html')))
 
 app.use(function (err, req, res, next) {
     console.error(err.stack);
@@ -47,7 +48,7 @@ module.exports = app;
 var port = process.env.PORT || 3000; // needs to be used whenever you're not in development
 app.listen(port, function () {
   console.log('The server is listening closely on port', port);
-  db.sync()
+  db.sync({})
   .then(function () {
     console.log('Synchronated the database');
   })

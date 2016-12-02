@@ -1,18 +1,18 @@
 var express = require('express');
 var router = express.Router();
 var twilio = require('twilio');
-var constants = require('../variables');
+var authyKey = require('../variables').authyKey;
 var User = require('../models/user');
 
 // router.get('/', function (req, res, next) {
 //   res.send("I'm working!")
 // })
 
-var phoneReg = require('../phone_verification')(constants.authyKey);
+var phoneReg = require('../phone_verification')(authyKey);
 
 // https://github.com/seegno/authy-client
 const Client = require('authy-client').Client;
-const authy = new Client({key: constants.authyKey});
+const authy = new Client({key: authyKey});
 
 
 router.post('/verification/start', function(req, res, next){
@@ -21,11 +21,13 @@ router.post('/verification/start', function(req, res, next){
     var via = req.body.via;
 
     console.log("body: ", req.body);
+    console.log('THIS IS AN ARBITRARY CONSOLE LOG')
+    console.log("THIS IS THE AUTHY KEY IN VERIFICATION START", authyKey);
 
     if (phone_number && country_code && via) {
         phoneReg.requestPhoneVerification(phone_number, country_code, via, function (err, response) {
             if (err) {
-                console.log('error creating phone reg request', err);
+                console.log('error creating phone reg request in verification start', err);
                 res.status(500).json(err);
             } else {
                 console.log('Success register phone API call: ', response);

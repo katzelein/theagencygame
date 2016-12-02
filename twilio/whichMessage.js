@@ -14,6 +14,9 @@ const UserChallenge = require('../models/userChallenge')
 const Challenge = require('../models/challenge')
 
 
+// console.log("SHARE MISSION: ", sharedMission([1, 2, 3], [1, 2]))
+
+
 const whichMessage = {
 
 	CONFIRM_JOIN: (username, userInput) => {
@@ -214,11 +217,15 @@ const whichMessage = {
 		}
 
 		else if(userInput === 'eager beaver'){
-			return Promise.all([partnerChooser(user.id, user.location.coordinates), missionChooser(user.location.coordinates)])
+			console.log(" IN EAGER BEAVER")
+			return Promise.all([partnerChooser(user.id, user.location.coordinates), missionChooser(user, user.location.coordinates)])
 			.then(response => {
 				let partners = response[0]
 				//console.log("USERS: ", partners)
-				let newMission = response[1];
+				let potentialMissions = response[1];
+
+				console.log("PARTNERS LENGTH: ", partners.length)
+				console.log("POTENTIAL MISSIONS LENGTH: ", potentialMissions.length)
 				if(!partners || !partners.length){
 					return {
 							state: {
@@ -228,48 +235,74 @@ const whichMessage = {
 						}
 				}
 				else{
-					let partner = partners[0]
+					console.log("IN ELSE BC PARTNERS WERE FOUND")
+					let parterId, partner = null;
+					let newMission = null;
 
-					console.log("ABOUT TO SEND MESSAGE")
-					return client.sendMessage({
+					//check if every mission the user HAS NOT done is in this list of every mission the partner HAS done
+					let partnerFound = partners.some(function(potPartner, i){
+						newMission = sharedMission(potentialMissions, potPartner.userMissions)
+						console.log("NEW MISSION: ", newMission)
 
-		              to: partner.phoneNumber, // Any number Twilio can deliver to
-		              from: '+12027593387', // A number you bought from Twilio and can use for outbound communication
-		              body: `We have found a partner for you. Agent ${user.username} is ready to go. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.` // body of the SMS message
-
-		          	})
-		          	.then(() => {
-		          		return UserMission.bulkCreate([
-		          			{userId: user.id, missionId: newMission.id, partnerId: partner.id},
-		          			{userId: partner.id, missionId: newMission.id , partnerId: user.id}])
-		          	})
-					.then(() => {
-						console.log("ABOUT TO UPDATE PARTNER")
-						return partner.update({
-						messageState: 'FETCH_CHALLENGE',
-						currentMission: newMission.id,
-						lastMessageTo: Date(),
-						status: 'active_pair',
-						readyAt: null
-					})})
-					.then(() => {
-						return {
-							state: {
-								messageState: 'FETCH_CHALLENGE',
-								currentMission: newMission.id,
-								status: 'active_pair',
-								readyAt: null
-							},
-							message: `Agent ${partner.username} will be your partner. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.`
+						if(/*sharedMission(potentialMissions, potPartner.userMissions)*/ newMission){
+							partner = potPartner
+							console.log("TRUE! This is partner: ", partner.username)
+							return true;
+						}
+						else{
+							console.log(`PARTNER ${potPartner.username} FALSE`)
 						}
 					})
-					.catch(err => console.log(err))
+
+					console.log("PARTNER BEFORE UPDATES: ", partner)
+					console.log("MISSION BEFORE UPDATES: ", newMission)
+					if(partnerFound){
+						console.log("ABOUT TO SEND MESSAGE")
+						return client.sendMessage({
+
+			              to: partner.phoneNumber, // Any number Twilio can deliver to
+			              from: '+12027593387', // A number you bought from Twilio and can use for outbound communication
+			              body: `We have found a partner for you. Agent ${user.username} is ready to go. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.` // body of the SMS message
+
+			          	})
+			          	.then(() => {
+			          		return UserMission.bulkCreate([
+			          			{userId: user.id, missionId: newMission.id, partnerId: partner.id},
+			          			{userId: partner.id, missionId: newMission.id , partnerId: user.id}])
+			          	})
+						.then(() => {
+							console.log("ABOUT TO UPDATE PARTNER")
+							return partner.update({
+							messageState: 'FETCH_CHALLENGE',
+							currentMission: newMission.id,
+							lastMessageTo: Date(),
+							status: 'active_pair',
+							readyAt: null
+						})})
+						.then(() => {
+							return {
+								state: {
+									messageState: 'FETCH_CHALLENGE',
+									currentMission: newMission.id,
+									status: 'active_pair',
+									readyAt: null
+								},
+								message: `Agent ${partner.username} will be your partner. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.`
+							}
+						})
+						.catch(err => console.log(err))
+					}
+					else{
+						console.log("PARTNERS WERE FOUND, BUT NO MISSIONS IN COMMON")
+						return {
+								state: {
+									messageState: 'SOLO_OK',
+									},
+								message: "There are no agents currently available.  Text 'wait' if you would like to wait for a partner or 'go' if you would like to fly solo instead."
+						}
+					}
 				}
 			})
-		}
-
-		else return {
-			message: "We did not recognize your preference, please respond with 'lone wolf' or 'eager beaver'."
 		}
 	},
 
@@ -504,6 +537,21 @@ const whichMessage = {
 	},
 
 	QUERY_RESIGN: () => {},
+}
+
+function sharedMission(userNonMissions, partnerMissions){
+	//there is at least one mission in userMissions that is NOT in partnerMissions
+	let newMission = null;
+	partnerMissions = partnerMissions.map(mission => (mission.missionId))
+	console.log("PARTNER MISSION IDS: ", partnerMissions)
+	userNonMissions.some(function(mission, i){
+		console.log("looking at mission: ", mission.id, " ", partnerMissions.includes(mission.id))
+		if(!partnerMissions.includes(mission.id)) {newMission = mission};
+		if(newMission) {console.log("NEW MISSION ID: ", newMission.id)}
+
+		return !partnerMissions.includes(mission)
+	})
+	return newMission;
 }
 
 const checkTags = (expectedTags, actualTags) => {

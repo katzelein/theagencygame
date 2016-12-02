@@ -1,104 +1,50 @@
 import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
 import axios from 'axios';
+import MissionDataBox from './MissionDataBox'
 
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import Paper from 'material-ui/Paper';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}
   from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import Chip from 'material-ui/Chip';
+import SvgIconFace from 'material-ui/svg-icons/action/assignment-ind';
+import SvgIconWork from 'material-ui/svg-icons/action/work';
+import Avatar from 'material-ui/Avatar'
 
 const styles = {
   paper: {
-    // height: 100,
-    // width: 800,
-    textAlign: 'center',
-    display: 'inline-block',
+    margin: 30,
+    padding: 10
   },
   table: {
     margin: 20,
-  }
+    width: 900,
+  },
+  raisedButton: {
+    margin: 20
+  },
+  chip: {
+    margin: 'auto',
+  },
 };
-
-const tableData = [
-  {
-    status: 'completed',
-    id: '27',
-    title: 'Grace Hopper and the Missing Bone',
-    numChallenges: '5',
-    place: 'Grace Hopper Academy'
-  },
-  {
-    status: 'completed',
-    id: '4',
-    title: 'Intrigue on Wall Street',
-    numChallenges: '3',
-    place: 'Wall Street'
-  },
-  {
-    status: 'completed',
-    id: '3',
-    title: 'The Dark Underbelly of Broadway\'s Bright Lights',
-    numChallenges: '4',
-    place: 'Broadway'
-  },
-  {
-    status: 'completed',
-    id: '19',
-    title: 'Fullstack\'s Disappearing Cereal',
-    numChallenges: '2',
-    place: 'Fullstack Academy'
-  },
-  {
-    status: 'completed',
-    id: '16',
-    title: 'In the Shadow of the World Trade Center',
-    numChallenges: '6',
-    place: 'World Trade Center'
-  },
-  {
-    status: 'completed',
-    id: '31',
-    title: 'Disappearance in Port Authority',
-    numChallenges: '4',
-    place: 'NYC Metro'
-  },
-  {
-    status: 'incomplete',
-    id: '9',
-    title: 'The Case of the Closed Subway Station',
-    numChallenges: '5',
-    place: 'NYC Metro'
-  },
-];
 
 export default class Dashboard extends Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
-      fixedHeader: true,
-      fixedFooter: true,
-      stripedRows: false,
-      showRowHover: false,
-      selectable: true,
-      multiSelectable: false,
-      enableSelectAll: false,
-      deselectOnClickaway: true,
-      showCheckboxes: true,
-      height: '300px',
+      open: false,
+      data: false
     };
-
-    this.handleToggle.bind(this)
     this.handleChange.bind(this)
     this.logout = this.logout.bind(this)
-  }
-
-  handleToggle (event, toggled) {
-    this.setState({
-      [event.target.name]: toggled,
-    });
+    this.handleOpen = this.handleOpen.bind(this)
+    this.handleClose = this.handleClose.bind(this)
   }
 
   handleChange (event) { 
@@ -107,9 +53,23 @@ export default class Dashboard extends Component {
     });
   }
 
+  handleOpen () {
+    this.setState({open: true})
+  }
+
+  handleClose () {
+    this.setState({open: false})
+  }
+
   componentDidMount () {
     this.props.findUser()
-   
+    this.props.findUserData()
+    this.setState({
+      data: true
+    })
+  }
+
+  componentWillReceiveProps() {
   }
 
   logout(){
@@ -122,73 +82,166 @@ export default class Dashboard extends Component {
   }
 
   render () {
-    console.log("DASHBOARD USER: ", this.props.user)
+
+    const actions = [
+      <FlatButton
+        label="OK"
+        primary={true}
+        onTouchTap={this.handleClose}
+      />,
+    ];
+
     return (
       <div id="main">
         <Grid>
           <Row>
-          <div id="dashboard" >
-              {this.props.user.id ? (
-                <div>
-                  <div>
-                    <Paper style={{margin: 30}} zDepth={5}>
-                      <h1>DASHBOARD</h1>
-                      <Table style={styles.table} >
-                        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                          <TableRow>
-                            <TableHeaderColumn colSpan={10} style={{textAlign: 'center', fontSize: 26}}>
-                              {this.props.user.username}
-                            </TableHeaderColumn>
-                          </TableRow>
 
-                          <TableRow>
-                            <TableHeaderColumn colSpan={1} >ID</TableHeaderColumn>
-                            <TableHeaderColumn colSpan={4} >Title</TableHeaderColumn>
-                            <TableHeaderColumn colSpan={2} >Location</TableHeaderColumn>
-                            <TableHeaderColumn colSpan={1} >Challenges</TableHeaderColumn>
-                            <TableHeaderColumn colSpan={2} >Status</TableHeaderColumn>
-                          </TableRow>
-
-                        </TableHeader>
-
-                        <TableBody
-                          displayRowCheckbox={false}
-                          deselectOnClickaway={true}
-                          showRowHover={true} 
-                          adjustForCheckbox={false}>
-
-                          {tableData.map( (row, index) => (
-                            <TableRow key={index} onCellClick={(e) => {e.PreventDefault()}}>
-                              <TableRowColumn colSpan={1} >{row.id}</TableRowColumn>
-                              <TableRowColumn colSpan={4} >{row.title}</TableRowColumn>
-                              <TableRowColumn colSpan={2} >{row.place}</TableRowColumn>
-                              <TableRowColumn colSpan={1} >{row.numChallenges}</TableRowColumn>
-                              <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
-                            </TableRow>
-                          ))}
-
-                        </TableBody>
-
-                      </Table>
-
-                      <div ><RaisedButton secondary={true} label="Logout" onClick={this.logout} style={{margin: 20}}/></div>
-                    </Paper>
-                  </div>
-
-                  {this.props.user && this.props.user.isAdmin ?
-                    (
+          {/*<Col xs={12}>
+                      <Row center="xs">
+                    <div id="dashboard" >
+                        {this.props.user.id ? (
+                          <div>
+                            <div>
+                             <Paper style={{margin: 30}} zDepth={5}>
+                                <h1>DASHBOARD</h1>
+                                <Table style={styles.table} >
+                                  <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                                    <TableRow>
+                                      <TableHeaderColumn colSpan={10} style={{textAlign: 'center', fontSize: 26}}>
+                                        {this.props.user.username}
+                                      </TableHeaderColumn>
+                                    </TableRow>
+          
+                                    <TableRow>
+                                      <TableHeaderColumn colSpan={1} >ID</TableHeaderColumn>
+                                      <TableHeaderColumn colSpan={4} >Title</TableHeaderColumn>
+                                      <TableHeaderColumn colSpan={2} >Location</TableHeaderColumn>
+                                      <TableHeaderColumn colSpan={1} >Challenges</TableHeaderColumn>
+                                      <TableHeaderColumn colSpan={2} >Status</TableHeaderColumn>
+                                    </TableRow>
+          
+                                  </TableHeader>
+          
+                                  <TableBody
+                                    displayRowCheckbox={false}
+                                    deselectOnClickaway={true}
+                                    showRowHover={true} 
+                                    adjustForCheckbox={false}>
+          
+                                    {tableData.map( (row, index) => (
+                                      <TableRow key={index} onCellClick={(e) => {e.PreventDefault()}}>
+                                        <TableRowColumn colSpan={1} >{row.id}</TableRowColumn>
+                                        <TableRowColumn colSpan={4} >{row.title}</TableRowColumn>
+                                        <TableRowColumn colSpan={2} >{row.place}</TableRowColumn>
+                                        <TableRowColumn colSpan={1} >{row.numChallenges}</TableRowColumn>
+                                        <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
+                                      </TableRow>
+                                    ))}
+          
+                                  </TableBody>
+          
+                                </Table>
+          
+                                <div ><RaisedButton secondary={true} label="Logout" onClick={this.logout} style={{margin: 20}}/></div>
+                              </Paper>
+                            </div>
+          
+                            {this.props.user && this.props.user.isAdmin ?
+                              (*/}
+            <Col xs={12}>
+              <Row center="xs">
+                <div id="dashboard">
+                  {this.props.user.id ? (
+                    <div>
                       <div>
-                        <RaisedButton href='/admin' primary={true} label="Admin Page" onClick={this.logout} style={{margin: 20}}/>
+                        <Paper style={styles.paper} zDepth={5}>
+                          <Avatar color="#444" icon={<SvgIconWork />} />
+                          <h1>DOSSIER</h1>
+                          <Chip
+                            style={styles.chip} >
+                              <Avatar color="#444" icon={<SvgIconFace />} />
+                              {this.props.user.username}
+                          </Chip>
+                          <Table style={styles.table} selectable={false} >
+                            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                              <TableRow>
+                                <TableHeaderColumn colSpan={1} >ID</TableHeaderColumn>
+                                <TableHeaderColumn colSpan={4} >Title</TableHeaderColumn>
+                                <TableHeaderColumn colSpan={2} >Location</TableHeaderColumn>
+                                <TableHeaderColumn colSpan={2} >Status</TableHeaderColumn>
+                                <TableHeaderColumn style={{textAlign: 'center'}} colSpan={2} >Actions</TableHeaderColumn>
+                              </TableRow>
+                            </TableHeader>
+
+                            <TableBody
+                              displayRowCheckbox={false}
+                              deselectOnClickaway={true}
+                              showRowHover={true} 
+                              adjustForCheckbox={false}>
+
+                              {this.props.userData ? (
+                                this.props.userData.map(row => (
+                                  <TableRow key={row.missionId}>
+                                    <TableRowColumn colSpan={1} >{row.missionId}</TableRowColumn>
+                                    <TableRowColumn colSpan={4} >{row.mission.title}</TableRowColumn>
+                                    <TableRowColumn colSpan={2} >{row.mission.place}</TableRowColumn>
+                                    <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
+                                    <TableRowColumn colSpan={2} >
+
+                                      <RaisedButton 
+                                        label="Challenges"
+                                        primary={true} 
+                                        onTouchTap={this.handleOpen} />
+                                      <Dialog
+                                        title="Challenges"
+                                        actions={actions}
+                                        modal={false}
+                                        open={this.state.open}
+                                        onRequestClose={this.handleClose}
+                                        autoScrollBodyContent={true} >
+                                          <MissionDataBox styl={{margin: 20}} userMission={row} userChallenges={row.mission.challenges}/>
+                                      </Dialog>
+                                    </TableRowColumn>
+                                  </TableRow>
+                                ))) : (
+                                  <TableRow>
+                                    <TableRowColumn style={{textAlign: 'center'}} colSpan={11}> No data to display for this agent</TableRowColumn>
+                                  </TableRow>
+                                )}
+
+                            </TableBody>
+                          </Table>
+
+                          <div >
+                            <RaisedButton 
+                              secondary={true} 
+                              label="Logout" 
+                              onClick={this.logout} 
+                              style={styles.raisedButton}/>
+                          </div>
+                        </Paper>
                       </div>
-                    ) :
-                    null   
-                  }           
+
+                      {this.props.user && this.props.user.isAdmin ?
+                        (
+                          <div>
+                            <RaisedButton 
+                              href='/admin' 
+                              primary={true} 
+                              label="Admin Page" 
+                              onClick={this.logout} 
+                              style={styles.raisedButton}/>
+                          </div>
+                        ) : null   
+                      }           
+                    </div>
+                  ) : (
+                    <div> Access Denied. <Link to="/">Try again.</Link></div>
+                  )
+                }
                 </div>
-              ) : (
-                <div> Please <Link to="/">log in</Link> to view your dashboard </div>
-              )
-            }
-          </div>
+              </Row>
+            </Col>
           </Row>
         </Grid>
       </div>

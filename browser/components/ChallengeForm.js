@@ -83,7 +83,7 @@ export default class ChallengeForm extends Component {
         </IconButton>
         </CardHeader>
         <CardText>
-          <form id="challenge-form" onSubmit={this.submitAlert}> 
+          <form id="challenge-form" onSubmit={this.submitAlert} autoComplete="off"> 
             {this.props.missionSpecific ? null : <MissionDropDown missions={this.props.missions}/>}
             <label>Objective:</label><br/>
             <input type="text" name="objective" /><br/>

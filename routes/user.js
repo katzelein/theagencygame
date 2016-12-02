@@ -43,11 +43,9 @@ router.get('/:id/history', function(req, res, next){
 		attributes:['challengeId']
 	})
 	.then(challenges => {
-	console.log("CHALLENGES: ", challenges)
 		user_challenges = challenges.map(function(i){
 			return i.challengeId
 		})
-		console.log("USER_CHALLENGES: ", user_challenges)
 	return UserMission.findAll({
 		where: {
 			userId: req.params.id
@@ -65,13 +63,6 @@ router.get('/:id/history', function(req, res, next){
   	})
   	})
   	.then(resp => {
-  		let mission = resp[0].mission
-  		let challenges = mission.challenges
-  		let challengeUsers = challenges[0]
-  		// console.log("RESP: ", resp)
-  		// console.log("MISSION: ", resp[0].mission)
-  		console.log("CHALLENGES: ", challenges)
-  		// console.log("CHALLENGE USERS: ", challengeUsers)
   		res.json(resp)
 	})
 })

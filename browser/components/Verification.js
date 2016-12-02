@@ -32,63 +32,40 @@ export class SendVerification extends Component {
     this.startVerification = this.startVerification.bind(this)
   }
 
-  componentDidMount () {
-
-  }
-
   startVerification(e) {
-    //dispatcher
-    //1. check db for number
-    //2. authy.startverification
-
     e.preventDefault()
-    console.log("This is e: ", e.target.country_code.value)
     let countryCode = e.target.country_code.value
     let number = e.target.phone_number.value
     let via = 'sms'
-    console.log("These are the countryCode, number" + countryCode + '' + number)
-    if(!(countryCode && number)){
-      //alert("Please provide your number")
+
+    if (!(countryCode && number)) {
       this.setState({error: "Please provide your number"})
     }
-   
-    else{
-    this.setState({countryCode, number})
-    let fullNumber = "+" + countryCode + number
-    this.props.setNumber({countryCode, number})
-    console.log("AFTER SET STATE: ", this.state)
-    axios.get(`/api/user/exists/${fullNumber}`)
-    .then(res => res.data)
-    .then(user => {
-      if(user.found){
-        axios.post('/authy/verification/start', {countryCode, phoneNumber: number, via})
-        .then(() => browserHistory.push('/verify'))
-      }
-      else{
-        //alert("This number is not a registered number, please text the agency to get started")
-        this.setState({error: "No account associated with this number"})
-      }
-    })
-  }
-    
-    // don't send text if user is not in database
+    else {
+      this.setState({countryCode, number})
+      let fullNumber = "+" + countryCode + number
+      this.props.setNumber({countryCode, number})
 
+      axios.get(`/api/user/exists/${fullNumber}`)
+      .then(res => res.data)
+      .then(user => {
+        if (user.found) {
+          axios.post('/authy/verification/start', {countryCode, phoneNumber: number, via})
+          .then(() => browserHistory.push('/verify'))
+        }
+        else {
+          this.setState({error: "No account associated with this number"})
+        }
+      })
+    }
   }
 
   handleCodeChange (event, value) {
-    console.log("This is the event: ", event)
-    console.log("This is the value: ", value)
-
     this.setState({ countryCode: this.state.countryCode });
-
-    console.log("This is the state after CodeChange", this.state)
   }
 
   handlePhoneChange (event, value) {
-    console.log("This is the event: ", event)
-    console.log("This is the value: ", value)
     this.setState({ number: event.target.value });
-    console.log("This is the state after PhoneChange", this.state)
   }
 
   render () {
@@ -99,7 +76,7 @@ export class SendVerification extends Component {
               <Row center="xs">
                 <h3>Phone Verification</h3>
               </Row>
-              
+
               <Row center="xs">
                 <form role="form" onSubmit={this.startVerification}>
 
@@ -107,15 +84,14 @@ export class SendVerification extends Component {
                     <TextField
                       name="country_code"
                       floatingLabelText="Country Code"
+                      default="1"
                       hintText="1"
-                      // value={this.state.countryCode}
                       onChange={this.handleCodeChange} />
                   </Row>
 
                   <Row>
                     <TextField
                       name="phone_number"
-                      // value={this.state.number}
                       floatingLabelText="Phone #"
                       onChange={this.handlePhoneChange} />
                   </Row>
@@ -135,21 +111,20 @@ export class SendVerification extends Component {
 
                   <br />
                   <Row center="xs">
-                    <RaisedButton 
+                    <RaisedButton
                       type="submit"
                       style={{float: 'center'}}
                       icon={<CommunicationPhonelinkRing />}
-                      label="Request Verification" 
+                      label="Request Verification"
                       secondary={true} />
+                  </Row>
+
+                  <Row>
+                    {this.state.error ? <div className="error">{this.state.error}</div> : null}
                   </Row>
 
                 </form>
               </Row>
-
-              <Row>
-                {this.state.error ? <div className="error">{this.state.error}</div> : null}
-              </Row>
-
             </Col>
           </Row>
         </Grid>
@@ -169,43 +144,22 @@ export class Verify extends Component {
 
   }
 
-  // startVerification(e) {
-  //   //dispatcher
-  //   //1. check db for number
-  //   //2. authy.startverification
-  //   e.preventDefault()
-  //   let countryCode = e.target.country_code.value
-  //   let phoneNumber = e.target.phone_number.value
-  //   let method = e.target.via.value
-  //   console.log("STATE: ", this.state)
-  //   console.log("THIS: ", this)
-  //   this.setState({showVerification: true, 
-  //     countryCode, phoneNumber})
-  //   console.log("AFTER SET STATE: ", this.state)
-  //   axios.post('/authy/verification/start', {countryCode, phoneNumber, method})
-  //   .then(() => browserHistory.push('/'))
-  // }
-
   verifyNumber(e){
     e.preventDefault()
     let token = e.target.token.value;
-    // let countryCode = this.state.countryCode
-    // let phoneNumber = this.state.phoneNumber
     let countryCode = this.props.phoneNumber.countryCode
     let phoneNumber = this.props.phoneNumber.number
-    console.log("phone Number: ", phoneNumber)
+
     axios.post('/authy/verification/verify', {token, countryCode, phoneNumber})
     .then((res) => (res.data))
     .then((data) => {
-      console.log("verifyNumber DATA: ", data)
-      if(data.number && data.verified){
+      if (data.number && data.verified) {
         this.props.findUser()
         browserHistory.push('/dashboard')
       }
       // do something different if user not found/incorrect verification token
-      else if(data.verified === false){
+      else if (data.verified === false) {
         this.setState({error: "Incorrect token"})
-        //alert("Incorrect token")
       }
       else this.setState({error: data.error})
     })
@@ -219,7 +173,7 @@ export class Verify extends Component {
             <Row center="xs">
               <h3>Verify By Token</h3>
             </Row>
-            
+
             <Row center="xs">
               <form role="form" onSubmit={this.verifyNumber}>
 
@@ -236,11 +190,11 @@ export class Verify extends Component {
                 <br />
 
                 <Row center="xs">
-                  <RaisedButton 
+                  <RaisedButton
                     type="submit"
                     style={{float: 'center'}}
                     icon={<CheckCircle />}
-                    label="Verify Phone" 
+                    label="Verify Phone"
                     secondary={true} />
                 </Row>
 
@@ -248,9 +202,9 @@ export class Verify extends Component {
             </Row>
 
             <Row center="xs">
-              {this.state.error ? 
-                <div style={{height: '20px', padding: '2px 0px'}} className="error">{this.state.error}</div> 
-                : 
+              {this.state.error ?
+                <div style={{height: '20px', padding: '2px 0px'}} className="error">{this.state.error}</div>
+                :
                 <div style={{height: '20px', padding: '2px 0px'}}/>
               }
             </Row>
@@ -258,7 +212,6 @@ export class Verify extends Component {
             <Row center="xs">
               <div><Link to="/sendVerification">Request new code</Link></div>
             </Row>
-
           </Col>
         </Row>
       </Grid>

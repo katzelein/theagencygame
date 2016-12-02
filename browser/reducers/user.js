@@ -8,11 +8,9 @@ export const setUser = (user) => ({
 
 export const fetchUser = () => ((dispatch) => {
 	console.log("dispatching users")
-	//console.log(typeof number, " : ", number)
   axios.get('/api/whoami')
   .then(res => res.data)
   .then(user => {
-    //console.log("user from whoami: ", user.username)
     if(user.id){
       axios.get(`/api/user/${user.id}`)
       .then(res => res.data)

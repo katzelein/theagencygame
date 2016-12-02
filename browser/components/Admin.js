@@ -61,8 +61,7 @@ export default class Admin extends Component {
 
               {/* }) : ( 
                  <div className="adminContainer">You do not have permission to access this page, please contact and administrator</div>
-                ) */}
-              } 
+                ) */} 
             </Row>
           </Col>     
         </Row>
