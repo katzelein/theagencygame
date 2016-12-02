@@ -45,6 +45,7 @@ router.post('/verification/verify', function(req, res, next){
 	 var country_code = req.body.countryCode;
     var phone_number = req.body.phoneNumber;
     var token = req.body.token;
+		console.log('THE REQ.BODY.TOKEN INSIDE OF VERIFY', req.body.token)
 
     if (phone_number && country_code && token) {
         phoneReg.verifyPhoneToken(phone_number, country_code, token, function (err, response) {
