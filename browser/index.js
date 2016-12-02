@@ -3,8 +3,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AppContainer from './containers/AppContainer';
-import {SendVerificationContainer} from './containers/VerificationContainer';
-import {VerifyContainer} from './containers/VerificationContainer';
+import { SendVerificationContainer } from './containers/VerificationContainer';
+import { VerifyContainer } from './containers/VerificationContainer';
 import DashboardContainer from './containers/DashboardContainer';
 import AdminContainer from './containers/AdminContainer';
 import EditMissionsContainer from './containers/EditMissionsContainer';
@@ -17,15 +17,15 @@ import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 // Adding Material-UI
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import Paper from 'material-ui/Paper'
-import {grey800, amberA700, grey400, amberA400, grey600, amberA100, fullWhite} from 'material-ui/styles/colors'
-import {fade} from 'material-ui/utils/colorManipulator';
+import Paper from 'material-ui/Paper';
+import { grey800, amberA700, grey400, amberA400, grey600, amberA100, fullWhite } from 'material-ui/styles/colors';
+import { fade } from 'material-ui/utils/colorManipulator';
 
 injectTapEventPlugin();
 
-import { Grid, Row, Col } from 'react-flexbox-grid/lib/index'
+import { Grid, Row, Col } from 'react-flexbox-grid/lib/index';
 
-const muiTheme = getMuiTheme ({
+const muiTheme = getMuiTheme({
   palette: {
     primary1Color: grey400,
     primary2Color: amberA700,
@@ -53,6 +53,7 @@ ReactDOM.render(
         <Paper style={{position: 'absolute', top: 0, bottom: 0, overflow: 'auto', width: '100%'}}>
           <Router history={browserHistory}>
             <Route path="/">
+              <IndexRoute component={AppContainer}/>
               <Route path="login" component={AppContainer} />
               <Route path="sendVerification" component={SendVerificationContainer} />
               <Route path="verify" component={VerifyContainer} />
@@ -61,7 +62,6 @@ ReactDOM.render(
                 <Route path="editChallenge" component={EditChallengesContainer}/>
                 <Route path="editMission" component={EditMissionsContainer}/>
               </Route>
-              <IndexRoute component={AppContainer}/>
             </Route>
           </Router>
         </Paper>

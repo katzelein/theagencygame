@@ -33,8 +33,7 @@ const MyInput = React.createClass({
           name={this.props.name}
           onChange={this.changeValue}
           value={this.getValue()}
-          checked={this.props.type === 'checkbox' && this.getValue() ? 'checked' : null}
-        />
+          checked={this.props.type === 'checkbox' && this.getValue() ? 'checked' : null} />
         <span className='validation-error'>{errorMessage}</span>
       </div>
     );

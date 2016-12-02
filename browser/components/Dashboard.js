@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
 import axios from 'axios';
-import MissionDataBox from './MissionDataBox'
 
-import {Grid, Row, Col} from 'react-flexbox-grid';
-import Paper from 'material-ui/Paper';
-import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}
-  from 'material-ui/Table';
-import RaisedButton from 'material-ui/RaisedButton';
+import { Grid, Row, Col } from 'react-flexbox-grid';
+
+
+import Avatar from 'material-ui/Avatar';
+import Chip from 'material-ui/Chip';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import Chip from 'material-ui/Chip';
+import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
 import SvgIconFace from 'material-ui/svg-icons/action/assignment-ind';
 import SvgIconWork from 'material-ui/svg-icons/action/work';
-import Avatar from 'material-ui/Avatar'
+import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn }
+from 'material-ui/Table';
+
+import MissionDataBox from './MissionDataBox';
+
 
 const styles = {
   paper: {
@@ -34,7 +38,7 @@ const styles = {
 
 export default class Dashboard extends Component {
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -47,21 +51,21 @@ export default class Dashboard extends Component {
     this.handleClose = this.handleClose.bind(this)
   }
 
-  handleChange (event) { 
+  handleChange(event) {
     this.setState({
       height: event.target.value
     });
   }
 
-  handleOpen () {
-    this.setState({open: true})
+  handleOpen() {
+    this.setState({ open: true })
   }
 
-  handleClose () {
-    this.setState({open: false})
+  handleClose() {
+    this.setState({ open: false })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.findUser()
     this.props.findUserData()
     this.setState({
@@ -69,19 +73,16 @@ export default class Dashboard extends Component {
     })
   }
 
-  componentWillReceiveProps() {
-  }
-
-  logout(){
+  logout() {
     this.props.logoutUser()
     axios.post('/api/logout')
-    .then(res => {
-      console.log("logout res: ", res)
-      browserHistory.push('/')
-    })
+      .then(res => {
+        console.log("logout res: ", res)
+        browserHistory.push('/')
+      })
   }
 
-  render () {
+  render() {
 
     const actions = [
       <FlatButton
@@ -134,7 +135,6 @@ export default class Dashboard extends Component {
                                     <TableRowColumn colSpan={2} >{row.mission.place}</TableRowColumn>
                                     <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
                                     <TableRowColumn colSpan={2} >
-
                                       <RaisedButton 
                                         label="Challenges"
                                         primary={true} 
@@ -158,7 +158,6 @@ export default class Dashboard extends Component {
 
                             </TableBody>
                           </Table>
-
                           <div >
                             <RaisedButton 
                               secondary={true} 

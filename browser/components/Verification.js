@@ -11,15 +11,25 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib/index'
 import CommunicationPhonelinkRing from 'material-ui/svg-icons/communication/phonelink-ring'
 import CheckCircle from 'material-ui/svg-icons/action/check-circle'
 
-const style = {
+const styles = {
   paper: {
     textAlign: 'center',
     display: 'inline-block',
+  },
+  raisedButton: {
+    float: 'center'
+  },
+  textField: {
+    textAlign: 'center'
+  },
+  error: {
+    height: 20, 
+    padding: '2px 0px'
   }
 };
 
 export class SendVerification extends Component {
-  constructor(){
+  constructor() {
     super();
     this.state = {
       via: 1,
@@ -39,133 +49,113 @@ export class SendVerification extends Component {
     let via = 'sms'
 
     if (!(countryCode && number)) {
-      this.setState({error: "Please provide your number"})
-    }
-    else {
-      this.setState({countryCode, number})
+      this.setState({ error: "Please provide your number" })
+    } else {
+      this.setState({ countryCode, number })
       let fullNumber = "+" + countryCode + number
-      this.props.setNumber({countryCode, number})
+      this.props.setNumber({ countryCode, number })
 
       axios.get(`/api/user/exists/${fullNumber}`)
-      .then(res => res.data)
-      .then(user => {
-        if (user.found) {
-          axios.post('/authy/verification/start', {countryCode, phoneNumber: number, via})
-          .then(() => browserHistory.push('/verify'))
-        }
-        else {
-          this.setState({error: "No account associated with this number"})
-        }
-      })
+        .then(res => res.data)
+        .then(user => {
+          if (user.found) {
+            axios.post('/authy/verification/start', { countryCode, phoneNumber: number, via })
+              .then(() => browserHistory.push('/verify'))
+          } else {
+            this.setState({ error: "No account associated with this number" })
+          }
+        })
     }
   }
 
-  handleCodeChange (event, value) {
+  handleCodeChange(event, value) {
     this.setState({ countryCode: this.state.countryCode });
   }
 
-  handlePhoneChange (event, value) {
+  handlePhoneChange(event, value) {
     this.setState({ number: event.target.value });
   }
 
-  render () {
+  render() {
     return (
-        <Grid>
-          <Row>
-            <Col xs={12}>
-              <Row center="xs">
-                <h3>Phone Verification</h3>
-              </Row>
+      <Grid>
+        <Row>
+          <Col xs={12}>
+            <Row center="xs">
+              <h3>Phone Verification</h3>
+            </Row>
 
-              <Row center="xs">
-                <form role="form" onSubmit={this.startVerification} autoComplete="off">
+            <Row center="xs">
+              <form role="form" onSubmit={this.startVerification}>
 
-                  <Row>
-                    <TextField
-                      name="country_code"
-                      floatingLabelText="Country Code"
-                      default="1"
-                      hintText="1"
-                      onChange={this.handleCodeChange} />
-                  </Row>
+                <Row>
+                  <TextField
+                    name="country_code"
+                    floatingLabelText="Country Code"
+                    default="1"
+                    hintText="1"
+                    onChange={this.handleCodeChange} />
+                </Row>
 
-                  <Row>
-                    <TextField
-                      name="phone_number"
-                      floatingLabelText="Phone #"
-                      onChange={this.handlePhoneChange} />
-                  </Row>
+                <Row>
+                  <TextField
+                    name="phone_number"
+                    floatingLabelText="Phone #"
+                    onChange={this.handlePhoneChange} />
+                </Row>
 
-                  {/* <Row>
-                    <SelectField
-                      name="via"
-                      // value={this.state.method}
-                      floatingLabelText="Via"
-                      onChange={this.handleViaChange}
-                      style={{float: 'left', textAlign: 'left'}} >
-                        <MenuItem value={1} primaryText="Text" />
-                        <MenuItem value={2} primaryText="Call" />
-                    </SelectField>
-                  </Row>
-                  */}
+                <br />
+                <Row center="xs">
+                  <RaisedButton
+                    type="submit"
+                    style={styles.raisedButton}
+                    icon={<CommunicationPhonelinkRing />}
+                    label="Request Verification"
+                    secondary={true} />
+                </Row>
 
-                  <br />
-                  <Row center="xs">
-                    <RaisedButton
-                      type="submit"
-                      style={{float: 'center'}}
-                      icon={<CommunicationPhonelinkRing />}
-                      label="Request Verification"
-                      secondary={true} />
-                  </Row>
+                <Row>
+                  {this.state.error ? <div className="error">{this.state.error}</div> : null}
+                </Row>
 
-                  <Row>
-                    {this.state.error ? <div className="error">{this.state.error}</div> : null}
-                  </Row>
-
-                </form>
-              </Row>
-            </Col>
-          </Row>
-        </Grid>
+              </form>
+            </Row>
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 }
 
 
 export class Verify extends Component {
-  constructor(){
+  constructor() {
     super();
     this.verifyNumber = this.verifyNumber.bind(this)
     this.state = {};
   }
 
-  componentDidMount () {
-
-  }
-
-  verifyNumber(e){
+  verifyNumber(e) {
     e.preventDefault()
     let token = e.target.token.value;
     let countryCode = this.props.phoneNumber.countryCode
     let phoneNumber = this.props.phoneNumber.number
 
-    axios.post('/authy/verification/verify', {token, countryCode, phoneNumber})
-    .then((res) => (res.data))
-    .then((data) => {
-      if (data.number && data.verified) {
-        this.props.findUser()
-        browserHistory.push('/dashboard')
-      }
-      // do something different if user not found/incorrect verification token
-      else if (data.verified === false) {
-        this.setState({error: "Incorrect token"})
-      }
-      else this.setState({error: data.error})
-    })
+    axios.post('/authy/verification/verify', { token, countryCode, phoneNumber })
+      .then((res) => (res.data))
+      .then((data) => {
+        if (data.number && data.verified) {
+          this.props.findUser()
+          browserHistory.push('/dashboard')
+        }
+        // do something different if user not found/incorrect verification token
+        else if (data.verified === false) {
+          this.setState({ error: "Incorrect token" })
+        } else this.setState({ error: data.error })
+      })
   }
 
-  render () {
+  render() {
     return (
       <Grid>
         <Row>
@@ -173,44 +163,41 @@ export class Verify extends Component {
             <Row center="xs">
               <h3>Verify By Token</h3>
             </Row>
-
             <Row center="xs">
               <form role="form" onSubmit={this.verifyNumber} autoComplete="off">
-
                 <Row>
                   <TextField
                     type="text"
                     name="token"
                     floatingLabelText="Verification Token"
                     hintText="Verification Token"
-                    style={{textAlign: 'center'}}
+                    style={styles.textField}
                     onChange={this.handleTokenChange} />
                 </Row>
-
                 <br />
-
                 <Row center="xs">
                   <RaisedButton
                     type="submit"
-                    style={{float: 'center'}}
+                    style={styles.raisedButton}
                     icon={<CheckCircle />}
                     label="Verify Phone"
                     secondary={true} />
                 </Row>
-
               </form>
             </Row>
-
             <Row center="xs">
+              
               {this.state.error ?
-                <div style={{height: '20px', padding: '2px 0px'}} className="error">{this.state.error}</div>
+                <div style={styles.error} className="error">{this.state.error}</div>
                 :
-                <div style={{height: '20px', padding: '2px 0px'}}/>
+                <div style={styles.error}/>
               }
-            </Row>
 
+            </Row>
             <Row center="xs">
-              <div><Link to="/sendVerification">Request new code</Link></div>
+              <div>
+                <Link to="/sendVerification">Request new code</Link>
+              </div>
             </Row>
           </Col>
         </Row>
