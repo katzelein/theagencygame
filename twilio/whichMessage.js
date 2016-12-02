@@ -364,13 +364,13 @@ const whichMessage = {
 					 */
 					// let actualTags = [] // clarifai stuff
 
-					// goodAnswer = getPhotoTags(message)
-					// .then (actualTags => {
-					// 	// console.log(actualTags);
-					// 	if (checkTags(currentChallenge.targetTags, actualTags)) return true;
-					// 	else return false;
-					// })
-					// break;
+					goodAnswer = getPhotoTags(message)
+					.then (actualTags => {
+						// console.log(actualTags);
+						if (checkTags(currentChallenge.targetTags, actualTags)) return true;
+						else return false;
+					})
+					break;
 				case 'voice':
 					// put Kat's voice stuff here!!
 					/*
@@ -378,14 +378,14 @@ const whichMessage = {
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
-					// goodAnswer = checkWatsonPromise(message)
-					// .then((transcript) => {
-					// 	console.log('transcript:',transcript);
-					// 	if (transcript != currentChallenge.targetText) 
-					// 		returnMessage = "Not quite what we were looking for, but the Agency will manage. ";
-					// 	return true;
-					// })
-					// break;
+					goodAnswer = checkWatsonPromise(message)
+					.then((transcript) => {
+						console.log('transcript:',transcript);
+						if (transcript != currentChallenge.targetText) 
+							returnMessage = "Not quite what we were looking for, but the Agency will manage. ";
+						return true;
+					})
+					break;
 				default:
 					goodAnswer = true;
 			}
@@ -472,126 +472,6 @@ const whichMessage = {
 	},
 
 
-	// CHALLENGE_ANSWER: (user, message) => {
-	// 	return Challenge.findById(user.currentChallenge)
-	// 	.then(currentChallenge => {
-	// 		let success;
-
-	// 		if (currentChallenge.hasNext) {
-	// 			success = {
-	// 				applyToUser: {
-	// 					state: {messageState: 'FETCH_CHALLENGE'},
-	// 					message: currentChallenge.conclusion + "\n\nAre you ready for your next challenge?",
-	// 				},
-	// 				applyToPartner: {
-	// 					user: {messagestate: 'FETCH_CHALLENGE'}
-	// 				}
-	// 			}
-	// 		} else {
-	// 			success = {
-	// 				applyToUser: {
-	// 					state: {
-	// 						messageState: 'STANDBY',
-	// 						currentMission: 0,
-	// 						currentChallenge: 0,
-	// 						status: 'standby'
-	// 					},
-	// 					message: currentChallenge.conclusion + "\n\nYou have completed your mission.  Text 'new mission' to start a new mission",
-	// 				},
-	// 				applyToPartner: {
-	// 					user: {
-	// 						messageState: 'STANDBY',
-	// 						currentMission: 0,
-	// 						currentChallenge: 0,
-	// 						status: 'standby'
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 		let fail = {message: "Your answer doesn't quite match The Agency's records.  Please try again."}
-
-	// 		switch (currentChallenge.category) {
-	// 			case 'text':
-	// 				if (currentChallenge.targetText.toLowerCase() == message.Body.toLowerCase()) {
-
-	// 					if (user.status == 'active_pair') fetchPartnerFromUserMission({
-	// 						id: user.id,
-	// 						currentMission: user.currentMission,
-	// 						currentChallenge: user.currentChallenge
-	// 					}, success.applyToPartner)
-	// 					return success.applyToUser;
-	// 				}
-	// 				else return fail;
-	// 			case 'image':
-	// 				// put clarifai function here!!!
-	// 				/*
-	// 				 * parameters:	currentChallenge.targetTags // array of tags
-	// 				 * 				message // whole body of twilio request
-	// 				 * returns: true / false
-	// 				 */
-	// 				// let actualTags = [] // clarifai stuff
-
-	// 				return getPhotoTags(message)
-	// 				.then (actualTags => {
-	// 					// console.log(actualTags);
-	// 					if (checkTags(currentChallenge.targetTags, actualTags)) {
-
-	// 						if (user.status == 'active_pair') fetchPartnerFromUserMission({
-	// 							id: user.id,
-	// 							currentMission: user.currentMission,
-	// 							currentChallenge: user.currentChallenge
-	// 						}, success.applyToPartner)
-	// 						return success.applyToUser;
-
-	// 					}
-	// 					else return fail;
-	// 				})
-	// 			case 'voice':
-	// 				// put Kat's voice stuff here!!
-	// 				/*
-	// 				 * parameters:	currentChallenge.targetText // target words
-	// 				 * 				message // whole body of twilio request
-	// 				 * returns: true / false
-	// 				 */
-	// 				let scriptPromise = checkWatsonPromise(message);
-	// 				return scriptPromise
-	// 				.then((transcript) => {
-	// 					console.log('transcript',transcript);
-	// 					if (transcript == currentChallenge.targetText) {
-
-	// 						if (user.status == 'active_pair') fetchPartnerFromUserMission({
-	// 							id: user.id,
-	// 							currentMission: user.currentMission,
-	// 							currentChallenge: user.currentChallenge
-	// 						}, success.applyToPartner)
-	// 						return success.applyToUser;
-	// 					}
-	// 					else {
-	// 						let newMessage = "Not quite what we were looking for, but the Agency will manage. " + success.applyToUser.message
-	// 						success.applyToUser.message = newMessage;
-							
-
-	// 						if (user.status == 'active_pair') fetchPartnerFromUserMission({
-	// 							id: user.id,
-	// 							currentMission: user.currentMission,
-	// 							currentChallenge: user.currentChallenge
-	// 						}, success.applyToPartner)
-	// 						return success.applyToUser;
-	// 					}
-	// 				})
-	// 				// if(true) return success;
-	// 				// else return fail;
-	// 			default:
-					
-	// 				if (user.status == 'active_pair') fetchPartnerFromUserMission({
-	// 					id: user.id,
-	// 					currentMission: user.currentMission,
-	// 					currentChallenge: user.currentChallenge
-	// 				}, success.applyToPartner)
-	// 				return success.applyToUser;
-	// 		}
-	// 	})
-	// },
 	QUERY_HIATUS: () =>{return ""},
 
 	QUERY_TUTORIAL: (user, userInput) => {
