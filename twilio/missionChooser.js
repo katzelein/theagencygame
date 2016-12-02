@@ -51,7 +51,7 @@ const missionChooser = (user, coordinates) => {
 		let missionIds = missions.map(function(i){
 			return i.id
 		})
-		if(missionIds.length === 0) missionIds.push('test')
+		if(missionIds.length === 0) missionIds.push(0)
 		console.log("MISSION IDS: ", missionIds)
 		return Mission.findAll({
 			where: sequelize.and(
