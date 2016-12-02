@@ -38,25 +38,29 @@ return User.findAll({
 const missionChooser = (user, coordinates) => {
 	// filter all missions based on location
 	// randomly choose a mission
-
+	console.log("USER IN MISSION CHOOSER: ", user)
+	console.log("COORDINATES IN MISSION CHOOSER: ", coordinates)
 
 	// can also fetch mission based on labelled place
 	// set default to return Grace Hopper mission
+
 	// if (!place) place = "Grace Hopper";
 	// return Mission.findOne({where: {place: place}})
+	console.log('THE COORDINATES IN MISSION CHOOSER', coordinates)
 	let coordString = `POINT(${coordinates[0]} ${coordinates[1]})`
 	return user.getMissions()
 	.then(missions => {
 		let missionIds = missions.map(function(i){
 			return i.id
 		})
+		if(missionIds.length === 0) missionIds.push(0)
 		console.log("MISSION IDS: ", missionIds)
 		return Mission.findAll({
 			where: sequelize.and(
 				sequelize.where(sequelize.fn(
 					'ST_DWithin',
 					sequelize.col('missions.location'), sequelize.fn('ST_GeographyFromText', `SRID=4326;${coordString}`), 2000), true
-			),
+				),
 			//sequelize.where(sequelize.col('users.status'), 'ready')
 			{id: {$notIn: missionIds}}
 			)

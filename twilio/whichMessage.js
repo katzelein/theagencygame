@@ -1,21 +1,22 @@
 const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
-const getPhotoTags = require('./clarifai')
+
+const clarifai = require('./clarifai')
+const {getPhotoTags} = clarifai
+
 const {missionChooser, partnerChooser} = require('./missionChooser')
 
-const {checkWatsonPromise} = require('./watson');
+const watson = require('./watson');
+const {checkWatsonPromise} = watson;
 
 const User = require('../models/user')
-const {accountSid, authToken} = require('../variables')
-const client = require('twilio')(accountSid, authToken);
 const UserMission = require('../models/userMission')
 const UserChallenge = require('../models/userChallenge')
 const Challenge = require('../models/challenge')
 
-
-// console.log("SHARE MISSION: ", sharedMission([1, 2, 3], [1, 2]))
-
+const send_sms = require('./send-sms')
+const {sendSimpleText} = send_sms;
 
 const whichMessage = {
 
@@ -179,7 +180,7 @@ const whichMessage = {
 					// ask team what to do if user decides to quit waiting???
 					// set new messagestate????
 				},
-				message: 'Ok, we will contact you when a partner becomes available.'
+				message: 'Ok, we will contact you when a partner becomes available. Text \'go\' if you run out of patience and would rather go it alone.'
 			}
 		}
 		else if(message === 'go'){
@@ -198,29 +199,31 @@ const whichMessage = {
 		let coordinates = user.location.coordinates
 		let soloAdventurePromise, pairAdventurePromise;
 		if(userInput === 'lone wolf'){
+
 			return missionChooser(user, coordinates)
 			.then(potentialMissions => {
+				console.log('POTENTIAL MISSIONS', potentialMissions)
 				if(potentialMissions.length){
 					let newMission = potentialMissions[0]
-				UserMission.create({
-					userId: user.id,
-					missionId: newMission.id,
-					partnerId: null
-				})
-				return {
-					state: {
-						messageState: 'FETCH_CHALLENGE',
-						currentMission: newMission.id,
-						status: 'active_solo'
-					},
-					message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+user.username+"?"
+					UserMission.create({
+						userId: user.id,
+						missionId: newMission.id,
+						partnerId: null
+					})
+					return {
+						state: {
+							messageState: 'FETCH_CHALLENGE',
+							currentMission: newMission.id,
+							status: 'active_solo'
+						},
+						message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+user.username+"?"
+					}
 				}
-			}
-			else{
-				return {
-					message: "There are no missions in this area, or you have completed all of them! Try again later or when you have relocated."
+				else{
+					return {
+						message: "There are no missions in this area, or you have completed all of them! Try again later or when you have relocated."
+					}
 				}
-			}
 			})
 		}
 
@@ -266,13 +269,9 @@ const whichMessage = {
 					console.log("MISSION BEFORE UPDATES: ", newMission)
 					if(partnerFound){
 						console.log("ABOUT TO SEND MESSAGE")
-						return client.sendMessage({
+						let outMessage = `We have found a partner for you. Agent ${user.username} is ready to go. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.` ;
 
-			              to: partner.phoneNumber, // Any number Twilio can deliver to
-			              from: '+12027593387', // A number you bought from Twilio and can use for outbound communication
-			              body: `We have found a partner for you. Agent ${user.username} is ready to go. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.` // body of the SMS message
-
-			          	})
+						return sendSimpleText(partner.phoneNumber, outMessage)
 			          	.then(() => {
 			          		return UserMission.bulkCreate([
 			          			{userId: user.id, missionId: newMission.id, partnerId: partner.id},
@@ -351,33 +350,27 @@ const whichMessage = {
 				})
 
 			} else {
-				if(user.status == 'active_pair') {
-					return fetchPartnerFromUserMission(
-						user,
-						{
-							user: {
-								messageState: 'STANDBY',
-								currentMission: 0,
-								currentChallenge: 0
-							},
-						}
-					)
-					.then(() => {
-						return {
-							state: {
+				let cleanState = {
 								messageState: 'STANDBY',
 								currentMission: 0,
 								currentChallenge: 0
 							}
+
+				if(user.status == 'active_pair') {
+					return fetchPartnerFromUserMission(
+						user,
+						{
+							user: cleanState
+						}
+					)
+					.then(() => {
+						return {
+							state: cleanState
 						}
 					})
 				}
 				return {
-					state: {
-						messageState: 'STANDBY',
-						currentMission: 0,
-						currentChallenge: 0
-					}
+					state: cleanState
 				}
 			}
 		})
@@ -422,7 +415,7 @@ const whichMessage = {
 					goodAnswer = checkWatsonPromise(message)
 					.then((transcript) => {
 						console.log('transcript:',transcript);
-						if (transcript != currentChallenge.targetText)
+						if (transcript != currentChallenge.targetText) 
 							returnMessage = "Not quite what we were looking for, but the Agency will manage. ";
 						return true;
 					})

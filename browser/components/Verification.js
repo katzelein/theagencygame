@@ -163,10 +163,8 @@ export class Verify extends Component {
             <Row center="xs">
               <h3>Verify By Token</h3>
             </Row>
-
             <Row center="xs">
-              <form role="form" onSubmit={this.verifyNumber}>
-
+              <form role="form" onSubmit={this.verifyNumber} autoComplete="off">
                 <Row>
                   <TextField
                     type="text"
@@ -176,9 +174,7 @@ export class Verify extends Component {
                     style={styles.textField}
                     onChange={this.handleTokenChange} />
                 </Row>
-
                 <br />
-
                 <Row center="xs">
                   <RaisedButton
                     type="submit"

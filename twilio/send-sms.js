@@ -8,13 +8,30 @@ const twilioNum = constants.twilioNum;
 //require the Twilio module and create a REST client
 let client = require('twilio')(accountSid, authToken);
 
-client.messages.create({
-    to: "+18607485586",
-    from: twilioNum,
-    body: "This is the ship that made the Kessel Run in fourteen parsecs?",
-}, function(err, message) {
-    console.log(message.sid);
-});
+// client.messages.create({
+//     to: "+18607485586",
+//     from: twilioNum,
+//     body: "This is the ship that made the Kessel Run in fourteen parsecs?",
+// }, function(err, message) {
+//     console.log(message.sid);
+// });
+
+let sendSimpleText = (phoneNumber, message) => {
+	return client.sendMessage({
+		to: phoneNumber,		// Any number Twilio can deliver to
+		from: '+12027593387',	// A number you bought from Twilio and can use for outbound communication
+		body: message 			// body of the SMS message
+	})
+}
+
+// comment out for live, leave in for testing
+// sendSimpleText = (phoneNumber, message) => {
+// 	console.log(`${phoneNumber}------sending text: ${message}`)
+// 	return Promise.resolve('sending')
+// };
+
+module.exports = {sendSimpleText}
+
 
 
 // var twilio = require('twilio');
