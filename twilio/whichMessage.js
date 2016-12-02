@@ -108,13 +108,6 @@ const whichMessage = {
 	TUTORIAL_MISSION_3: (username, message) => {
 		// assuming they sent in a picture
 
-		let success = {
-			state: {messageState: 'STANDBY'},
-			message: "Congratulations, Trainee, you have completed your training mission!  Your name has been added to our list of active field agents.  Text in 'new mission' whenever you have the time to request your first mission!"
-		}
-		let fail = {
-			message: "That ... wasn't a picture ...."
-		}
 		// put clarifai function here!!!
 		/*
 		 * parameters:	currentChallenge.targetTags // array of target tags
@@ -124,8 +117,15 @@ const whichMessage = {
 		return getPhotoTags(message)
 		.then (actualTags => {
 			console.log(actualTags);
-			if (actualTags.length) return success;
-			else return fail;
+			if (actualTags.length) {
+				return {
+					state: {messageState: 'STANDBY'},
+					message: `Image registers as: [${actualTags[0]}, ${actualTags[1]}, ${actualTags[2]}]\n\nCongratulations, Trainee, you have completed your training mission!  Your name has been added to our list of active field agents.  Text in 'new mission' whenever you have the time to request your first mission!`
+				}
+			}
+			else return {
+				message: "That ... wasn't a picture ...."
+			}
 		})
 	},
 
@@ -265,25 +265,39 @@ const whichMessage = {
 					})
 					.catch(err => console.log(err))
 				}
-		})}
+			})
+		}
 
 		else return {
 			message: "We did not recognize your preference, please respond with 'lone wolf' or 'eager beaver'."
 		}
 	},
 
-	FETCH_CHALLENGE: (user, currentMissionId, currentChallengeId, userInput) => {
+	FETCH_CHALLENGE: (user, userInput) => {
 		// still need to adjust based on userInput
-		return getChallenge(user.currentMissionId, user.currentChallengeId)
+		console.log('FETCH_CHALLENGE')
+		return getChallenge(user.currentMission, user.currentChallenge)
 		.then(newChallenge => {
 			if (newChallenge) {
+				if(user.status == 'active_pair') {
+					fetchPartnerFromUserMission(
+						{
+							id: user.id,
+							currentMission: user.currentMission,
+							currentChallenge: newChallenge.id
+						},{
+							user: {
+								messageState: 'CHALLENGE_ANSWER',
+								currentChallenge: newChallenge.id
+							},
+							userChallenge: {}
+						}
+					)
+				}
 				UserChallenge.create({
 					userId: user.id,
 					challengeId: newChallenge.id
 				})
-				if(user.status == 'active_pair') {
-					fetchPartnerFromUserMission(user,{})
-				}
 				return {
 					state:{
 						messageState: 'CHALLENGE_ANSWER',
@@ -292,6 +306,18 @@ const whichMessage = {
 					message: newChallenge.objective+": "+newChallenge.summary,
 				}
 			} else {
+				if(user.status == 'active_pair') {
+					fetchPartnerFromUserMission(
+						user,
+						{
+							user: {
+								messageState: 'STANDBY',
+								currentMission: 0,
+								currentChallenge: 0
+							},
+						}
+					)
+				}
 				return {
 					state: {
 						messageState: 'STANDBY',
@@ -303,35 +329,19 @@ const whichMessage = {
 		})
 	},
 
-	CHALLENGE_ANSWER: (currentChallengeId, message) => {
-		return Challenge.findById(currentChallengeId)
-		.then(currentChallenge => {
-			let success;
+	CHALLENGE_ANSWER: (user, message) => {
 
-			if (currentChallenge.hasNext) {
-				success = {
-					state: {messageState: 'FETCH_CHALLENGE'},
-					message: currentChallenge.conclusion + "\n\nAre you ready for your next challenge?",
-					userChallengeState: {status: 'complete'}
-				}
-			} else {
-				success = {
-					state: {
-						messageState: 'STANDBY',
-						currentMission: 0,
-						currentChallenge: 0,
-						status: 'standby'
-					},
-					message: currentChallenge.conclusion + "\n\nYou have completed your mission.  Text 'new mission' to start a new mission",
-					userMissionState: {status: 'complete'}
-				}
-			}
-			let fail = {message: "Your answer doesn't quite match The Agency's records.  Please try again."}
+		let returnMessage = "";
+		let currentChallenge;
+		return Challenge.findById(user.currentChallenge)
+		.then(foundChallenge => {
+			currentChallenge = foundChallenge;
+			let goodAnswer = false;
 
 			switch (currentChallenge.category) {
 				case 'text':
-					if (currentChallenge.targetText.toLowerCase() == message.Body.toLowerCase()) return success;
-					else return fail;
+					if (currentChallenge.targetText.toLowerCase() == message.Body.toLowerCase()) goodAnswer = true;
+					break;
 				case 'image':
 					// put clarifai function here!!!
 					/*
@@ -341,12 +351,15 @@ const whichMessage = {
 					 */
 					// let actualTags = [] // clarifai stuff
 
-					return getPhotoTags(message)
-					.then (actualTags => {
-						// console.log(actualTags);
-						if (checkTags(currentChallenge.targetTags, actualTags)) return success;
-						else return fail;
-					})
+					goodAnswer = getPhotoTags(message)
+					console.log(goodAnswer,goodAnswer.length);
+					// .then (actualTags => {
+					// 	// console.log(actualTags);
+					// 	if (checkTags(currentChallenge.targetTags, actualTags)) return true;
+					// 	else return false;
+					// })
+					goodAnswer = true;
+					break;
 				case 'voice':
 					// put Kat's voice stuff here!!
 					/*
@@ -354,25 +367,216 @@ const whichMessage = {
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
-					let scriptPromise = checkWatsonPromise(message);
-					return scriptPromise
+					goodAnswer = checkWatsonPromise(message)
 					.then((transcript) => {
-						console.log('transcript',transcript);
-						if (transcript == currentChallenge.targetText) return success;
-						else {
-							let newMessage = "Not quite what we were looking for, but the Agency will manage. " + success.message
-							success.message = newMessage;
-							return success;
-						}
+						console.log('transcript:',transcript);
+						if (transcript != currentChallenge.targetText) 
+							returnMessage = "Not quite what we were looking for, but the Agency will manage. ";
+						return true;
 					})
-					// if(true) return success;
-					// else return fail;
+					break;
 				default:
-					return success;
+					goodAnswer = true;
 			}
+
+			return goodAnswer;
+		})
+		.then(success => {
+			console.log('success: ', success);
+
+			if(!success) return {message: "Your answer doesn't quite match The Agency's records.  Please try again."};
+
+			// if program reaches here, answer is correct
+			let waitForThese = []
+			let temp = UserChallenge.findOne({
+				userId: user.id,
+				challengeId: user.currentChallenge
+			})
+			.then(foundUserChallenge => {
+				return foundUserChallenge.update({status: 'complete'});
+			})
+			waitForThese.push(temp);
+
+			let returnObj, partnerObj;
+
+			if(currentChallenge.hasNext) {
+				returnObj = {
+					state: {messageState: 'FETCH_CHALLENGE'},
+					message: currentChallenge.conclusion + "\n\nAre you ready for your next challenge?"
+				}
+
+				partnerObj = {
+					user: {messageState: 'FETCH_CHALLENGE'},
+					userChallenge: {status: 'complete'}
+				}
+			} else {
+				// finished last challenge of mission, set mission to complete
+
+				temp = UserMission.findOne({
+					userId: user.id,
+					missionId: user.currentMission
+				})
+				.then(foundUserMission => {
+					return foundUserMission.update({status: 'complete'})
+				})
+				waitForThese.push(temp)
+
+				returnObj = {
+					state: {
+						messageState: 'STANDBY',
+						currentMission: 0,
+						currentChallenge: 0,
+						status: 'standby'
+					},
+					message: currentChallenge.conclusion + "\n\nYou have completed your mission.  Text 'new mission' to start a new mission",
+				}
+
+				partnerObj = {
+					user: {
+						messageState: 'STANDBY',
+						currentMission: 0,
+						currentChallenge: 0,
+						status: 'standby'
+					},
+
+					userChallenge: {status: 'complete'},
+					userMission: {status: 'complete'}
+				}
+			}
+
+			if (user.status == 'active_pair') {
+				temp = fetchPartnerFromUserMission(user, partnerObj);
+				waitForThese.push(temp);
+			}
+
+			return Promise.all(waitForThese)
+			.then(() => {
+				return returnObj;
+			})
 		})
 	},
 
+
+	// CHALLENGE_ANSWER: (user, message) => {
+	// 	return Challenge.findById(user.currentChallenge)
+	// 	.then(currentChallenge => {
+	// 		let success;
+
+	// 		if (currentChallenge.hasNext) {
+	// 			success = {
+	// 				applyToUser: {
+	// 					state: {messageState: 'FETCH_CHALLENGE'},
+	// 					message: currentChallenge.conclusion + "\n\nAre you ready for your next challenge?",
+	// 				},
+	// 				applyToPartner: {
+	// 					user: {messagestate: 'FETCH_CHALLENGE'}
+	// 				}
+	// 			}
+	// 		} else {
+	// 			success = {
+	// 				applyToUser: {
+	// 					state: {
+	// 						messageState: 'STANDBY',
+	// 						currentMission: 0,
+	// 						currentChallenge: 0,
+	// 						status: 'standby'
+	// 					},
+	// 					message: currentChallenge.conclusion + "\n\nYou have completed your mission.  Text 'new mission' to start a new mission",
+	// 				},
+	// 				applyToPartner: {
+	// 					user: {
+	// 						messageState: 'STANDBY',
+	// 						currentMission: 0,
+	// 						currentChallenge: 0,
+	// 						status: 'standby'
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 		let fail = {message: "Your answer doesn't quite match The Agency's records.  Please try again."}
+
+	// 		switch (currentChallenge.category) {
+	// 			case 'text':
+	// 				if (currentChallenge.targetText.toLowerCase() == message.Body.toLowerCase()) {
+
+	// 					if (user.status == 'active_pair') fetchPartnerFromUserMission({
+	// 						id: user.id,
+	// 						currentMission: user.currentMission,
+	// 						currentChallenge: user.currentChallenge
+	// 					}, success.applyToPartner)
+	// 					return success.applyToUser;
+	// 				}
+	// 				else return fail;
+	// 			case 'image':
+	// 				// put clarifai function here!!!
+	// 				/*
+	// 				 * parameters:	currentChallenge.targetTags // array of tags
+	// 				 * 				message // whole body of twilio request
+	// 				 * returns: true / false
+	// 				 */
+	// 				// let actualTags = [] // clarifai stuff
+
+	// 				return getPhotoTags(message)
+	// 				.then (actualTags => {
+	// 					// console.log(actualTags);
+	// 					if (checkTags(currentChallenge.targetTags, actualTags)) {
+
+	// 						if (user.status == 'active_pair') fetchPartnerFromUserMission({
+	// 							id: user.id,
+	// 							currentMission: user.currentMission,
+	// 							currentChallenge: user.currentChallenge
+	// 						}, success.applyToPartner)
+	// 						return success.applyToUser;
+
+	// 					}
+	// 					else return fail;
+	// 				})
+	// 			case 'voice':
+	// 				// put Kat's voice stuff here!!
+	// 				/*
+	// 				 * parameters:	currentChallenge.targetText // target words
+	// 				 * 				message // whole body of twilio request
+	// 				 * returns: true / false
+	// 				 */
+	// 				let scriptPromise = checkWatsonPromise(message);
+	// 				return scriptPromise
+	// 				.then((transcript) => {
+	// 					console.log('transcript',transcript);
+	// 					if (transcript == currentChallenge.targetText) {
+
+	// 						if (user.status == 'active_pair') fetchPartnerFromUserMission({
+	// 							id: user.id,
+	// 							currentMission: user.currentMission,
+	// 							currentChallenge: user.currentChallenge
+	// 						}, success.applyToPartner)
+	// 						return success.applyToUser;
+	// 					}
+	// 					else {
+	// 						let newMessage = "Not quite what we were looking for, but the Agency will manage. " + success.applyToUser.message
+	// 						success.applyToUser.message = newMessage;
+							
+
+	// 						if (user.status == 'active_pair') fetchPartnerFromUserMission({
+	// 							id: user.id,
+	// 							currentMission: user.currentMission,
+	// 							currentChallenge: user.currentChallenge
+	// 						}, success.applyToPartner)
+	// 						return success.applyToUser;
+	// 					}
+	// 				})
+	// 				// if(true) return success;
+	// 				// else return fail;
+	// 			default:
+					
+	// 				if (user.status == 'active_pair') fetchPartnerFromUserMission({
+	// 					id: user.id,
+	// 					currentMission: user.currentMission,
+	// 					currentChallenge: user.currentChallenge
+	// 				}, success.applyToPartner)
+	// 				return success.applyToUser;
+	// 		}
+	// 	})
+	// },
 	QUERY_HIATUS: () =>{return ""},
 
 	QUERY_TUTORIAL: (user, userInput) => {
@@ -421,6 +625,10 @@ const checkTags = (expectedTags, actualTags) => {
 }
 
 /* 
+ * user:
+ * 		// user who your are searching for
+ * 		// assumes user is up-to-date, so will sometimes need to tweak
+ *		// important properties: {id, currentMission, currentChallenge}
  * allTheStates:
  * 		{
  *			user: {} // update state of  partner's user model
@@ -436,7 +644,6 @@ const fetchPartnerFromUserMission = (user, allTheStates) => {
 		}
 	})
 	.then(foundUserMission => {
-		// console.log(foundUserMission)
 		return User.findById(foundUserMission.partnerId)
 	})
 	.then(partner => {
@@ -467,7 +674,7 @@ const fetchPartnerFromUserMission = (user, allTheStates) => {
 				}
 			})
 			.then(foundPartnerChallenge => {
-				foundPartnerChallenge.update(allTheStates.userChallenge)
+				foundPartnerChallenge[0].update(allTheStates.userChallenge)
 			})
 			allUpdates.push(temp);
 		}

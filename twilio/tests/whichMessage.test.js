@@ -119,12 +119,12 @@ describe('Game Logic', () => {
 
 	describe('state: CHALLENGE_ANSWER',() => {
 		describe('preceding message: [<Challenge text> Send back a photo, Send back a text, make a voice call]', () => {
-			let textChallenge, imageChallenge, voiceChallenge, nightwishMission;
+			let textChallenge, imageChallenge, voiceChallenge, nightwishMission, nightwishUser;
 
 			before('create challenges', () => {
 				let zeroth = Mission.create({
 					title: 'Shudder Before the Beautiful',
-					description: 'Floor Jansen',
+					description: 'Endless Forms Most Beautiful',
 					place: 'Nightwish',
 					numChallenges: 2
 				})
@@ -139,7 +139,7 @@ describe('Game Logic', () => {
 				})
 
 				let second = Challenge.create({
-					object: 'This pilgrim shining bright',
+					objective: 'This pilgrim shining bright',
 					summary: 'We are shuddering',
 					targetTags: ['gha_logo'],
 					category: 'image',
@@ -149,7 +149,7 @@ describe('Game Logic', () => {
 				})
 
 				let third = Challenge.create({
-					object: 'Before the plentiful',
+					objective: 'Before the plentiful',
 					summary: 'We the voyagers',
 					targetText: 'hello',
 					category: 'voice',
@@ -157,22 +157,51 @@ describe('Game Logic', () => {
 					order: 3,
 					hasNext: false
 				})
-								return Promise.all([zeroth, first, second, third])
+
+
+				return Promise.all([zeroth, first, second, third])
 				.then((promiseAnswers) => {
 					nightwishMission = promiseAnswers[0];
 					textChallenge = promiseAnswers[1];
 					imageChallenge = promiseAnswers[2];
 					voiceChallenge = promiseAnswers[3];
 					// console.log(promiseAnswers)
-				})
 
+					return User.create({
+						username: 'Floor Jansen',
+						currentMission: nightwishMission.id,
+						currentChallenge: 0,
+						status: 'standby',
+						messageState: 'CHALLENGE_ANSWER'
+					})
+				})
+				.then(newUser => {
+					nightwishUser = newUser;
+					return UserMission.create({
+						userId: nightwishUser.id,
+						missionId: nightwishMission.id,
+					})
+				})
 				// return Promise.resolve(createAll)
 			})
 
-			xdescribe('text input: (PROBLEM: cannot read property toLowerCase of undefined)', () => {
+			describe('text input: (PROBLEM: cannot read property toLowerCase of undefined)', () => {
+
+				before('set user\'s currentChallenge to textChallenge', () => {
+					return User.findById(nightwishUser.id)
+					.then(foundUser => {
+						return foundUser.update({currentChallenge: textChallenge.id})
+					})
+					.then(updatedUser => {
+						nightwishUser = updatedUser;
+					})
+				})
+
 				it('should return conclusion if text is correct', () => {
-					let message = {body: 'Deafens me with endless love'}
-					return whichMessage.CHALLENGE_ANSWER(textChallenge.id, message)
+					let message = {Body: 'Deafens me with endless love'}
+
+
+					return whichMessage.CHALLENGE_ANSWER(nightwishUser, message)
 					.then(result => {
 						let resultConclusion = result.message.slice(0,25);
 						// console.log(resultConclusion);
@@ -181,12 +210,12 @@ describe('Game Logic', () => {
 				})
 
 				it('should return error message if text is incorrect', () => {
-					let message = {body: 'Nemo my name forevermore'}
-					return whichMessage.CHALLENGE_ANSWER(textChallenge.id, message)
+					let message = {Body: 'Nemo my name forevermore'}
+					return whichMessage.CHALLENGE_ANSWER(nightwishUser, message)
 					.then(result => {
 						let resultConclusion = result.message.slice();
 						// console.log(resultConclusion);
-						expect(resultConclusion).to.be.equal("Your answer doesn't quite match ....")
+						expect(resultConclusion).to.be.equal("Your answer doesn't quite match The Agency's records.  Please try again.")
 					})
 				})
 			})
@@ -216,7 +245,7 @@ describe('Game Logic', () => {
 					.then(result => {
 						let resultConclusion = result.message.slice();
 						// console.log(resultConclusion);
-						expect(resultConclusion).to.be.equal("Your answer doesn't quite match ....")
+						expect(resultConclusion).to.be.equal("Your answer doesn't quite match The Agency's records.  Please try again.")
 					})
 				})
 			})
@@ -344,15 +373,6 @@ describe('Game Logic', () => {
 					elanUser = promiseList[0];
 					elanPartner = promiseList[1];
 
-					// return UserMission.bulkCreate({
-					// 	userId: elanUser.id,
-					// 	missionId: elanMission.id,
-					// 	partnerId: elanPartner.id
-					// }, {
-					// 	userId: elanPartner.id,
-					// 	missionId: elanMission.id,
-					// 	partnerId: elanUser.id
-					// })
 					const newUserMission = UserMission.create({
 						userId: elanUser.id,
 						missionId: elanMission.id,
@@ -372,6 +392,10 @@ describe('Game Logic', () => {
 				let findUser = User.findById(elanUser.id);
 				let findPartner = User.findById(elanPartner.id);
 				return Promise.all([findUser, findPartner])
+				.then(promiseList => {
+					elanUser = promiseList[0];
+					elanPartner = promiseList[1];
+				})
 			})
 
 			it('should find and update partner based on user', () => {
@@ -384,54 +408,62 @@ describe('Game Logic', () => {
 					}
 				}
 
-				fetchPartnerFromUserMission(elanUser, allTheStates)
+				return fetchPartnerFromUserMission(elanUser, allTheStates)
 				.then(() => {
 					return User.findById(elanPartner.id)
 				})
 				.then(partner => {
 					expect(partner.currentMission).to.be.equal(0)
+					console.log('partner',partner)
+					console.log('elanPartner', elanPartner)
 				})
 			})
 
-			it('should find and update partner\'s UserMission model', () => {
+			it('should find and update partner\'s UserMission model (fifty-fifty chance of failing - something to do with promises???)', () => {
 				
 				let allTheStates = {
 					userMission: {status: 'complete'}
 				}
 
-				UserMission.findOne({
+				return UserMission.findOne({
 					where: {
 						userId: elanPartner.id,
 						missionId: elanMission.id
 					}
 				})
 				.then(foundPartnerMission => {
+					// console.log(foundPartnerMission)
 					expect(foundPartnerMission.status).to.be.equal('incomplete')
-					return fetchPartnerFromUserMission(elanUser, allTheStates)
+					let temp = fetchPartnerFromUserMission(elanUser, allTheStates)
+					// console.log(temp)
+					return Promise.resolve(temp)
 				})
-				.then(() => {
+				.then(returned => {
+					// console.log(returned);
 					return UserMission.findOne({
 						where: {
 							userId:elanPartner.id,
 							missionId: elanMission.id
 						}
 					})
+					.then(foundPartnerMission => {
+						console.log(foundPartnerMission.status)
+						expect(foundPartnerMission.status).to.be.equal('complete')
+					})
 				})
-				.then(foundPartnerMission => {
-					expect(foundPartnerMission.status).to.be.equal('complete')
-				})
+
 			})
 
 			it('should create partner\'s UserChallenge model', () => {
 
 				let allTheStates = {
-					userChallenge: {status: 'incomplete'}
+					userChallenge: {}
 				}
 
-				UserChallenge.findOne({
+				return UserChallenge.findOne({
 					where: {
 						userId: elanPartner.id,
-						missionId: elanMission.id
+						challengeId: elanChallenge.id
 					}
 				})
 				.then(foundPartnerChallenge => {
@@ -443,11 +475,12 @@ describe('Game Logic', () => {
 					return UserChallenge.findOne({
 						where: {
 							userId: elanPartner.id,
-							missionId: elanMission.id
+							challengeId: elanChallenge.id
 						}
 					})
 				})
 				.then(foundPartnerChallenge => {
+					// console.log(foundPartnerChallenge)
 					expect(foundPartnerChallenge.status).to.be.equal('incomplete');
 				})
 			})
@@ -540,4 +573,18 @@ describe('Game Logic', () => {
 
 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/REe4ae4c77a5aa2c7d866a6494ff8a3318',
 // welcome to the agents
+
+// gha logo
+{
+	MediaUrl0: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Messages/MM28717150f4aa31afbfceb4d7e15af8e0/Media/MEf55921bbfc74d012ca5ecc11a472493d',
+	MediaContentType0: 'image/jpeg', // gha logo
+}
+'{"MediaUrl0": "https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Messages/MM28717150f4aa31afbfceb4d7e15af8e0/Media/MEf55921bbfc74d012ca5ecc11a472493d","MediaContentType0": "image/jpeg"}'
+
+// bowl
+{
+	MediaUrl0: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Messages/MM26aa8d1a6ee78d96e0579ee0d2b797df/Media/ME97234e6fe389ca73761e882278b4aeb3',
+	MediaContentType0: 'image/jpeg', 
+}
+'{"MediaUrl0": "https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Messages/MM26aa8d1a6ee78d96e0579ee0d2b797df/Media/ME97234e6fe389ca73761e882278b4aeb3", "MediaContentType0": "image/jpeg"}'
 */

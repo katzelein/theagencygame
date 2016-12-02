@@ -8,13 +8,13 @@ describe('checkWatsonPromise (mostly successful - don\'t overuse watson)', () =>
 		console.log(checkWatsonPromise)
 	})
 
-	xit('should return a promise', () => {
+	it('should return a promise', () => {
 		let message = {RecordingUrl: "https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE75eed5e89a494ce14683e246b38a3928"}
 		let answer = checkWatsonPromise(message);
 		expect(answer.constructor.name).to.be.equal('Promise')
 	})
 
-	xit('should work even wrapped in another function', () => {
+	it('should work even wrapped in another function', () => {
 		let wrapper = function(body) {
 			let answer = checkWatsonPromise(message);
 			return answer;
@@ -32,7 +32,7 @@ describe('checkWatsonPromise (mostly successful - don\'t overuse watson)', () =>
 		})
 	})
 
-	xit('should work even wrapped in another function', () => {
+	it('should work even wrapped in another function', () => {
 		let wrapperobject = {
 			wrapper: function(body) {
 				let answer = checkWatsonPromise(message);
