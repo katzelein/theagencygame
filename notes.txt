@@ -65,5 +65,7 @@ add link back to dashboard from admin page
 fix sessions
 missionChooser
 
+- if getlocation calls function but doesn't find address, return "text in address directly"
+
 
 
