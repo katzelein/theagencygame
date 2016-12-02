@@ -6,7 +6,7 @@ if (process.env.IS_HEROKU === 'true'){
   console.log('!!!!process.env.IS_HEROKU is', process.env.IS_HEROKU)
 } else {
   console.log('*****process.env.IS_HEROKU is', process.env.IS_HEROKU)
-  localConst = require('./constants')
+  //localConst = require('./constants')
 }
 
 //Twilio constants
