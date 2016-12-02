@@ -1,5 +1,6 @@
 var request = require('request');
 var VERSION = "0.1";
+var constants = require('./variables');
 
 
 module.exports = function (apiKey, apiUrl) {
