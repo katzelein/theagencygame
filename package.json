@@ -63,9 +63,10 @@
     "webpack": "^1.13.2",
     "style-loader": "^0.13.1",
     "css-loader": "^0.26.0"
-
   },
   "devDependencies": {
+    "eslint": "^3.11.1",
+    "eslint-plugin-react": "^6.7.1",
     "istanbul": "^0.4.5",
     "npm": "^4.0.2"
   }

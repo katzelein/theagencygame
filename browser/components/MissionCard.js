@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 // import { Form } from 'formsy-react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import {RaisedButton, FlatButton, IconButton} from 'material-ui';
 import MyInput from './Input';
 import MissionForm from './MissionForm';
@@ -14,102 +14,101 @@ import ActionDelete from 'material-ui/svg-icons/action/delete';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 import ActionDone from 'material-ui/svg-icons/action/done';
-import { Popconfirm, message } from 'antd';
 import Dialog from 'material-ui/Dialog';
 
 export default class MissionCard extends Component{
-  constructor(props){
-    super(props)
-    this.state = {addChallenge: false, addOrSave: "ADD CHALLENGE", isEditing: false, mission: this.props.mission, open: false}
-    this.mission = Object.assign({}, this.state.mission)
-    this.toggleAdd = this.toggleAdd.bind(this);
-    this.deleteMission = this.deleteMission.bind(this);
-    this.editMission = this.editMission.bind(this);
-    this.updateMissionState = this.updateMissionState.bind(this);
-    this.saveMission = this.saveMission.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleOpen = this.handleOpen.bind(this);
-  }
+	constructor(props){
+		super(props);
+		this.state = {addChallenge: false, addOrSave: 'ADD CHALLENGE', isEditing: false, mission: this.props.mission, open: false};
+		this.mission = Object.assign({}, this.state.mission);
+		this.toggleAdd = this.toggleAdd.bind(this);
+		this.deleteMission = this.deleteMission.bind(this);
+		this.editMission = this.editMission.bind(this);
+		this.updateMissionState = this.updateMissionState.bind(this);
+		this.saveMission = this.saveMission.bind(this);
+		this.handleClose = this.handleClose.bind(this);
+		this.handleOpen = this.handleOpen.bind(this);
+	}
 
-  toggleAdd(){
-    let bool = !this.state.addChallenge
-    let buttonText = bool ? "SAVE CHALLENGE" : "ADD CHALLENGE"
-    console.log("BUTTON TEXT: ", buttonText)
-    this.setState({addChallenge: bool, addOrSave: buttonText})
-  }
+	toggleAdd(){
+		let bool = !this.state.addChallenge;
+		let buttonText = bool ? 'SAVE CHALLENGE' : 'ADD CHALLENGE';
+		console.log('BUTTON TEXT: ', buttonText);
+		this.setState({addChallenge: bool, addOrSave: buttonText});
+	}
 
-  updateMissionState(e){
-    console.log("MISSION BODY: ", this.state.mission)
-    console.log("EVENT: ", e)
-    console.log("EVENT TARGET: ", e.target)
-    console.log("THIS.MISSION: ", this.mission)
+	updateMissionState(e){
+		console.log('MISSION BODY: ', this.state.mission);
+		console.log('EVENT: ', e);
+		console.log('EVENT TARGET: ', e.target);
+		console.log('THIS.MISSION: ', this.mission);
 
-      let val = e.target.value
-      console.log("VAL: ", val)
-      if(e.target.name === 'location'){
-        let coordinates = val.split(",")
-        val = {type: "Point", coordinates}
-      }
-      console.log("THIS>MISSION: ", this.mission)
-      this.mission[e.target.name] = val
-      console.log("THIS.MISSION AFTER UPDATE: ", this.mission)
-      this.setState({mission: this.mission})
+		let val = e.target.value;
+		console.log('VAL: ', val);
+		if(e.target.name === 'location'){
+			let coordinates = val.split(',');
+			val = {type: 'Point', coordinates};
+		}
+		console.log('THIS>MISSION: ', this.mission);
+		this.mission[e.target.name] = val;
+		console.log('THIS.MISSION AFTER UPDATE: ', this.mission);
+		this.setState({mission: this.mission});
 
-  }
+	}
 
-  saveMission(){
-    console.log("STATE BEFORE SAVE: ", this.state)
-    let missionId = this.state.mission.id
-    console.log("IN SAVE: ")
-    console.log("MISSION ID: ", missionId, " type ", typeof missionId)
-    axios.put(`/api/mission/${missionId}/update`, this.state.mission)
+	saveMission(){
+		console.log('STATE BEFORE SAVE: ', this.state);
+		let missionId = this.state.mission.id;
+		console.log('IN SAVE: ');
+		console.log('MISSION ID: ', missionId, ' type ', typeof missionId);
+		axios.put(`/api/mission/${missionId}/update`, this.state.mission)
     .then(() => {
-      this.props.findMissions()
-      let bool = !this.state.isEditing
-      this.setState({isEditing: bool})
-    })
-  }
+	this.props.findMissions();
+	let bool = !this.state.isEditing;
+	this.setState({isEditing: bool});
+});
+	}
 
-  deleteMission(id){
-    axios.delete(`/api/mission/${id}`)
+	deleteMission(id){
+		axios.delete(`/api/mission/${id}`)
     .then(() => {
-      this.props.findMissions()
-    })
-  }
+	this.props.findMissions();
+});
+	}
 
-  editMission(){
-    let bool = !this.state.isEditing
-    this.setState({isEditing: bool})
-  }
+	editMission(){
+		let bool = !this.state.isEditing;
+		this.setState({isEditing: bool});
+	}
 
-  handleOpen(){
-    console.log("handleOpen")
-    this.setState({open: true});
-  };
+	handleOpen(){
+		console.log('handleOpen');
+		this.setState({open: true});
+	}
 
-  handleClose(){
-    console.log("handleClose")
-    this.setState({open: false});
-  };
+	handleClose(){
+		console.log('handleClose');
+		this.setState({open: false});
+	}
 
-  render () {
-    const actions = [
-      <FlatButton
+	render () {
+		const actions = [
+			<FlatButton
         label="Cancel"
         primary={true}
         onClick={this.handleClose}
       />,
-      <FlatButton
+			<FlatButton
         label="Delete"
         primary={true}
         onClick={() => {
-          this.handleClose
-          this.deleteMission(this.props.mission.id)
-        }}
+	this.handleClose;
+	this.deleteMission(this.props.mission.id);
+}}
       />,
-    ];
-    if(this.state.isEditing){
-      return(
+		];
+		if(this.state.isEditing){
+			return(
         <Card id={`mission-${this.props.mission.id}`} style={{padding: '10px', margin: '10px'}}>
           <CardText expandable={true}>
             <EditMissionForm mission={this.state.mission} onChange={this.updateMissionState}
@@ -117,11 +116,11 @@ export default class MissionCard extends Component{
           </CardText>
           <div> Challenges </div>
                   {this.props.mission.challenges.map((challenge, i) => {
-                    return(
+	return(
                     <ChallengeCard key={challenge.id} challenge={challenge} mission={this.props.mission} refreshCards={this.props.findMissions}
                     missionSpecific={true}/>
-                    )
-                  })}
+	);
+})}
           <CardActions id="actions" expandable={true}>
             <div className="mui-button" style={{position: 'absolute', height: '100%', 'marginRight': '0px'}}>
               <IconButton className="inside-mui-button" tooltip="Save"
@@ -137,25 +136,25 @@ export default class MissionCard extends Component{
             </div>
           </CardActions>
         </Card>
-      )
-    }
-    else{
-      return(
+			);
+		}
+		else{
+			return(
   
               <Card id={`mission-${this.props.mission.id}`} style={{padding: '10px', margin: '10px'}}>
                 <CardHeader actAsExpander={true} 
                   showExpandableButton={true} title={this.props.mission.title}
-                  titleStyle={{fontWeight: "bold"}}>
+                  titleStyle={{fontWeight: 'bold'}}>
                   <div className="card-header"> {this.props.mission.description} </div>
                 </CardHeader>
                 <CardText expandable={true}>
                   <div> Challenges </div>
                   {this.props.mission.challenges.map((challenge, i) => {
-                    return(
+	return(
                     <ChallengeCard key={challenge.id} challenge={challenge} mission={this.props.mission} refreshCards={this.props.findMissions}
                     missionSpecific={true}/>
-                    )
-                  })}
+	);
+})}
                   {this.state.addChallenge ? <ChallengeForm missionSpecific={true} refreshCards={this.props.findMissions} mission={this.props.mission} toggleAdd={this.toggleAdd}/> : null}
     
             {this.state.addChallenge ? 
@@ -190,9 +189,9 @@ export default class MissionCard extends Component{
                 </CardActions>
             </Card>
         
-    )
-  }
-}}
+			);
+		}
+	}}
 
 
 

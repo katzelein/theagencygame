@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { Form } from 'formsy-react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import {RaisedButton, FlatButton, IconButton} from 'material-ui';
 import EditChallengeForm from './EditChallengeForm';
 import axios from 'axios';
@@ -12,10 +12,18 @@ import ContentClear from 'material-ui/svg-icons/content/clear';
 import ActionDone from 'material-ui/svg-icons/action/done';
 
 export default class ChallengeCard extends Component{
-  constructor(props){
-    super(props)
-    this.state = { refresh: true, isEditing: false, challenge: this.props.challenge, prevMission: this.props.challenge.missionId}
-    this.challenge = Object.assign({}, this.state.challenge)
+  
+  constructor (props) {
+    super(props);
+
+    this.state = { 
+      refresh: true, 
+      isEditing: false, 
+      challenge: this.props.challenge, 
+      prevMission: this.props.challenge.missionId
+    }
+
+    this.challenge = Object.assign({}, this.state.challenge);
     this.deleteChallenge = this.deleteChallenge.bind(this);
     this.editChallenge = this.editChallenge.bind(this);
     this.updateChallengeState = this.updateChallengeState.bind(this);
@@ -26,64 +34,56 @@ export default class ChallengeCard extends Component{
 
 
   deleteChallenge(id){
-    let bool = !this.state.refresh
+
     // delete challenge from a mission, not from the database
-    if(this.props.deleteFromMission){
-      let missionId = this.props.mission.id
+    let bool = !this.state.refresh;
+    if (this.props.deleteFromMission) {
+      let missionId = this.props.mission.id;
       axios.delete(`/api/challenge/${id}/mission/${missionId}`)
       .then(() => {
-        // console.log("PROPS: ", this.props)
-        this.props.refreshCards()
-        this.setState({refresh: bool})
-        // console.log("REFRESH: ", this.state.refresh)
+        this.props.refreshCards();
+        this.setState({refresh: bool});
       })
     }
+
     // delete challenge from database
-    else{
+    else {
       axios.delete(`/api/challenge/${id}`)
       .then(() => {
-        // console.log("PROPS: ", this.props)
-        this.props.refreshCards()
-        this.setState({refresh: bool})
-      //   console.log("REFRESH: ", this.state.refresh)
+        this.props.refreshCards();
+        this.setState({ refresh: bool });
       })
     }
   }
 
-  editChallenge(){
-    let bool = !this.state.isEditing
-    this.setState({isEditing: bool})
+  editChallenge () {
+    let bool = !this.state.isEditing;
+    this.setState({ isEditing: bool });
   }
 
   updateChallengeState(e){
-    console.log("CHALLENGE BODY: ", this.state.challenge)
-    console.log("EVENT: ", e)
-    console.log("EVENT TARGET: ", e.target)
-    console.log("THIS.CHALLENGE: ", this.challenge)
 
-    if(e.target.name === 'mission'){
-      // console.log("MISSION TARGET")
-      // console.log("MISSION VALUE: ", e.target.value)
-      let val = e.target.value === 'null' ? null : parseInt(e.target.value)
-      this.challenge.missionId = val
+
+    if (e.target.name === 'mission') {
+      let val = e.target.value === 'null' ? null : parseInt(e.target.value);
+      this.challenge.missionId = val;
       this.setState({
         challenge: this.challenge
-      })
+      });
     }
-    else{
-      let val = e.target.value
-      if(e.target.name === 'targetTags'){
+
+    else {
+      let val = e.target.value;
+      if (e.target.name === 'targetTags') {
         val = val.split(",")
       }
-      this.challenge[e.target.name] = val
-      // console.log("CHANGED CHALLENGE: ", this.challenge)
-      this.setState({challenge: this.challenge})
+      this.challenge[e.target.name] = val;
+      this.setState({challenge: this.challenge});
       }
     }
   
 
-  saveChallenge(){
-    console.log("STATE BEFORE SAVE: ", this.state)
+  saveChallenge () {
     let missionId = this.state.challenge.missionId
     let prevMission = this.state.prevMission
     let challengeId = this.state.challenge.id
@@ -128,7 +128,7 @@ export default class ChallengeCard extends Component{
     if(this.state.isEditing){
       return(
 
-        <Card style={{padding: '10px', margin: '10px', 'background-color': 'white', color: 'black'}}>
+        <Card style={{padding: '10px', margin: '10px', 'backgroundColor': 'white', color: 'black'}}>
       <CardText style={{color: 'black'}} expandable={true}>
         <EditChallengeForm onChange={this.updateChallengeState} challenge={this.state.challenge} editChallenge={this.props.editChallenge} 
         missionSpecific={this.props.missionSpecific} missions={this.props.missions}/>
@@ -152,7 +152,7 @@ export default class ChallengeCard extends Component{
     }
     else{
     return (
-  <Card style={{padding: '10px', margin: '10px', 'background-color': 'white', color: 'black'}}>
+  <Card style={{padding: '10px', margin: '10px', 'backgroundColor': 'white', color: 'black'}}>
       <CardHeader className="white-challenge-card" actAsExpander={true} 
                   showExpandableButton={true} title={this.props.challenge.objective}
                   titleStyle={{fontWeight: "bold", color: 'black'}} style={{color: 'black'}}>

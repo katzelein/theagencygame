@@ -7,10 +7,6 @@ import Fingerprint from 'material-ui/svg-icons/action/fingerprint'
 
 export default class App extends Component {
 
-  componentDidMount () {
-   
-  }
-
   render () {
     return (
       <Grid>

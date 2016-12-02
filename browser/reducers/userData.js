@@ -32,6 +32,3 @@ export const userData = (userData = [], action) => {
     default: return userData;
   }
 }
-
-//
-
