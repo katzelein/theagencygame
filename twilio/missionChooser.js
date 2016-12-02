@@ -51,6 +51,7 @@ const missionChooser = (user, coordinates) => {
 		let missionIds = missions.map(function(i){
 			return i.id
 		})
+		if(!missionIds.length) missionIds.push(0)
 		console.log("MISSION IDS: ", missionIds)
 		return Mission.findAll({
 			where: sequelize.and(
@@ -58,7 +59,7 @@ const missionChooser = (user, coordinates) => {
                     'ST_DWithin',
                     sequelize.col('missions.location'), sequelize.fn('ST_GeographyFromText', `SRID=4326;${coordString}`), 2000), true
             ),
-            {id: 3}
+            {id: {$notIn: missionIds}}
             )
 		})
 		//.then(res => console.log("RES: ", res))
