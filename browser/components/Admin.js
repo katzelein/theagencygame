@@ -28,6 +28,13 @@ const styles = {
   chip: {
     margin: 'auto',
   },
+  avatar: {
+    marginBottom: 40,
+    cursor: 'pointer'
+  },
+  tabs: {
+    maxHeight: 800
+  }
 };
 
 export default class Admin extends Component {
@@ -59,27 +66,31 @@ export default class Admin extends Component {
             <Row center="xs">
               {this.props.user && this.props.user.isAdmin ? (
                 <div>
-                <h3>Admin Page</h3>
-                <Paper style={styles.paper} zDepth={5}>
-                <div className="adminContainer">
-                  <Tabs
-                    style={{maxHeight: 800}}
-                    value={this.state.value}
-                    onChange={e => this.handleChange(e)}>
-                    <Tab 
-                      label="View/Edit Mission" 
-                      value="missions" >
-                      <EditMissionsContainer/> 
-                    </Tab>
-                    <Tab 
-                      label="View/Edit Challenges" 
-                      value="order">
-                      <EditChallengesContainer/> 
-                    </Tab>
-                  </Tabs>
-                </div>
-                </Paper>
-                {/*<button style={{backgroundColor:'transparent', border: 'none'}}>*/} <Avatar style={{'margin-bottom': '40px', cursor: 'pointer'}} onClick={() => {browserHistory.push('/dashboard')}} color="#444" icon={<SvgIconDashboard hoverColor={amberA700}/>} />
+                  <h3>Admin Page</h3>
+                  <Paper style={styles.paper} zDepth={5}>
+                    <div className="adminContainer">
+                      <Tabs
+                        style={styles.tabs}
+                        value={this.state.value}
+                        onChange={e => this.handleChange(e)}>
+                        <Tab 
+                          label="View/Edit Mission" 
+                          value="missions" >
+                          <EditMissionsContainer/> 
+                        </Tab>
+                        <Tab 
+                          label="View/Edit Challenges" 
+                          value="order">
+                          <EditChallengesContainer/> 
+                        </Tab>
+                      </Tabs>
+                    </div>
+                  </Paper>
+                  <Avatar 
+                    style={styles.avatar} 
+                    onClick={() => {browserHistory.push('/dashboard')}} 
+                    color="#444" 
+                    icon={<SvgIconDashboard hoverColor={amberA700}/>} />
                 </div>
               ) : ( 
                 <div className="adminContainer">Access Denied. <Link to="/">Try again.</Link></div>

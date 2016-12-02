@@ -5,6 +5,13 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import RaisedButton from 'material-ui/RaisedButton';
 import Fingerprint from 'material-ui/svg-icons/action/fingerprint'
 
+const styles = {
+  raisedButton: {
+    float: 'center'
+  },
+};
+
+
 export default class App extends Component {
 
   render() {
@@ -19,7 +26,7 @@ export default class App extends Component {
             <Row center="xs">
               <RaisedButton 
                 type="submit"
-                style={{float: 'center'}}
+                style={styles.raisedButton}
                 icon={<Fingerprint />}
                 label="Request Verification" 
                 secondary={true}

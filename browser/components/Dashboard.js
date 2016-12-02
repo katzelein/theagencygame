@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
 
-import Avatar from 'material-ui/Avatar'
+import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -16,7 +16,7 @@ import SvgIconWork from 'material-ui/svg-icons/action/work';
 import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn }
 from 'material-ui/Table';
 
-import MissionDataBox from './MissionDataBox'
+import MissionDataBox from './MissionDataBox';
 
 
 const styles = {
@@ -135,7 +135,6 @@ export default class Dashboard extends Component {
                                     <TableRowColumn colSpan={2} >{row.mission.place}</TableRowColumn>
                                     <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
                                     <TableRowColumn colSpan={2} >
-
                                       <RaisedButton 
                                         label="Challenges"
                                         primary={true} 
@@ -159,7 +158,6 @@ export default class Dashboard extends Component {
 
                             </TableBody>
                           </Table>
-
                           <div >
                             <RaisedButton 
                               secondary={true} 
