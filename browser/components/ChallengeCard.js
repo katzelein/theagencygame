@@ -34,10 +34,6 @@ const styles = {
   cardHeader: {
     color: 'black'
   },
-  cardHeaderTitle: {
-    fontWeight: 'bold', 
-    color: 'black'
-  },
   muiButton: {
     position: 'absolute', 
     height: '100%', 
@@ -195,7 +191,7 @@ export default class ChallengeCard extends Component {
             actAsExpander={true} 
             showExpandableButton={true} 
             title={this.props.challenge.objective}
-            titleStyle={styles.cardHeaderTitle} 
+            titleStyle={{fontWeight: "bold", color: 'black'}} 
             style={styles.cardHeader} >
           </CardHeader>
           <CardText style={styles.cardText} expandable={true}>

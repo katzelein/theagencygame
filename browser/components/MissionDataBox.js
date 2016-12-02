@@ -12,6 +12,8 @@ import Toggle from 'material-ui/Toggle';
 import { grey800, amberA700, grey400, amberA400, grey600, amberA100, fullWhite } from 'material-ui/styles/colors'
 import SvgIconBlur from 'material-ui/svg-icons/image/blur-circular';
 
+
+
 export default class MissionDataBox extends Component {
 
   constructor(props) {

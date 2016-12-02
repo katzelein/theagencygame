@@ -13,6 +13,9 @@ import ActionDelete from 'material-ui/svg-icons/action/delete';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 
 const styles = {
+  jumbotron: {
+    paddingBottom: 15
+  },
   challengeCard: {
     padding: 10, 
     margin: 10
@@ -52,7 +55,7 @@ export default class EditChallenges extends Component {
 
   render() {
     return (
-      <div className="container jumbotron" style={{'padding-bottom': '15px'}}>
+      <div className="container jumbotron" style={styles.jumbotron}>
         <div className="row centered-form">
           <div>
       

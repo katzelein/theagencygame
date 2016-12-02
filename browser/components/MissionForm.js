@@ -9,11 +9,37 @@ import axios from 'axios';
 import bluebird from 'bluebird';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
+const styles = {
+  card: {
+    padding: 10, 
+    margin: 10
+  },
+  cardHeader: {
+    position: 'relative', 
+    padding: '10px 16px 10px 16px', 
+    height: 50
+  },
+  iconButton: {
+    padding: '2px 10px 0px 0px', 
+    height: 21.25, 
+    width: 28, 
+    position: 'absolute', 
+    top: 0, 
+    right: 0
+  }
+}
+
 export default class MissionForm extends Component {
+  
   constructor(props) {
     super(props)
-    this.state = { fields: [], canSubmit: false, add: false, addOrSave: "ADD MISSION" }
-      //this.handleClick = this.handleClick.bind(this);
+    this.state = { 
+      fields: [], 
+      canSubmit: false, 
+      add: false, 
+      addOrSave: "ADD MISSION" 
+    }
+
     this.submitAlert = this.submitAlert.bind(this)
     this.closeForm = this.closeForm.bind(this)
   }
@@ -38,29 +64,56 @@ export default class MissionForm extends Component {
 
   render() {
     return (
-      <Card id="new-mission-form" style={{padding: '10px', margin: '10px'}}>
-        <CardHeader style={{position: 'relative', padding: '10px 16px 10px 16px', height: '50px'}} title="NEW MISSION"
-            titleStyle={{fontWeight: "bold", 'verticalAlign': 'center'}}>
-           {/* <div className="mui-button" style={{'padding-right': '0px', top: '0px', height: '21.25px', position: 'absolute'}}>*/}
-            <IconButton className="inside-mui-button" tooltip="Cancel"
-                    tooltipPosition="top-center" onClick={this.closeForm}
-                    style={{padding: '2px 10px 0px 0px', height: '21.25px', width: '28px', position: 'absolute', top: '0px', right: '0px'}}>
-          <ContentClear/>
-        </IconButton>
+      <Card 
+        id="new-mission-form" 
+        style={styles.card} >
+        <CardHeader 
+          style={styles.cardHeader} 
+          title="NEW MISSION"
+          titleStyle={{fontWeight: "bold", 'verticalAlign': 'center'}} >
+          <IconButton 
+            className="inside-mui-button" 
+            tooltip="Cancel"
+            tooltipPosition="top-center" 
+            onClick={this.closeForm}
+            style={styles.iconButton}>
+            <ContentClear/>
+          </IconButton>
         </CardHeader>
         <CardText>
-          <form id="mission-form" onSubmit={this.submitAlert} autoComplete="off"> 
-            <label>Title:</label><br/>
-            <input style={{color: 'black'}} type="text" name="title" /><br/>
+          <form 
+            id="mission-form" 
+            onSubmit={this.submitAlert} 
+            autoComplete="off"> 
+            <label>Title:</label>
+            <br/>
+            <input 
+              style={{color: 'black'}} 
+              type="text" 
+              name="title" />
+            <br/>
             <label>Description: </label><br/>
-            <textArea style={{color: 'black'}} type="text" name="description"/><br/>
-            <label>Place: </label><br/>
-            <input style={{color: 'black'}} type="text" name="place" /><br/>
+            <textArea 
+              style={{color: 'black'}} 
+              type="text" 
+              name="description"/>
+            <br/>
+            <label>Place: </label>
+            <br/>
+            <input 
+              style={{color: 'black'}} 
+              type="text" 
+              name="place" />
+            <br/>
             <label>Location: </label><br/>
-            <input style={{color: 'black'}} type="text" name="location" /><br/>
+            <input 
+              style={{color: 'black'}} 
+              type="text" 
+              name="location" />
+            <br/>
           </form>
         </CardText>
-        </Card>
+      </Card>
     )
   }
 }
