@@ -38,11 +38,11 @@ twilioAPI.post('/recording', function (req, res, next) {
   return answer
   .then(message => {
     console.log("answer message: ",message)
-    // return client.sendMessage({
-    //   to: req.body.From,
-    //   from: twilioNum,
-    //   body: message
-    // })
+    return client.sendMessage({
+      to: req.body.From,
+      from: twilioNum,
+      body: message
+    })
   })
   .then(() => {
     res.sendStatus(200);
@@ -51,4 +51,3 @@ twilioAPI.post('/recording', function (req, res, next) {
 })
 
 module.exports = {twilioAPI}; //,checkWatsonAPI
-
