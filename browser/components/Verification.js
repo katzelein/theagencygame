@@ -78,7 +78,7 @@ export class SendVerification extends Component {
               </Row>
 
               <Row center="xs">
-                <form role="form" onSubmit={this.startVerification}>
+                <form role="form" onSubmit={this.startVerification} autoComplete="off">
 
                   <Row>
                     <TextField
@@ -175,7 +175,7 @@ export class Verify extends Component {
             </Row>
 
             <Row center="xs">
-              <form role="form" onSubmit={this.verifyNumber}>
+              <form role="form" onSubmit={this.verifyNumber} autoComplete="off">
 
                 <Row>
                   <TextField

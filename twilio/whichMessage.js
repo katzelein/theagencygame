@@ -351,33 +351,27 @@ const whichMessage = {
 				})
 
 			} else {
-				if(user.status == 'active_pair') {
-					return fetchPartnerFromUserMission(
-						user,
-						{
-							user: {
-								messageState: 'STANDBY',
-								currentMission: 0,
-								currentChallenge: 0
-							},
-						}
-					)
-					.then(() => {
-						return {
-							state: {
+				let cleanState = {
 								messageState: 'STANDBY',
 								currentMission: 0,
 								currentChallenge: 0
 							}
+
+				if(user.status == 'active_pair') {
+					return fetchPartnerFromUserMission(
+						user,
+						{
+							user: cleanState
+						}
+					)
+					.then(() => {
+						return {
+							state: cleanState
 						}
 					})
 				}
 				return {
-					state: {
-						messageState: 'STANDBY',
-						currentMission: 0,
-						currentChallenge: 0
-					}
+					state: cleanState
 				}
 			}
 		})
