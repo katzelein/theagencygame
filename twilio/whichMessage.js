@@ -2,7 +2,7 @@ const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
 const getPhotoTags = require('./clarifai')
-const {adventureDetails, missionChooser, partnerChooser} = require('./missionChooser')
+const {missionChooser, partnerChooser} = require('./missionChooser')
 
 const {checkWatsonPromise} = require('./watson');
 
