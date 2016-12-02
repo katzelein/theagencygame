@@ -19,7 +19,8 @@ describe('Game Play', () => {
 				status: 'standby',
 				currentMission: 0,
 				currentChallenge: 0,
-				messageState: 'STANDBY',
+				messageState: 'QUERY_MISSION',
+				location: {type: 'Point', coordinates: [40.705691, -74.009342]}
 			})
 			.then(newUser => {
 				spiderUser = newUser;
@@ -48,24 +49,24 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user starts on STANDBY', () => {
+		xit('user starts on STANDBY', () => {
 			expect(spiderUser.messageState).to.be.equal('STANDBY');
 			expect(spiderUser.status).to.be.equal('standby');
 		})
 
-		it('user texts in \'new\' to start a mission | server asks for location', () => {
+		xit('user texts in \'new\' to start a mission | server asks for location', () => {
 			return fetchMessage(spiderUser, {Body: 'new'})
 			.then(message => {
 				expect(message).to.be.equal("Ah, Agent Chernaya Vdovda, good of you to call in! Before we assign you a new mission, please send in your location.")
 			})
 		})
 
-		it('user status on standby, messageState at SOLO_YN', () => {
+		xit('user status on standby, messageState at SOLO_YN', () => {
 			expect(spiderUser.messageState).to.be.equal('SOLO_YN');
 			expect(spiderUser.status).to.be.equal('standby')
 		})
 
-		it('user texts in location | server asks lone wolf or eager beaver', () => {
+		xit('user texts in location | server asks lone wolf or eager beaver', () => {
 			return fetchMessage(spiderUser, {Body: 'manhattan'})
 			.then(message => {
 				expect(message).to.be.equal("Thank you for sending in your location.  Would you prefer to partner up for your next mission, or go it alone? Respond with 'lone wolf' or 'eager beaver'.")
@@ -112,6 +113,16 @@ describe('Game Play', () => {
 				expect(foundUserMission).to.not.be.null;
 				expect(foundUserMission.status).to.be.equal('incomplete')
 				expect(foundUserMission.partnerId).to.be.null;
+				
+				return UserChallenge.findOne({
+					where: {
+						userId: spiderUser.id,
+						challengeId: challengeIds[0]
+					}
+				})
+			})
+			.then(foundUserChallenge => {
+				expect(foundUserChallenge).to.be.null
 			})
 		})
 
@@ -125,6 +136,19 @@ describe('Game Play', () => {
 		it('user messageState at CHALLENGE_ANSWER', () => {
 			expect(spiderUser.messageState).to.be.equal('CHALLENGE_ANSWER')
 			expect(spiderUser.status).to.be.equal('active_solo');
+			expect(spiderUser.currentMission).to.be.equal(missionId)
+			expect(spiderUser.currentChallenge).to.be.equal(challengeIds[0])
+
+			UserChallenge.findOne({
+				where: {
+					userId: spiderUser.id,
+					challengeId: challengeIds[0]
+				}
+			})
+			.then(foundUserChallenge => {
+				expect(foundUserChallenge).to.not.be.null
+				expect(foundUserChallenge.status).to.be.equal('incomplete')
+			})
 		})
 
 		it('user texts in a picture of the bowl | server asks to continue to next challenge', () => {
@@ -141,6 +165,19 @@ describe('Game Play', () => {
 		it('user messageState at FETCH_CHALLENGE', () => {
 			expect(spiderUser.messageState).to.be.equal('FETCH_CHALLENGE')
 			expect(spiderUser.status).to.be.equal('active_solo');
+			expect(spiderUser.currentMission).to.be.equal(missionId)
+			expect(spiderUser.currentChallenge).to.be.equal(challengeIds[0])
+
+			return UserChallenge.findOne({
+				where: {
+					userId: spiderUser.id,
+					challengeId: challengeIds[0]
+				}
+			})
+			.then(foundUserChallenge => {
+				expect(foundUserChallenge).to.not.be.null
+				expect(foundUserChallenge.status).to.be.equal('complete')
+			})
 		})
 
 		it('user texts in \'yes\' | server sends challenge description: Fire Extinguisher', () => {
@@ -153,6 +190,19 @@ describe('Game Play', () => {
 		it('user messageState at CHALLENGE_ANSWER', () => {
 			expect(spiderUser.messageState).to.be.equal('CHALLENGE_ANSWER')
 			expect(spiderUser.status).to.be.equal('active_solo');
+			expect(spiderUser.currentMission).to.be.equal(missionId)
+			expect(spiderUser.currentChallenge).to.be.equal(challengeIds[1])
+
+			return UserChallenge.findOne({
+				where: {
+					userId: spiderUser.id,
+					challengeId: challengeIds[1]
+				}
+			})
+			.then(foundUserChallenge => {
+				expect(foundUserChallenge).to.not.be.null
+				expect(foundUserChallenge.status).to.be.equal('incomplete')
+			})
 		})
 
 		it('user texts in \'133w\' | server asks to continue to next challenge', () => {
@@ -165,6 +215,19 @@ describe('Game Play', () => {
 		it('user messageState at FETCH_CHALLENGE', () => {
 			expect(spiderUser.messageState).to.be.equal('FETCH_CHALLENGE')
 			expect(spiderUser.status).to.be.equal('active_solo');
+			expect(spiderUser.currentMission).to.be.equal(missionId)
+			expect(spiderUser.currentChallenge).to.be.equal(challengeIds[1])
+
+			return UserChallenge.findOne({
+				where: {
+					userId: spiderUser.id,
+					challengeId: challengeIds[1]
+				}
+			})
+			.then(foundUserChallenge => {
+				expect(foundUserChallenge).to.not.be.null
+				expect(foundUserChallenge.status).to.be.equal('complete')
+			})
 		})
 
 		it('user texts in \'yes\' | server sends challenge description: Voice call', () => {
@@ -177,6 +240,19 @@ describe('Game Play', () => {
 		it('user messageState at CHALLENGE_ANSWER', () => {
 			expect(spiderUser.messageState).to.be.equal('CHALLENGE_ANSWER')
 			expect(spiderUser.status).to.be.equal('active_solo');
+			expect(spiderUser.currentMission).to.be.equal(missionId)
+			expect(spiderUser.currentChallenge).to.be.equal(challengeIds[2])
+
+			return UserChallenge.findOne({
+				where: {
+					userId: spiderUser.id,
+					challengeId: challengeIds[2]
+				}
+			})
+			.then(foundUserChallenge => {
+				expect(foundUserChallenge).to.not.be.null
+				expect(foundUserChallenge.status).to.be.equal('incomplete')
+			})
 		})
 
 		it('user calls in | servers sends a text message to continue', () => {
@@ -192,6 +268,19 @@ describe('Game Play', () => {
 		it('user messageState at FETCH_CHALLENGE', () => {
 			expect(spiderUser.messageState).to.be.equal('FETCH_CHALLENGE')
 			expect(spiderUser.status).to.be.equal('active_solo');
+			expect(spiderUser.currentMission).to.be.equal(missionId)
+			expect(spiderUser.currentChallenge).to.be.equal(challengeIds[2])
+
+			return UserChallenge.findOne({
+				where: {
+					userId: spiderUser.id,
+					challengeId: challengeIds[2]
+				}
+			})
+			.then(foundUserChallenge => {
+				expect(foundUserChallenge).to.not.be.null
+				expect(foundUserChallenge.status).to.be.equal('complete')
+			})
 		})
 
 		it('user texts in \'yes\' | server sends challenge description: GHA Logo', () => {
@@ -204,6 +293,19 @@ describe('Game Play', () => {
 		it('user messageState at CHALLENGE_ANSWER', () => {
 			expect(spiderUser.messageState).to.be.equal('CHALLENGE_ANSWER')
 			expect(spiderUser.status).to.be.equal('active_solo');
+			expect(spiderUser.currentMission).to.be.equal(missionId)
+			expect(spiderUser.currentChallenge).to.be.equal(challengeIds[3])
+
+			return UserChallenge.findOne({
+				where: {
+					userId: spiderUser.id,
+					challengeId: challengeIds[3]
+				}
+			})
+			.then(foundUserChallenge => {
+				expect(foundUserChallenge).to.not.be.null
+				expect(foundUserChallenge.status).to.be.equal('incomplete')
+			})
 		})
 
 		it('user texts in image of the GHA logo | server asks to continue to next challenge', () => {
@@ -220,6 +322,19 @@ describe('Game Play', () => {
 		it('user messageState at FETCH_CHALLENGE', () => {
 			expect(spiderUser.messageState).to.be.equal('FETCH_CHALLENGE')
 			expect(spiderUser.status).to.be.equal('active_solo');
+			expect(spiderUser.currentMission).to.be.equal(missionId)
+			expect(spiderUser.currentChallenge).to.be.equal(challengeIds[3])
+
+			return UserChallenge.findOne({
+				where: {
+					userId: spiderUser.id,
+					challengeId: challengeIds[3]
+				}
+			})
+			.then(foundUserChallenge => {
+				expect(foundUserChallenge).to.not.be.null
+				expect(foundUserChallenge.status).to.be.equal('complete')
+			})
 		})
 
 		it('user texts in \'yes\' | server sends challenge description: Cereal', () => {
@@ -232,6 +347,19 @@ describe('Game Play', () => {
 		it('user messageState at CHALLENGE_ANSWER', () => {
 			expect(spiderUser.messageState).to.be.equal('CHALLENGE_ANSWER')
 			expect(spiderUser.status).to.be.equal('active_solo');
+			expect(spiderUser.currentMission).to.be.equal(missionId)
+			expect(spiderUser.currentChallenge).to.be.equal(challengeIds[4])
+
+			return UserChallenge.findOne({
+				where: {
+					userId: spiderUser.id,
+					challengeId: challengeIds[4]
+				}
+			})
+			.then(foundUserChallenge => {
+				expect(foundUserChallenge).to.not.be.null
+				expect(foundUserChallenge.status).to.be.equal('incomplete')
+			})
 		})
 
 		it('user texts in \'fruity pebbles\' | server sends end of mission', () => {
@@ -244,6 +372,29 @@ describe('Game Play', () => {
 		it('user messageState at STANDBY', () => {
 			expect(spiderUser.messageState).to.be.equal('STANDBY')
 			expect(spiderUser.status).to.be.equal('standby');
+			expect(spiderUser.currentMission).to.be.equal(0);
+			expect(spiderUser.currentChallenge).to.be.equal(0);
+
+			return UserChallenge.findOne({
+				where: {
+					userId: spiderUser.id,
+					challengeId: challengeIds[4]
+				}
+			})
+			.then(foundUserChallenge => {
+				expect(foundUserChallenge).to.not.be.null
+				expect(foundUserChallenge.status).to.be.equal('complete')
+				return UserMission.findOne({
+					where: {
+						userId: spiderUser.id,
+						missionId: missionId
+					}
+				})
+			})
+			.then(foundUserMission => {
+				expect(foundUserMission).to.not.be.null
+				expect(foundUserMission.status).to.be.equal('complete')
+			})
 		})
 	})
 })

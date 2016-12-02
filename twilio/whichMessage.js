@@ -294,20 +294,24 @@ const whichMessage = {
 						}
 					)
 				}
-				UserChallenge.create({
+				return UserChallenge.create({
 					userId: user.id,
 					challengeId: newChallenge.id
 				})
-				return {
-					state:{
-						messageState: 'CHALLENGE_ANSWER',
-						currentChallenge: newChallenge.id
-					},
-					message: newChallenge.objective+": "+newChallenge.summary,
-				}
+				.then(newUserChallenge => {
+					// console.log(newUserChallenge)
+					return {
+						state:{
+							messageState: 'CHALLENGE_ANSWER',
+							currentChallenge: newChallenge.id
+						},
+						message: newChallenge.objective+": "+newChallenge.summary,
+					}
+				})
+				
 			} else {
 				if(user.status == 'active_pair') {
-					fetchPartnerFromUserMission(
+					return fetchPartnerFromUserMission(
 						user,
 						{
 							user: {
@@ -317,6 +321,15 @@ const whichMessage = {
 							},
 						}
 					)
+					.then(() => {
+						return {
+							state: {
+								messageState: 'STANDBY',
+								currentMission: 0,
+								currentChallenge: 0
+							}
+						}
+					})
 				}
 				return {
 					state: {
@@ -351,13 +364,13 @@ const whichMessage = {
 					 */
 					// let actualTags = [] // clarifai stuff
 
-					goodAnswer = getPhotoTags(message)
-					.then (actualTags => {
-						// console.log(actualTags);
-						if (checkTags(currentChallenge.targetTags, actualTags)) return true;
-						else return false;
-					})
-					break;
+					// goodAnswer = getPhotoTags(message)
+					// .then (actualTags => {
+					// 	// console.log(actualTags);
+					// 	if (checkTags(currentChallenge.targetTags, actualTags)) return true;
+					// 	else return false;
+					// })
+					// break;
 				case 'voice':
 					// put Kat's voice stuff here!!
 					/*
@@ -365,14 +378,14 @@ const whichMessage = {
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
-					goodAnswer = checkWatsonPromise(message)
-					.then((transcript) => {
-						console.log('transcript:',transcript);
-						if (transcript != currentChallenge.targetText) 
-							returnMessage = "Not quite what we were looking for, but the Agency will manage. ";
-						return true;
-					})
-					break;
+					// goodAnswer = checkWatsonPromise(message)
+					// .then((transcript) => {
+					// 	console.log('transcript:',transcript);
+					// 	if (transcript != currentChallenge.targetText) 
+					// 		returnMessage = "Not quite what we were looking for, but the Agency will manage. ";
+					// 	return true;
+					// })
+					// break;
 				default:
 					goodAnswer = true;
 			}
@@ -386,11 +399,14 @@ const whichMessage = {
 			// if program reaches here, answer is correct
 			let waitForThese = []
 			let temp = UserChallenge.findOne({
-				userId: user.id,
-				challengeId: user.currentChallenge
+				where: {
+					userId: user.id,
+					challengeId: user.currentChallenge
+				}
 			})
 			.then(foundUserChallenge => {
-				return foundUserChallenge.update({status: 'complete'});
+				if (foundUserChallenge) 
+					return foundUserChallenge.update({status: 'complete'});
 			})
 			waitForThese.push(temp);
 
@@ -410,8 +426,10 @@ const whichMessage = {
 				// finished last challenge of mission, set mission to complete
 
 				temp = UserMission.findOne({
-					userId: user.id,
-					missionId: user.currentMission
+					where: {
+						userId: user.id,
+						missionId: user.currentMission
+					}
 				})
 				.then(foundUserMission => {
 					return foundUserMission.update({status: 'complete'})
