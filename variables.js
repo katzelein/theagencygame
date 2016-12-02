@@ -2,7 +2,7 @@
 * On heroku, use heroku env variables, locally use .gitignored constants
 */
 let localConst
-if (process.env.IS_HEROKU){
+if (process.env.IS_HEROKU === 'true'){
   console.log('!!!!the environment is', process.env.IS_HEROKU)
 } else {
   console.log('*****the environment is', process.env.IS_HEROKU)
@@ -11,7 +11,7 @@ if (process.env.IS_HEROKU){
 
 //Twilio constants
 const accountSid = process.env.TWILIO_ACCOUNT_SID || localConst.accountSid
-const authToken = process.env.TWILIO_AUTH_TOKEN || localConst.authToken
+const authToken = process.env.TWILIO_AUTH_TOKEN || localConst.authTokengit s
 const twilioNum = process.env.TWILIO_NUM || localConst.twilioNum
 //Clarifai constants
 const clarifaiClientId = process.env.CLARIFAI_CLIENT_ID || localConst.clarifaiClientId
