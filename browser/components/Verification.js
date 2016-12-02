@@ -10,7 +10,6 @@ import Paper from 'material-ui/Paper';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib/index'
 import CommunicationPhonelinkRing from 'material-ui/svg-icons/communication/phonelink-ring'
 import CheckCircle from 'material-ui/svg-icons/action/check-circle'
-import constants from "../../variables"
 
 const style = {
   paper: {
