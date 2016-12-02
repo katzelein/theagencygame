@@ -16,6 +16,7 @@ function PhoneVerification(apiKey, apiUrl) {
 }
 
 PhoneVerification.prototype.init = function () {
+    console.log('~~~~the user agent~~~~', this.user_agent)
     this.headers = {
         "User-Agent": this.user_agent
     };
@@ -31,7 +32,7 @@ PhoneVerification.prototype.init = function () {
  */
 PhoneVerification.prototype.verifyPhoneToken = function (phone_number, country_code, token, callback) {
 
-    console.log('in verify phone');
+    console.log('~~~~in verify phone~~~~~', this.apiKey);
     this._request("get", "/protected/json/phones/verification/check", {
             "api_key": this.apiKey,
             "verification_code": token,
