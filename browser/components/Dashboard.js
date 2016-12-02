@@ -127,11 +127,13 @@ export default class Dashboard extends Component {
       <div id="main">
         <Grid>
           <Row>
+          <Col xs={12}>
+            <Row center="xs">
           <div id="dashboard" >
               {this.props.user.id ? (
                 <div>
                   <div>
-                    <Paper style={{margin: 30}} zDepth={5}>
+                   <Paper style={{margin: 30}} zDepth={5}>
                       <h1>DASHBOARD</h1>
                       <Table style={styles.table} >
                         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
@@ -189,6 +191,8 @@ export default class Dashboard extends Component {
               )
             }
           </div>
+          </Row>
+          </Col>
           </Row>
         </Grid>
       </div>

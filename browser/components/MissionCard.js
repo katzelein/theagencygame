@@ -13,17 +13,22 @@ import axios from 'axios';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import ContentClear from 'material-ui/svg-icons/content/clear';
+import ActionDone from 'material-ui/svg-icons/action/done';
+import { Popconfirm, message } from 'antd';
+import Dialog from 'material-ui/Dialog';
 
 export default class MissionCard extends Component{
   constructor(props){
     super(props)
-    this.state = {addChallenge: false, addOrSave: "ADD CHALLENGE", isEditing: false, mission: this.props.mission}
+    this.state = {addChallenge: false, addOrSave: "ADD CHALLENGE", isEditing: false, mission: this.props.mission, open: false}
     this.mission = Object.assign({}, this.state.mission)
     this.toggleAdd = this.toggleAdd.bind(this);
     this.deleteMission = this.deleteMission.bind(this);
     this.editMission = this.editMission.bind(this);
     this.updateMissionState = this.updateMissionState.bind(this);
     this.saveMission = this.saveMission.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
   }
 
   toggleAdd(){
@@ -77,7 +82,32 @@ export default class MissionCard extends Component{
     this.setState({isEditing: bool})
   }
 
+  handleOpen(){
+    console.log("handleOpen")
+    this.setState({open: true});
+  };
+
+  handleClose(){
+    console.log("handleClose")
+    this.setState({open: false});
+  };
+
   render () {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onClick={this.handleClose}
+      />,
+      <FlatButton
+        label="Delete"
+        primary={true}
+        onClick={() => {
+          this.handleClose
+          this.deleteMission(this.props.mission.id)
+        }}
+      />,
+    ];
     if(this.state.isEditing){
       return(
         <Card id={`mission-${this.props.mission.id}`} style={{padding: '10px', margin: '10px'}}>
@@ -85,22 +115,24 @@ export default class MissionCard extends Component{
             <EditMissionForm mission={this.state.mission} onChange={this.updateMissionState}
                             editMission={this.props.editMission}/>
           </CardText>
+          <div> Challenges </div>
+                  {this.props.mission.challenges.map((challenge, i) => {
+                    return(
+                    <ChallengeCard key={challenge.id} challenge={challenge} mission={this.props.mission} refreshCards={this.props.findMissions}
+                    missionSpecific={true}/>
+                    )
+                  })}
           <CardActions id="actions" expandable={true}>
             <div className="mui-button" style={{position: 'absolute', height: '100%', 'marginRight': '0px'}}>
               <IconButton className="inside-mui-button" tooltip="Save"
                     tooltipPosition="top-center" onClick={this.saveMission}
-                    iconStyle={{color: 'black'}} style={{padding: '0px', height: '100%', width: '28px'}}>
-                  <ContentClear/>
+                   style={{padding: '0px', height: '100%', width: '28px'}}>
+                  <ActionDone/>
               </IconButton>
               <IconButton className="inside-mui-button" tooltip="Cancel"
                     tooltipPosition="top-center" onClick={this.editMission}
-                    iconStyle={{color: 'black'}} style={{padding: '0px', height: '100%', width: '28px'}}>
+                    style={{padding: '0px', height: '100%', width: '28px'}}>
                    <ContentClear/>
-              </IconButton>
-              <IconButton className="inside-mui-button" tooltip="delete"
-                      tooltipPosition="top-center" onClick={() => this.deleteMission(this.props.mission.id)}
-                      style={{padding: '0px', height: '100%', width: '28px'}}>
-                    <ActionDelete/>
               </IconButton>
             </div>
           </CardActions>
@@ -133,6 +165,15 @@ export default class MissionCard extends Component{
               (<RaisedButton type="button" className="mission-button" label="ADD CHALLENGE" onClick={this.toggleAdd}/>)
             }
                 </CardText>
+                <Dialog
+                  actions={actions}
+                  modal={false}
+                  open={this.state.open}
+                  onRequestClose={this.handleClose}
+                  overlayStyle={{background: 'rgba(250, 110, 60, .5)'}}
+                >
+                Are you sure you want to delete this mission?
+               </Dialog>
                 <CardActions id="actions" expandable={true}>
                   <div className="mui-button" style={{position: 'absolute', height: '100%', 'marginRight': '0px'}}>
                     <IconButton className="inside-mui-button" tooltip="edit"
@@ -140,8 +181,8 @@ export default class MissionCard extends Component{
                       style={{padding: '0px', height: '100%', width: '28px'}}>
                       <EditorModeEdit/>
                     </IconButton>
-                    <IconButton className="inside-mui-button" tooltip="delete"
-                      tooltipPosition="top-center" onClick={() => this.deleteMission(this.props.mission.id)}
+                    <IconButton className="inside-mui-button" tooltip="delete" onClick={this.handleOpen}
+                      tooltipPosition="top-center" 
                       style={{padding: '0px', height: '100%', width: '28px'}}>
                       <ActionDelete/>
                     </IconButton>
@@ -155,6 +196,6 @@ export default class MissionCard extends Component{
 
 
 
-
+//onClick={() => this.deleteMission(this.props.mission.id)}
 
 
