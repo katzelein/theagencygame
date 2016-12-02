@@ -95,59 +95,6 @@ export default class Dashboard extends Component {
       <div id="main">
         <Grid>
           <Row>
-
-          {/*<Col xs={12}>
-                      <Row center="xs">
-                    <div id="dashboard" >
-                        {this.props.user.id ? (
-                          <div>
-                            <div>
-                             <Paper style={{margin: 30}} zDepth={5}>
-                                <h1>DASHBOARD</h1>
-                                <Table style={styles.table} >
-                                  <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                                    <TableRow>
-                                      <TableHeaderColumn colSpan={10} style={{textAlign: 'center', fontSize: 26}}>
-                                        {this.props.user.username}
-                                      </TableHeaderColumn>
-                                    </TableRow>
-          
-                                    <TableRow>
-                                      <TableHeaderColumn colSpan={1} >ID</TableHeaderColumn>
-                                      <TableHeaderColumn colSpan={4} >Title</TableHeaderColumn>
-                                      <TableHeaderColumn colSpan={2} >Location</TableHeaderColumn>
-                                      <TableHeaderColumn colSpan={1} >Challenges</TableHeaderColumn>
-                                      <TableHeaderColumn colSpan={2} >Status</TableHeaderColumn>
-                                    </TableRow>
-          
-                                  </TableHeader>
-          
-                                  <TableBody
-                                    displayRowCheckbox={false}
-                                    deselectOnClickaway={true}
-                                    showRowHover={true} 
-                                    adjustForCheckbox={false}>
-          
-                                    {tableData.map( (row, index) => (
-                                      <TableRow key={index} onCellClick={(e) => {e.PreventDefault()}}>
-                                        <TableRowColumn colSpan={1} >{row.id}</TableRowColumn>
-                                        <TableRowColumn colSpan={4} >{row.title}</TableRowColumn>
-                                        <TableRowColumn colSpan={2} >{row.place}</TableRowColumn>
-                                        <TableRowColumn colSpan={1} >{row.numChallenges}</TableRowColumn>
-                                        <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
-                                      </TableRow>
-                                    ))}
-          
-                                  </TableBody>
-          
-                                </Table>
-          
-                                <div ><RaisedButton secondary={true} label="Logout" onClick={this.logout} style={{margin: 20}}/></div>
-                              </Paper>
-                            </div>
-          
-                            {this.props.user && this.props.user.isAdmin ?
-                              (*/}
             <Col xs={12}>
               <Row center="xs">
                 <div id="dashboard">
@@ -229,7 +176,6 @@ export default class Dashboard extends Component {
                               href='/admin' 
                               primary={true} 
                               label="Admin Page" 
-                              onClick={this.logout} 
                               style={styles.raisedButton}/>
                           </div>
                         ) : null   

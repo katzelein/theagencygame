@@ -11,6 +11,7 @@ const {mustBeAdmin, mustBeLoggedIn, selfOnly} = require('./permissions')
 // })
 
 router.get('/whoami', (req, res, next) => {
+	console.log("REQ.SESSION in API.js: ", req.session)
 	if(req.session && req.session.user){
 		console.log("REQUEST IN /whoami: ", req.session.user.username)
 	  	res.send(req.session.user)
@@ -52,6 +53,8 @@ router.get('/whoami', (req, res, next) => {
 
 router.get('/missions', function(req, res, next){
 	console.log("getting missions")
+	console.log("REQ.SESSION.USER in GET MISSIONS: ", req.session.user)
+	console.log("REQ.SESSION: ", req.session)
 	//mustBeAdmin()(req, res, next)
 	Mission.findAll({
 		include: [
