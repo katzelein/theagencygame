@@ -9,38 +9,6 @@ import axios from 'axios';
 import bluebird from 'bluebird';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
-const Fields = props => {
-  function onRemove(pos) {
-    return event => {
-      event.preventDefault();
-      props.onRemove(pos);
-    };
-  }
-  const foo = 'required';
-  return (
-    <div className="fields">
-      {props.data.map((field, i) => (
-        <div className="field" key={field.id}>
-          {
-            field.type === 'input' ?
-            (
-              <MyInput
-                value=""
-                name={`fields[${i}]`}
-                title={field.validations ? JSON.stringify(field.validations) : 'No validations'}
-                required={field.required}
-                validations={field.validations}
-              />
-            ) : null
-          }
-          <a href="#" className="remove-field" onClick={onRemove(i)}>X</a>
-        </div>
-      ))
-    }
-    </div>
-  );
-};
-
 export default class MissionForm extends Component {
   constructor(props){
     super(props)
@@ -81,15 +49,15 @@ export default class MissionForm extends Component {
         </IconButton>
         </CardHeader>
         <CardText>
-          <form id="mission-form" onSubmit={this.submitAlert}> 
+          <form id="mission-form" onSubmit={this.submitAlert} autoComplete="off"> 
             <label>Title:</label><br/>
-            <input type="text" name="title" /><br/>
+            <input style={{color: 'black'}} type="text" name="title" /><br/>
             <label>Description: </label><br/>
-            <textArea type="text" name="description"/><br/>
+            <textArea style={{color: 'black'}} type="text" name="description"/><br/>
             <label>Place: </label><br/>
-            <input type="text" name="place" /><br/>
+            <input style={{color: 'black'}} type="text" name="place" /><br/>
             <label>Location: </label><br/>
-            <input type="text" name="location" /><br/>
+            <input style={{color: 'black'}} type="text" name="location" /><br/>
           </form>
         </CardText>
         </Card>   

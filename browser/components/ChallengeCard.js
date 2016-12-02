@@ -9,6 +9,7 @@ import axios from 'axios';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import ContentClear from 'material-ui/svg-icons/content/clear';
+import ActionDone from 'material-ui/svg-icons/action/done';
 
 export default class ChallengeCard extends Component{
   constructor(props){
@@ -137,17 +138,12 @@ export default class ChallengeCard extends Component{
         <IconButton className="inside-mui-button" tooltip="Save"
                     tooltipPosition="top-center" onClick={this.saveChallenge}
                     iconStyle={{color: 'black'}} style={{padding: '0px', height: '100%', width: '28px'}}>
-          <ContentClear/>
+          <ActionDone/>
         </IconButton>
         <IconButton className="inside-mui-button" tooltip="Cancel"
                     tooltipPosition="top-center" onClick={this.editChallenge}
                     iconStyle={{color: 'black'}} style={{padding: '0px', height: '100%', width: '28px'}}>
           <ContentClear/>
-        </IconButton>
-        <IconButton className="inside-mui-button" tooltip="Delete"
-                    tooltipPosition="top-center" onClick={() => this.deleteChallenge(this.props.challenge.id)}
-                    iconStyle={{color: 'black'}} style={{padding: '0px', height: '100%', width: '28px'}}>
-          <ActionDelete/>
         </IconButton>
         </div>
       </CardActions>

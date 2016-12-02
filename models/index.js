@@ -20,6 +20,7 @@ Mission.hasMany(Challenge)
 Challenge.belongsTo(Mission)
 UserMissions.belongsTo(Mission)
 UserMissions.belongsTo(User)
+User.hasMany(UserMissions)
 
 // sync the db, creating it if necessary
 function sync(force=appEnv) { //appEnv

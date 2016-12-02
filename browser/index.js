@@ -50,7 +50,7 @@ ReactDOM.render(
   <MuiThemeProvider muiTheme={muiTheme}>
     <Provider store={store}>
       <Grid fluid>
-        <Paper style={{width: '100%'}}>
+        <Paper style={{position: 'absolute', top: 0, bottom: 0, overflow: 'auto', width: '100%'}}>
           <Router history={browserHistory}>
             <Route path="/">
               <Route path="login" component={AppContainer} />
