@@ -15,7 +15,7 @@ const checkWatsonPromise = function (body) {
 
   // needs internet -___-''
   // get the WAV file from twilio
-  // request(body.RecordingUrl).pipe(fs.createWriteStream('message.wav')).on('end', ok => console.log('wrote message.wav'))
+  request(body.RecordingUrl).pipe(fs.createWriteStream('message.wav')).on('end', ok => console.log('wrote message.wav'))
   // do we need this if params includes recordingurl???
 
   // check it in Watson

@@ -43,7 +43,7 @@ const missionChooser = (user, coordinates) => {
 	// can also fetch mission based on labelled place
 	// set default to return Grace Hopper mission
 	// if (!place) place = "Grace Hopper"; 
-	return Mission.findAll({where: {place: 'Grace Hopper'}})
+	// return Mission.findAll({where: {place: 'Grace Hopper'}})
 
 	let coordString = `POINT(${coordinates[0]} ${coordinates[1]})`
 	return user.getMissions()

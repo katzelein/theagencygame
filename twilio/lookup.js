@@ -2,7 +2,7 @@ const User = require('../models/user')
 const Sequelize = require('sequelize')
 
 const UserMission = require('../models/userMission')
-
+const {sendSimpleText} = require('./send-sms')
 const {whichMessage} = require('./whichMessage')
 
 const lookup = (phoneNumber, message) => {
@@ -155,7 +155,8 @@ const sendMessageToPartner = (user, message) => {
 	.then(partner => {
 		partner.update({lastMessageTo: Date()})
 		// send message somehow
+		sendSimpleText(partner.phoneNumber, message);
 	})
 }
 
-module.exports = {lookup, fetchMessage}
+module.exports = {lookup, fetchMessage, sendMessageToPartner}

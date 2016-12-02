@@ -1,21 +1,22 @@
 const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
-const getPhotoTags = require('./clarifai')
+
+const clarifai = require('./clarifai')
+const {getPhotoTags} = clarifai
+
 const {missionChooser, partnerChooser} = require('./missionChooser')
 
-const {checkWatsonPromise} = require('./watson');
+const watson = require('./watson');
+const {checkWatsonPromise} = watson;
 
 const User = require('../models/user')
-const {accountSid, authToken} = require('../variables')
-const client = require('twilio')(accountSid, authToken);
 const UserMission = require('../models/userMission')
 const UserChallenge = require('../models/userChallenge')
 const Challenge = require('../models/challenge')
 
-
-// console.log("SHARE MISSION: ", sharedMission([1, 2, 3], [1, 2]))
-
+const send_sms = require('./send-sms')
+const {sendSimpleText} = send_sms;
 
 const whichMessage = {
 
@@ -201,27 +202,27 @@ const whichMessage = {
 
 			return missionChooser(user, coordinates)
 			.then(potentialMissions => {
-				let newMission = potentialMissions;
-				if(potentialMissions.length) newMission = potentialMissions[0]
-				UserMission.create({
-					userId: user.id,
-					missionId: newMission.id,
-					partnerId: null
-				})
-				return {
-					state: {
-						messageState: 'FETCH_CHALLENGE',
-						currentMission: newMission.id,
-						status: 'active_solo'
-					},
-					message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+user.username+"?"
+				if(potentialMissions.length){
+					let newMission = potentialMissions[0]
+					UserMission.create({
+						userId: user.id,
+						missionId: newMission.id,
+						partnerId: null
+					})
+					return {
+						state: {
+							messageState: 'FETCH_CHALLENGE',
+							currentMission: newMission.id,
+							status: 'active_solo'
+						},
+						message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+user.username+"?"
+					}
 				}
-			}
-			else{
-				return {
-					message: "There are no missions in this area, or you have completed all of them! Try again later or when you have relocated."
+				else{
+					return {
+						message: "There are no missions in this area, or you have completed all of them! Try again later or when you have relocated."
+					}
 				}
-			}
 			})
 		}
 
@@ -267,13 +268,9 @@ const whichMessage = {
 					console.log("MISSION BEFORE UPDATES: ", newMission)
 					if(partnerFound){
 						console.log("ABOUT TO SEND MESSAGE")
-						return client.sendMessage({
+						let outMessage = `We have found a partner for you. Agent ${user.username} is ready to go. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.` ;
 
-			              to: partner.phoneNumber, // Any number Twilio can deliver to
-			              from: '+12027593387', // A number you bought from Twilio and can use for outbound communication
-			              body: `We have found a partner for you. Agent ${user.username} is ready to go. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.` // body of the SMS message
-
-			          	})
+						return sendSimpleText(partner.phoneNumber, outMessage)
 			          	.then(() => {
 			          		return UserMission.bulkCreate([
 			          			{userId: user.id, missionId: newMission.id, partnerId: partner.id},
@@ -406,13 +403,13 @@ const whichMessage = {
 					 */
 					// let actualTags = [] // clarifai stuff
 
-					// goodAnswer = getPhotoTags(message)
-					// .then (actualTags => {
-					// 	// console.log(actualTags);
-					// 	if (checkTags(currentChallenge.targetTags, actualTags)) return true;
-					// 	else return false;
-					// })
-					// break;
+					goodAnswer = getPhotoTags(message)
+					.then (actualTags => {
+						// console.log(actualTags);
+						if (checkTags(currentChallenge.targetTags, actualTags)) return true;
+						else return false;
+					})
+					break;
 				case 'voice':
 					// put Kat's voice stuff here!!
 					/*
@@ -420,14 +417,14 @@ const whichMessage = {
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
-					// goodAnswer = checkWatsonPromise(message)
-					// .then((transcript) => {
-					// 	console.log('transcript:',transcript);
-					// 	if (transcript != currentChallenge.targetText) 
-					// 		returnMessage = "Not quite what we were looking for, but the Agency will manage. ";
-					// 	return true;
-					// })
-					// break;
+					goodAnswer = checkWatsonPromise(message)
+					.then((transcript) => {
+						console.log('transcript:',transcript);
+						if (transcript != currentChallenge.targetText) 
+							returnMessage = "Not quite what we were looking for, but the Agency will manage. ";
+						return true;
+					})
+					break;
 				default:
 					goodAnswer = true;
 			}
