@@ -1,9 +1,11 @@
 const User = require('../models/user')
 const Sequelize = require('sequelize')
 
+const UserMission = require('../models/userMission')
+
 const {whichMessage} = require('./whichMessage')
 
-module.exports = function(phoneNumber, message) {
+const lookup = (phoneNumber, message) => {
 	return User.findOne({where: {phoneNumber}})
 	.then(user => {
 		if (user) return fetchMessage(user, message);
@@ -87,15 +89,11 @@ const fetchMessage = (user, message) => {
 			break;
 		case 'FETCH_CHALLENGE':
 		// unique case: needs current mission and current challenge data
-			returnObj = whichMessage[user.messageState] (
-				user.currentMission, 
-				user.currentChallenge, 
-				simpleInput
-			);
+			returnObj = whichMessage[user.messageState] (user, simpleInput);
 			break;
 		case 'CHALLENGE_ANSWER':
 		// unique case: needs challenge data and all possible messages
-			returnObj = whichMessage[user.messageState] (user.currentChallenge, message)
+			returnObj = whichMessage[user.messageState] (user, message)
 			break;
 		default:
 		// text with all lowercase
@@ -105,13 +103,59 @@ const fetchMessage = (user, message) => {
 
 	return Promise.resolve(returnObj)
 	.then(obj => {
-		if (obj && obj.state) user.update(obj.state);
-		if (obj && obj.message) {
-			user.update({lastMessageTo: Date()})
-			return obj.message;
-		}
-		else return 'Sorry, The Agency\'s text processor has clearly failed.'
+		let hasPartner = false;
+		if (user.status == 'active_pair') hasPartner = true;
+
+		let updateObj = {}
+		let outMessage = 'Sorry, The Agency\'s text processor has clearly failed.'
+
+		if (obj && obj.state) 
+			Object.assign(
+				updateObj, 
+				obj.state, 
+				{lastMessageTo: Date()}
+			);
+		if (obj && obj.message) outMessage = obj.message;
+
+		if (hasPartner) 
+			return sendMessageToPartner(user, outMessage)
+			.then(() => {
+				return user.update(updateObj)
+			})
+			.then(() => {
+				return outMessage
+			})
+
+		else 
+			return user.update(updateObj)
+			.then(() => {
+				return outMessage
+			})
+
+		// if (obj && obj.state) user.update(obj.state);
+		// if (obj && obj.message) {
+		// 	user.update({lastMessageTo: Date()})
+		// 	if (hasPartner) sendMessageToPartner(user, obj.message)
+		// 	return obj.message;
+		// }
+		// else return 'Sorry, The Agency\'s text processor has clearly failed.'
 	})
 }
 
+const sendMessageToPartner = (user, message) => {
+	return UserMission.findOne({
+		where: {
+			userId: user.id,
+			missionId: user.currentMission
+		}
+	})
+	.then(foundUserMission => {
+		return User.findById(foundUserMission.partnerId)
+	})
+	.then(partner => {
+		partner.update({lastMessageTo: Date()})
+		// send message somehow
+	})
+}
 
+module.exports = {lookup, fetchMessage}

@@ -1,5 +1,6 @@
 var request = require('request');
 var VERSION = "0.1";
+var constants = require('./variables');
 
 
 module.exports = function (apiKey, apiUrl) {
@@ -16,6 +17,7 @@ function PhoneVerification(apiKey, apiUrl) {
 }
 
 PhoneVerification.prototype.init = function () {
+    console.log('~~~~the user agent~~~~', this.user_agent)
     this.headers = {
         "User-Agent": this.user_agent
     };
@@ -31,7 +33,7 @@ PhoneVerification.prototype.init = function () {
  */
 PhoneVerification.prototype.verifyPhoneToken = function (phone_number, country_code, token, callback) {
 
-    console.log('in verify phone');
+    console.log('~~~~in verify phone~~~~~', this.apiKey);
     this._request("get", "/protected/json/phones/verification/check", {
             "api_key": this.apiKey,
             "verification_code": token,
@@ -51,7 +53,7 @@ PhoneVerification.prototype.verifyPhoneToken = function (phone_number, country_c
  * @param {!function} callback
  */
 PhoneVerification.prototype.requestPhoneVerification = function (phone_number, country_code, via, callback) {
-
+    console.log('THIS IS AN AUTHY KEY IN requestPhoneVerification', this.apiKey)
     this._request("post", "/protected/json/phones/verification/start", {
             "api_key": this.apiKey,
             "phone_number": phone_number,
@@ -65,6 +67,8 @@ PhoneVerification.prototype.requestPhoneVerification = function (phone_number, c
 
 PhoneVerification.prototype._request = function (type, path, params, callback, qs) {
     qs = qs || {};
+    console.log("THIS IS THE AUTHY KEY IN PHONE VERIFICATION", this.apiKey);
+
     qs['api_key'] = this.apiKey;
 
     options = {

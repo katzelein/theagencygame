@@ -7,7 +7,7 @@ const twilioNum = require('../variables').twilioNum;
 const client = require('twilio')(accountSid, authToken);
 
 const checkWatsonPromise = require('./watson')
-const lookup = require('./lookup')
+const {lookup} = require('./lookup')
 
 twilioAPI.post('/voice', function (req, res, next) {
   let twiml = new twilio.TwimlResponse();
@@ -38,11 +38,11 @@ twilioAPI.post('/recording', function (req, res, next) {
   return answer
   .then(message => {
     console.log("answer message: ",message)
-    return client.sendMessage({
-      to: req.body.From,
-      from: twilioNum,
-      body: message
-    })
+    // return client.sendMessage({
+    //   to: req.body.From,
+    //   from: twilioNum,
+    //   body: message
+    // })
   })
   .then(() => {
     res.sendStatus(200);

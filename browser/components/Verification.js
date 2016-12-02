@@ -10,7 +10,6 @@ import Paper from 'material-ui/Paper';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib/index'
 import CommunicationPhonelinkRing from 'material-ui/svg-icons/communication/phonelink-ring'
 import CheckCircle from 'material-ui/svg-icons/action/check-circle'
-import constants from "../../variables"
 
 const style = {
   paper: {
@@ -42,7 +41,6 @@ export class SendVerification extends Component {
     if (!(countryCode && number)) {
       this.setState({error: "Please provide your number"})
     }
-   
     else {
       this.setState({countryCode, number})
       let fullNumber = "+" + countryCode + number

@@ -4,13 +4,13 @@ const {getLocation} = require('./location')
 const getPhotoTags = require('./clarifai')
 const {adventureDetails, missionChooser, partnerChooser} = require('./missionChooser')
 
-//const {checkWatsonPromise} = require('./voice')
 const {checkWatsonPromise} = require('./watson');
 
 const User = require('../models/user')
 const {accountSid, authToken} = require('../variables')
 const client = require('twilio')(accountSid, authToken);
 const UserMission = require('../models/userMission')
+const UserChallenge = require('../models/userChallenge')
 const Challenge = require('../models/challenge')
 
 
@@ -111,13 +111,6 @@ const whichMessage = {
 	TUTORIAL_MISSION_3: (username, message) => {
 		// assuming they sent in a picture
 
-		let success = {
-			state: {messageState: 'STANDBY'},
-			message: "Congratulations, Trainee, you have completed your training mission!  Your name has been added to our list of active field agents.  Text in 'new mission' whenever you have the time to request your first mission!"
-		}
-		let fail = {
-			message: "That ... wasn't a picture ...."
-		}
 		// put clarifai function here!!!
 		/*
 		 * parameters:	currentChallenge.targetTags // array of target tags
@@ -127,8 +120,15 @@ const whichMessage = {
 		return getPhotoTags(message)
 		.then (actualTags => {
 			console.log(actualTags);
-			if (actualTags.length) return success;
-			else return fail;
+			if (actualTags.length) {
+				return {
+					state: {messageState: 'STANDBY'},
+					message: `Image registers as: [${actualTags[0]}, ${actualTags[1]}, ${actualTags[2]}]\n\nCongratulations, Trainee, you have completed your training mission!  Your name has been added to our list of active field agents.  Text in 'new mission' whenever you have the time to request your first mission!`
+				}
+			}
+			else return {
+				message: "That ... wasn't a picture ...."
+			}
 		})
 	},
 
@@ -158,7 +158,7 @@ const whichMessage = {
 						messageState: 'QUERY_MISSION',
 						location: {type: 'Point', coordinates: coordinates}
 					},
-					message: "Thank you for sending in your location.  Would you prefer to partner up for your next mission, or go it alone? Respond with 'lone wolf' or 'eager beaver'. "
+					message: "Thank you for sending in your location.  Would you prefer to partner up for your next mission, or go it alone? Respond with 'lone wolf' or 'eager beaver'."
 				}
 			} else {
 				console.log("coordinates is not an array")
@@ -200,14 +200,20 @@ const whichMessage = {
 		if(userInput === 'lone wolf'){
 			return missionChooser(coordinates)
 			.then(newMission => {
-					return {
-						state: {
-							messageState: 'FETCH_CHALLENGE',
-							currentMission: newMission.id,
-						},
-						message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+user.username+"?"
-					}
+				UserMission.create({
+					userId: user.id,
+					missionId: newMission.id,
+					partnerId: null
 				})
+				return {
+					state: {
+						messageState: 'FETCH_CHALLENGE',
+						currentMission: newMission.id,
+						status: 'active_solo'
+					},
+					message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+user.username+"?"
+				}
+			})
 		}
 
 		else if(userInput === 'eager beaver'){
@@ -270,7 +276,7 @@ const whichMessage = {
 							messageState: 'FETCH_CHALLENGE',
 							currentMission: newMission.id,
 							lastMessageTo: Date(),
-							status: 'active',
+							status: 'active_pair',
 							readyAt: null
 						})})
 						.then(() => {
@@ -278,44 +284,86 @@ const whichMessage = {
 								state: {
 									messageState: 'FETCH_CHALLENGE',
 									currentMission: newMission.id,
-									status: 'active',
+									status: 'active_pair',
 									readyAt: null
 								},
 								message: `Agent ${partner.username} will be your partner. Your mission is ${newMission.title}: ${newMission.description} \n\nPlease meet at ${newMission.meetingPlace}.\n\nText "ready" when you have both arrived.`
 							}
 						})
 						.catch(err => console.log(err))
-				}
-				else{
-					console.log("PARTNERS WERE FOUND, BUT NO MISSIONS IN COMMON")
-					return {
-							state: {
-								messageState: 'SOLO_OK',
-							},
-							message: "There are no agents currently available.  Text 'wait' if you would like to wait for a partner or 'go' if you would like to fly solo instead."
+					}
+					else{
+						console.log("PARTNERS WERE FOUND, BUT NO MISSIONS IN COMMON")
+						return {
+								state: {
+									messageState: 'SOLO_OK',
+									},
+								message: "There are no agents currently available.  Text 'wait' if you would like to wait for a partner or 'go' if you would like to fly solo instead."
 						}
+					}
 				}
-			}
-		})}
-
-		else return {
-			message: "We did not recognize your preference, please respond with 'lone wolf' or 'eager beaver'."
+			})
 		}
 	},
 
-	FETCH_CHALLENGE: (currentMissionId, currentChallengeId, userInput) => {
+	FETCH_CHALLENGE: (user, userInput) => {
 		// still need to adjust based on userInput
-		return getChallenge(currentMissionId, currentChallengeId)
+		console.log('FETCH_CHALLENGE')
+		return getChallenge(user.currentMission, user.currentChallenge)
 		.then(newChallenge => {
 			if (newChallenge) {
-				return {
-					state:{
-						messageState: 'CHALLENGE_ANSWER',
-						currentChallenge: newChallenge.id
-					},
-					message: newChallenge.objective+": "+newChallenge.summary
+				if(user.status == 'active_pair') {
+					fetchPartnerFromUserMission(
+						{
+							id: user.id,
+							currentMission: user.currentMission,
+							currentChallenge: newChallenge.id
+						},{
+							user: {
+								messageState: 'CHALLENGE_ANSWER',
+								currentChallenge: newChallenge.id
+							},
+							userChallenge: {}
+						}
+					)
 				}
+				return UserChallenge.create({
+					userId: user.id,
+					challengeId: newChallenge.id
+				})
+				.then(newUserChallenge => {
+					// console.log(newUserChallenge)
+					return {
+						state:{
+							messageState: 'CHALLENGE_ANSWER',
+							currentChallenge: newChallenge.id
+						},
+						message: newChallenge.objective+": "+newChallenge.summary,
+					}
+				})
+				
 			} else {
+				if(user.status == 'active_pair') {
+					return fetchPartnerFromUserMission(
+						user,
+						{
+							user: {
+								messageState: 'STANDBY',
+								currentMission: 0,
+								currentChallenge: 0
+							},
+						}
+					)
+					.then(() => {
+						return {
+							state: {
+								messageState: 'STANDBY',
+								currentMission: 0,
+								currentChallenge: 0
+							}
+						}
+					})
+				}
 				return {
 					state: {
 						messageState: 'STANDBY',
@@ -327,33 +375,19 @@ const whichMessage = {
 		})
 	},
 
-	CHALLENGE_ANSWER: (currentChallengeId, message) => {
-		return Challenge.findById(currentChallengeId)
-		.then(currentChallenge => {
-			let success;
+	CHALLENGE_ANSWER: (user, message) => {
 
-			if (currentChallenge.hasNext) {
-				success = {
-					state: {messageState: 'FETCH_CHALLENGE'},
-					message: currentChallenge.conclusion + "\n\nAre you ready for your next challenge?"
-				}
-			} else {
-				success = {
-					state: {
-						messageState: 'STANDBY',
-						currentMission: 0,
-						currentChallenge: 0,
-						status: 'standby'
-					},
-					message: currentChallenge.conclusion + "\n\nYou have completed your mission.  Text 'new mission' to start a new mission"
-				}
-			}
-			let fail = {message: "Your answer doesn't quite match The Agency's records.  Please try again."}
+		let returnMessage = "";
+		let currentChallenge;
+		return Challenge.findById(user.currentChallenge)
+		.then(foundChallenge => {
+			currentChallenge = foundChallenge;
+			let goodAnswer = false;
 
 			switch (currentChallenge.category) {
 				case 'text':
-					if (currentChallenge.targetText.toLowerCase() == message.Body.toLowerCase()) return success;
-					else return fail;
+					if (currentChallenge.targetText.toLowerCase() == message.Body.toLowerCase()) goodAnswer = true;
+					break;
 				case 'image':
 					// put clarifai function here!!!
 					/*
@@ -363,12 +397,13 @@ const whichMessage = {
 					 */
 					// let actualTags = [] // clarifai stuff
 
-					return getPhotoTags(message)
+					goodAnswer = getPhotoTags(message)
 					.then (actualTags => {
 						// console.log(actualTags);
-						if (checkTags(currentChallenge.targetTags, actualTags)) return success;
-						else return fail;
+						if (checkTags(currentChallenge.targetTags, actualTags)) return true;
+						else return false;
 					})
+					break;
 				case 'voice':
 					// put Kat's voice stuff here!!
 					/*
@@ -376,24 +411,99 @@ const whichMessage = {
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
-					let scriptPromise = checkWatsonPromise(message);
-					return scriptPromise
+					goodAnswer = checkWatsonPromise(message)
 					.then((transcript) => {
-						console.log('transcript',transcript);
-						if (transcript == currentChallenge.targetText) return success;
-						else {
-							let newMessage = "Not quite what we were looking for, but the Agency will manage. " + success.message
-							success.message = newMessage;
-							return success;
-						}
+						console.log('transcript:',transcript);
+						if (transcript != currentChallenge.targetText) 
+							returnMessage = "Not quite what we were looking for, but the Agency will manage. ";
+						return true;
 					})
-					// if(true) return success;
-					// else return fail;
+					break;
 				default:
-					return success;
+					goodAnswer = true;
 			}
+
+			return goodAnswer;
+		})
+		.then(success => {
+
+			if(!success) return {message: "Your answer doesn't quite match The Agency's records.  Please try again."};
+
+			// if program reaches here, answer is correct
+			let waitForThese = []
+			let temp = UserChallenge.findOne({
+				where: {
+					userId: user.id,
+					challengeId: user.currentChallenge
+				}
+			})
+			.then(foundUserChallenge => {
+				if (foundUserChallenge) 
+					return foundUserChallenge.update({status: 'complete'});
+			})
+			waitForThese.push(temp);
+
+			let returnObj, partnerObj;
+
+			if(currentChallenge.hasNext) {
+				returnObj = {
+					state: {messageState: 'FETCH_CHALLENGE'},
+					message: currentChallenge.conclusion + "\n\nAre you ready for your next challenge?"
+				}
+
+				partnerObj = {
+					user: {messageState: 'FETCH_CHALLENGE'},
+					userChallenge: {status: 'complete'}
+				}
+			} else {
+				// finished last challenge of mission, set mission to complete
+
+				temp = UserMission.findOne({
+					where: {
+						userId: user.id,
+						missionId: user.currentMission
+					}
+				})
+				.then(foundUserMission => {
+					return foundUserMission.update({status: 'complete'})
+				})
+				waitForThese.push(temp)
+
+				returnObj = {
+					state: {
+						messageState: 'STANDBY',
+						currentMission: 0,
+						currentChallenge: 0,
+						status: 'standby'
+					},
+					message: currentChallenge.conclusion + "\n\nYou have completed your mission.  Text 'new mission' to start a new mission",
+				}
+
+				partnerObj = {
+					user: {
+						messageState: 'STANDBY',
+						currentMission: 0,
+						currentChallenge: 0,
+						status: 'standby'
+					},
+
+					userChallenge: {status: 'complete'},
+					userMission: {status: 'complete'}
+				}
+			}
+
+			if (user.status == 'active_pair') {
+				temp = fetchPartnerFromUserMission(user, partnerObj);
+				waitForThese.push(temp);
+			}
+
+			return Promise.all(waitForThese)
+			.then(() => {
+				return returnObj;
+			})
 		})
 	},
+
 
 	QUERY_HIATUS: () =>{return ""},
 
@@ -456,9 +566,63 @@ const checkTags = (expectedTags, actualTags) => {
 
 	return tagExists
 }
-console.log("QUERY MISSION: ", User.findById(6).then(user => {
-	console.log("GATOR: ", user)
-	return whichMessage.QUERY_MISSION(user, 'eager beaver')
-}))
 
-module.exports = {whichMessage, checkTags};
+/* 
+ * user:
+ * 		// user who your are searching for
+ * 		// assumes user is up-to-date, so will sometimes need to tweak
+ *		// important properties: {id, currentMission, currentChallenge}
+ * allTheStates:
+ * 		{
+ *			user: {} // update state of  partner's user model
+ *			userMission: {} // update state of partner's userMission model
+ *			userChallenge: {} // update state of partner's userChallenge model
+ *		 }
+ */
+const fetchPartnerFromUserMission = (user, allTheStates) => {
+	return UserMission.findOne({
+		where: {
+			userId: user.id,
+			missionId: user.currentMission
+		}
+	})
+	.then(foundUserMission => {
+		return User.findById(foundUserMission.partnerId)
+	})
+	.then(partner => {
+		let allUpdates = [];
+		let temp;
+
+		if (allTheStates.user) {
+			temp = partner.update(allTheStates.user);
+			allUpdates.push(temp);
+		}
+		if (allTheStates.userMission) {
+			temp = UserMission.findOne({
+				where: {
+					userId: partner.id,
+					missionId: user.currentMission
+				}
+			})
+			.then(foundPartnerMission => {
+				foundPartnerMission.update(allTheStates.userMission)
+			})
+			allUpdates.push(temp);
+		}
+		if (allTheStates.userChallenge) {
+			temp = UserChallenge.findOrCreate({
+				where: {
+					userId: partner.id,
+					challengeId: user.currentChallenge
+				}
+			})
+			.then(foundPartnerChallenge => {
+				foundPartnerChallenge[0].update(allTheStates.userChallenge)
+			})
+			allUpdates.push(temp);
+		}
+		return Promise.all(allUpdates)
+	})
+}
+
+module.exports = {whichMessage, checkTags, fetchPartnerFromUserMission};

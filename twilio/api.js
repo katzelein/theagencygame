@@ -3,7 +3,7 @@ var twilio = require('twilio')
 var rp = require('request-promise');
 var geocoder = require('geocoder');
 
-var lookup = require('./lookup')
+var {lookup} = require('./lookup')
 var getPhotoTags = require('./clarifai')
 const {accountSid, authToken} = require('../variables')
 
