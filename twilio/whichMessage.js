@@ -200,6 +200,7 @@ const whichMessage = {
 		if(userInput === 'lone wolf'){
 			return missionChooser(user, coordinates)
 			.then(potentialMissions => {
+				console.log('POTENTIAL MISSIONS', potentialMissions)
 				if(potentialMissions.length){
 					let newMission = potentialMissions[0]
 				UserMission.create({
