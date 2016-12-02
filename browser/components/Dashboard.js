@@ -69,9 +69,6 @@ export default class Dashboard extends Component {
     })
   }
 
-  componentWillReceiveProps() {
-  }
-
   logout(){
     this.props.logoutUser()
     axios.post('/api/logout')

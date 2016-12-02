@@ -53,6 +53,7 @@ ReactDOM.render(
         <Paper style={{width: '100%'}}>
           <Router history={browserHistory}>
             <Route path="/">
+              <IndexRoute component={AppContainer}/>
               <Route path="login" component={AppContainer} />
               <Route path="sendVerification" component={SendVerificationContainer} />
               <Route path="verify" component={VerifyContainer} />
@@ -61,7 +62,6 @@ ReactDOM.render(
                 <Route path="editChallenge" component={EditChallengesContainer}/>
                 <Route path="editMission" component={EditMissionsContainer}/>
               </Route>
-              <IndexRoute component={AppContainer}/>
             </Route>
           </Router>
         </Paper>

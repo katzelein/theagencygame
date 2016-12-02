@@ -11,8 +11,9 @@ import EditChallengesContainer from '../containers/EditChallengesContainer'
 
 export default class Admin extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
       value: "missions"
     }
@@ -36,33 +37,30 @@ export default class Admin extends Component {
         <Row>
           <Col xs={12}>
             <Row center="xs">
-              {/* {this.props.user.user && this.props.user.user.isAdmin ? ( */}
+              {this.props.user && this.props.user.isAdmin ? (
                 <div>
-                <h3>Admin Page</h3>
-                <div className="adminContainer">
-                  <Tabs
-                    style={{maxHeight: 800}}
-                    value={this.state.value}
-                    onChange={e => this.handleChange(e)}>
-                    <Tab 
-                      label="View/Edit Mission" 
-                      value="missions" >
-                      <EditMissionsContainer/> 
-                    </Tab>
-                    <Tab 
-                      label="View/Edit Challenges" 
-                      value="order">
-                      <EditChallengesContainer/> 
-                    </Tab>
-                  </Tabs>
+                  <h3>Admin Page</h3>
+                  <div className="adminContainer">
+                    <Tabs
+                      style={{maxHeight: 800}}
+                      value={this.state.value}
+                      onChange={e => this.handleChange(e)}>
+                      <Tab 
+                        label="View/Edit Mission" 
+                        value="missions" >
+                        <EditMissionsContainer/> 
+                      </Tab>
+                      <Tab 
+                        label="View/Edit Challenges" 
+                        value="order">
+                        <EditChallengesContainer/> 
+                      </Tab>
+                    </Tabs>
+                  </div>
                 </div>
-                </div>
-
-
-              {/* }) : ( 
-                 <div className="adminContainer">You do not have permission to access this page, please contact and administrator</div>
-                ) */}
-              } 
+              ) : ( 
+                <div className="adminContainer">Access Denied. <Link to="/">Try again.</Link></div>
+              )} 
             </Row>
           </Col>     
         </Row>
