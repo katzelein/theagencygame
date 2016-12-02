@@ -364,13 +364,13 @@ const whichMessage = {
 					 */
 					// let actualTags = [] // clarifai stuff
 
-					goodAnswer = getPhotoTags(message)
-					.then (actualTags => {
-						// console.log(actualTags);
-						if (checkTags(currentChallenge.targetTags, actualTags)) return true;
-						else return false;
-					})
-					break;
+					// goodAnswer = getPhotoTags(message)
+					// .then (actualTags => {
+					// 	// console.log(actualTags);
+					// 	if (checkTags(currentChallenge.targetTags, actualTags)) return true;
+					// 	else return false;
+					// })
+					// break;
 				case 'voice':
 					// put Kat's voice stuff here!!
 					/*
@@ -378,14 +378,14 @@ const whichMessage = {
 					 * 				message // whole body of twilio request
 					 * returns: true / false
 					 */
-					goodAnswer = checkWatsonPromise(message)
-					.then((transcript) => {
-						console.log('transcript:',transcript);
-						if (transcript != currentChallenge.targetText) 
-							returnMessage = "Not quite what we were looking for, but the Agency will manage. ";
-						return true;
-					})
-					break;
+					// goodAnswer = checkWatsonPromise(message)
+					// .then((transcript) => {
+					// 	console.log('transcript:',transcript);
+					// 	if (transcript != currentChallenge.targetText) 
+					// 		returnMessage = "Not quite what we were looking for, but the Agency will manage. ";
+					// 	return true;
+					// })
+					// break;
 				default:
 					goodAnswer = true;
 			}
