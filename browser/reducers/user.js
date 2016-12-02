@@ -11,6 +11,7 @@ export const fetchUser = () => ((dispatch) => {
   axios.get('/api/whoami')
   .then(res => res.data)
   .then(user => {
+    console.log("USER IN FETCH USER REDUCER: ", user)
     if(user.id){
       axios.get(`/api/user/${user.id}`)
       .then(res => res.data)
