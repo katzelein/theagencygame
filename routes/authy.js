@@ -21,6 +21,7 @@ router.post('/verification/start', function(req, res, next){
     var via = req.body.via;
 
     console.log("body: ", req.body);
+    console.log("THIS IS THE AUTHY KEY", constants.authyKey);
 
     if (phone_number && country_code && via) {
         phoneReg.requestPhoneVerification(phone_number, country_code, via, function (err, response) {
