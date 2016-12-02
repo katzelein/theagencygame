@@ -9,6 +9,8 @@ if (process.env.IS_HEROKU === 'true'){
   //localConst = require('./constants')
 }
 
+console.log('~!~!~!THE ACCOUNT SID', process.env.TWILIO_ACCOUNT_SID)
+
 //Twilio constants
 const accountSid = process.env.TWILIO_ACCOUNT_SID || localConst.accountSid
 const authToken = process.env.TWILIO_AUTH_TOKEN || localConst.authTokengit
