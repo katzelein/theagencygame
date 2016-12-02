@@ -10,6 +10,7 @@ import FlatButton from 'material-ui/FlatButton';
 import {Card, CardText, CardHeader, CardTitle} from 'material-ui/Card'
 import Toggle from 'material-ui/Toggle';
 import {grey800, amberA700, grey400, amberA400, grey600, amberA100, fullWhite} from 'material-ui/styles/colors'
+import SvgIconBlur from 'material-ui/svg-icons/image/blur-circular';
 
 export default class MissionDataBox extends Component {
 
@@ -29,7 +30,8 @@ export default class MissionDataBox extends Component {
                       <Card style={{width: 600}}>
                         <CardHeader
                           title={challenge.objective}
-                          style={{margin: 20, fontSize: 20}} />
+                          style={{margin: 20, fontSize: 20}}
+                          avatar={<SvgIconBlur />} />
                         <CardText style={{margin: 30, fontSize: 14, color: amberA700}}>
                           {challenge.summary}
                         </CardText>

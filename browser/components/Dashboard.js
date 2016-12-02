@@ -10,6 +10,10 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import Chip from 'material-ui/Chip';
+import SvgIconFace from 'material-ui/svg-icons/action/assignment-ind';
+import SvgIconWork from 'material-ui/svg-icons/action/work';
+import Avatar from 'material-ui/Avatar'
 
 const styles = {
   paper: {
@@ -22,7 +26,10 @@ const styles = {
   },
   raisedButton: {
     margin: 20
-  }
+  },
+  chip: {
+    margin: 'auto',
+  },
 };
 
 export default class Dashboard extends Component {
@@ -85,95 +92,103 @@ export default class Dashboard extends Component {
     ];
 
     return (
-
       <div id="main">
         <Grid>
           <Row>
-            <div id="dashboard">
-                {this.props.user.id ? (
-                  <div>
+            <Col xs={12}>
+              <Row center="xs">
+                <div id="dashboard">
+                  {this.props.user.id ? (
                     <div>
-                      <Paper style={styles.paper} zDepth={5}>
-                        <h1>DOSSIER</h1>
-                        <h4>{this.props.user.username}</h4>
-                        <Table style={styles.table} selectable={false} >
-                          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                            <TableRow>
-                              <TableHeaderColumn colSpan={1} >ID</TableHeaderColumn>
-                              <TableHeaderColumn colSpan={4} >Title</TableHeaderColumn>
-                              <TableHeaderColumn colSpan={2} >Location</TableHeaderColumn>
-                              <TableHeaderColumn colSpan={2} >Status</TableHeaderColumn>
-                              <TableHeaderColumn style={{textAlign: 'center'}} colSpan={2} >Actions</TableHeaderColumn>
-                            </TableRow>
-                          </TableHeader>
+                      <div>
+                        <Paper style={styles.paper} zDepth={5}>
+                          <Avatar color="#444" icon={<SvgIconWork />} />
+                          <h1>DOSSIER</h1>
+                          <Chip
+                            style={styles.chip} >
+                              <Avatar color="#444" icon={<SvgIconFace />} />
+                              {this.props.user.username}
+                          </Chip>
+                          <Table style={styles.table} selectable={false} >
+                            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                              <TableRow>
+                                <TableHeaderColumn colSpan={1} >ID</TableHeaderColumn>
+                                <TableHeaderColumn colSpan={4} >Title</TableHeaderColumn>
+                                <TableHeaderColumn colSpan={2} >Location</TableHeaderColumn>
+                                <TableHeaderColumn colSpan={2} >Status</TableHeaderColumn>
+                                <TableHeaderColumn style={{textAlign: 'center'}} colSpan={2} >Actions</TableHeaderColumn>
+                              </TableRow>
+                            </TableHeader>
 
-                          <TableBody
-                            displayRowCheckbox={false}
-                            deselectOnClickaway={true}
-                            showRowHover={true} 
-                            adjustForCheckbox={false} >
+                            <TableBody
+                              displayRowCheckbox={false}
+                              deselectOnClickaway={true}
+                              showRowHover={true} 
+                              adjustForCheckbox={false} >
 
-                            {this.props.userData ? (
-                              this.props.userData.map(row => (
-                                <TableRow key={row.missionId}>
-                                  <TableRowColumn colSpan={1} >{row.missionId}</TableRowColumn>
-                                  <TableRowColumn colSpan={4} >{row.mission.title}</TableRowColumn>
-                                  <TableRowColumn colSpan={2} >{row.mission.place}</TableRowColumn>
-                                  <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
-                                  <TableRowColumn colSpan={2} >
+                              {this.props.userData ? (
+                                this.props.userData.map(row => (
+                                  <TableRow key={row.missionId}>
+                                    <TableRowColumn colSpan={1} >{row.missionId}</TableRowColumn>
+                                    <TableRowColumn colSpan={4} >{row.mission.title}</TableRowColumn>
+                                    <TableRowColumn colSpan={2} >{row.mission.place}</TableRowColumn>
+                                    <TableRowColumn colSpan={2} >{row.status}</TableRowColumn>
+                                    <TableRowColumn colSpan={2} >
 
-                                    <RaisedButton 
-                                      label="Challenges"
-                                      primary={true} 
-                                      onTouchTap={this.handleOpen} />
-                                    <Dialog
-                                      title="Challenges"
-                                      actions={actions}
-                                      modal={false}
-                                      open={this.state.open}
-                                      onRequestClose={this.handleClose}
-                                      autoScrollBodyContent={true} >
-                                        <MissionDataBox styl={{margin: 20}} userMission={row} userChallenges={row.mission.challenges}/>
-                                    </Dialog>
-                                  </TableRowColumn>
-                                </TableRow>
-                              ))) : (
-                                <TableRow>
-                                  <TableRowColumn style={{textAlign: 'center'}} colSpan={11}> No data to display for this agent</TableRowColumn>
-                                </TableRow>
-                              )}
+                                      <RaisedButton 
+                                        label="Challenges"
+                                        primary={true} 
+                                        onTouchTap={this.handleOpen} />
+                                      <Dialog
+                                        title="Challenges"
+                                        actions={actions}
+                                        modal={false}
+                                        open={this.state.open}
+                                        onRequestClose={this.handleClose}
+                                        autoScrollBodyContent={true} >
+                                          <MissionDataBox styl={{margin: 20}} userMission={row} userChallenges={row.mission.challenges}/>
+                                      </Dialog>
+                                    </TableRowColumn>
+                                  </TableRow>
+                                ))) : (
+                                  <TableRow>
+                                    <TableRowColumn style={{textAlign: 'center'}} colSpan={11}> No data to display for this agent</TableRowColumn>
+                                  </TableRow>
+                                )}
 
-                          </TableBody>
-                        </Table>
+                            </TableBody>
+                          </Table>
 
-                        <div >
-                          <RaisedButton 
-                            secondary={true} 
-                            label="Logout" 
-                            onClick={this.logout} 
-                            style={styles.raisedButton}/>
-                        </div>
-                      </Paper>
+                          <div >
+                            <RaisedButton 
+                              secondary={true} 
+                              label="Logout" 
+                              onClick={this.logout} 
+                              style={styles.raisedButton}/>
+                          </div>
+                        </Paper>
+                      </div>
+
+                      {this.props.user && this.props.user.isAdmin ?
+                        (
+                          <div>
+                            <RaisedButton 
+                              href='/admin' 
+                              primary={true} 
+                              label="Admin Page" 
+                              onClick={this.logout} 
+                              style={styles.raisedButton}/>
+                          </div>
+                        ) : null   
+                      }           
                     </div>
-
-                    {this.props.user && this.props.user.isAdmin ?
-                      (
-                        <div>
-                          <RaisedButton 
-                            href='/admin' 
-                            primary={true} 
-                            label="Admin Page" 
-                            onClick={this.logout} 
-                            style={styles.raisedButton}/>
-                        </div>
-                      ) : null   
-                    }           
-                  </div>
-                ) : (
-                  <div> Please <Link to="/">log in</Link> to view your dashboard </div>
-                )
-              }
-            </div>
+                  ) : (
+                    <div> Access Denied. <Link to="/">Try again.</Link></div>
+                  )
+                }
+                </div>
+              </Row>
+            </Col>
           </Row>
         </Grid>
       </div>
