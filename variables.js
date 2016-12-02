@@ -6,13 +6,11 @@ if (process.env.IS_HEROKU === 'true'){
   console.log('!!!!process.env.IS_HEROKU is', process.env.IS_HEROKU)
 } else {
   console.log('*****process.env.IS_HEROKU is', process.env.IS_HEROKU)
-  //localConst = require('./constants')
+  localConst = require('./constants')
 }
 
-console.log('~!~!~!THE ACCOUNT SID', process.env.TWILIO_ACCOUNT_SID)
-
 //Twilio constants
-const accountSid = process.env.TWILIO_ACCOUNT_SID
+const accountSid = process.env.TWILIO_ACCOUNT_SID || localConst.accountSid
 const authToken = process.env.TWILIO_AUTH_TOKEN || localConst.authToken
 const twilioNum = process.env.TWILIO_NUM || localConst.twilioNum
 //Clarifai constants
