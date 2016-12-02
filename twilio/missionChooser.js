@@ -38,7 +38,8 @@ return User.findAll({
 const missionChooser = (user, coordinates) => {
 	// filter all missions based on location
 	// randomly choose a mission
-
+	console.log("USER IN MISSION CHOOSER: ", user)
+	console.log("COORDINATES IN MISSION CHOOSER: ", coordinates)
 
 	// can also fetch mission based on labelled place
 	// set default to return Grace Hopper mission
