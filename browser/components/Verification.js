@@ -42,7 +42,6 @@ export class SendVerification extends Component {
     if (!(countryCode && number)) {
       this.setState({error: "Please provide your number"})
     }
-   
     else {
       this.setState({countryCode, number})
       let fullNumber = "+" + countryCode + number
