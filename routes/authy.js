@@ -1,18 +1,18 @@
 var express = require('express');
 var router = express.Router();
 var twilio = require('twilio');
-var constants = require('../variables');
+var authyKey = require('../variables').authyKey;
 var User = require('../models/user');
 
 // router.get('/', function (req, res, next) {
 //   res.send("I'm working!")
 // })
 
-var phoneReg = require('../phone_verification')(constants.authyKey);
+var phoneReg = require('../phone_verification')(authyKey);
 
 // https://github.com/seegno/authy-client
 const Client = require('authy-client').Client;
-const authy = new Client({key: constants.authyKey});
+const authy = new Client({key: authyKey});
 
 
 router.post('/verification/start', function(req, res, next){
@@ -22,7 +22,7 @@ router.post('/verification/start', function(req, res, next){
 
     console.log("body: ", req.body);
     console.log('THIS IS AN ARBITRARY CONSOLE LOG')
-    console.log("THIS IS THE AUTHY KEY IN VERIFICATION START", constants.authyKey);
+    console.log("THIS IS THE AUTHY KEY IN VERIFICATION START", authyKey);
 
     if (phone_number && country_code && via) {
         phoneReg.requestPhoneVerification(phone_number, country_code, via, function (err, response) {
@@ -45,7 +45,6 @@ router.post('/verification/verify', function(req, res, next){
 	 var country_code = req.body.countryCode;
     var phone_number = req.body.phoneNumber;
     var token = req.body.token;
-		console.log('THE REQ.BODY.TOKEN INSIDE OF VERIFY', req.body.token)
 
     if (phone_number && country_code && token) {
         phoneReg.verifyPhoneToken(phone_number, country_code, token, function (err, response) {
