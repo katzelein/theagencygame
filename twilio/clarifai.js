@@ -56,4 +56,4 @@ function analyzePhoto(modelToUse, mediaUrl){
      )
 }
 
-module.exports = getPhotoTags;
+module.exports = {getPhotoTags};

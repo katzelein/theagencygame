@@ -1,5 +1,5 @@
 const {expect} = require('chai');
-const getPhotoTags = require('../clarifai')
+const {getPhotoTags} = require('../clarifai')
  
 xdescribe('Clarifai (success - don\'t overuse Clarifai in testing)', () => {
 	it ('should return a promise', () => {
