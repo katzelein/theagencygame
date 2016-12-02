@@ -57,7 +57,7 @@ const missionChooser = (user, coordinates) => {
 				sequelize.where(sequelize.fn(
 					'ST_DWithin',
 					//sequelize.col('missions.location'), sequelize.fn('ST_GeographyFromText', `SRID=4326;${coordString}`), 2000), true
-					sequelize.col('missions.location'), user.location, 2000), true
+					sequelize.col('missions.location'), sequelize.col('user.location'), 2000), true
 
 			),
 			//sequelize.where(sequelize.col('users.status'), 'ready')
