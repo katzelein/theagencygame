@@ -53,7 +53,7 @@ PhoneVerification.prototype.verifyPhoneToken = function (phone_number, country_c
  * @param {!function} callback
  */
 PhoneVerification.prototype.requestPhoneVerification = function (phone_number, country_code, via, callback) {
-
+    console.log('THIS IS AN AUTHY KEY IN requestPhoneVerification', this.apiKey)
     this._request("post", "/protected/json/phones/verification/start", {
             "api_key": this.apiKey,
             "phone_number": phone_number,
