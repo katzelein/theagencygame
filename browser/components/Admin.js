@@ -58,9 +58,17 @@ export default class Admin extends Component {
                     </Tabs>
                   </div>
                 </div>
+<<<<<<< HEAD
               ) : ( 
                 <div className="adminContainer">Access Denied. <Link to="/">Try again.</Link></div>
               )} 
+=======
+
+
+              {/* }) : ( 
+                 <div className="adminContainer">You do not have permission to access this page, please contact and administrator</div>
+                ) */} 
+>>>>>>> master
             </Row>
           </Col>     
         </Row>
