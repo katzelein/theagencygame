@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
 import axios from 'axios';
-import MissionDataBox from './MissionDataBox'
 
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import Paper from 'material-ui/Paper';
-import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn }
-from 'material-ui/Table';
-import RaisedButton from 'material-ui/RaisedButton';
+
+
+import Avatar from 'material-ui/Avatar'
+import Chip from 'material-ui/Chip';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import Chip from 'material-ui/Chip';
+import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
 import SvgIconFace from 'material-ui/svg-icons/action/assignment-ind';
 import SvgIconWork from 'material-ui/svg-icons/action/work';
-import Avatar from 'material-ui/Avatar'
+import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn }
+from 'material-ui/Table';
+
+import MissionDataBox from './MissionDataBox'
+
 
 const styles = {
   paper: {
@@ -172,7 +176,7 @@ export default class Dashboard extends Component {
                             <RaisedButton 
                               href='/admin' 
                               primary={true} 
-                              label="Admin Page"
+                              label="Admin Page" 
                               style={styles.raisedButton}/>
                           </div>
                         ) : null   
