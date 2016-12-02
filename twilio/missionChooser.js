@@ -52,7 +52,11 @@ const missionChooser = (user, coordinates) => {
 			return i.id
 		})
 		console.log("MISSION IDS: ", missionIds)
-		return Mission.findAll()
+		return Mission.findAll({
+			where: {
+				id: 1
+			}
+		})
 		//.then(res => console.log("RES: ", res))
 		.catch(err => console.log(err))
 
