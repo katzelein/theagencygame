@@ -6,8 +6,8 @@ import App from '../components/App';
 const mapStateToProps = (state) => (state)
 
 const mapDispatchToProps = (dispatch) => ({
-    
- });
+
+});
 
 
 const AppContainer = connect(mapStateToProps, mapDispatchToProps)(App);

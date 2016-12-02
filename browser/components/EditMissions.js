@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { Form } from 'formsy-react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
-import {RaisedButton, FlatButton, IconButton} from 'material-ui';
+import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card'
+import { RaisedButton, FlatButton, IconButton } from 'material-ui';
 import MyInput from './Input';
 import MissionForm from './MissionForm';
 import ChallengeForm from './ChallengeForm';
@@ -14,29 +14,29 @@ import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import MissionCard from './MissionCard'
 
 export default class EditMissions extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
-    this.state = { fields: [], canSubmit: false, addMission: false, addOrSave: "ADD MISSION"}
+    this.state = { fields: [], canSubmit: false, addMission: false, addOrSave: "ADD MISSION" }
     this.toggleAdd = this.toggleAdd.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.findMissions()
   }
 
-  toggleAdd(){
+  toggleAdd() {
     let bool = !this.state.addMission
     let buttonText = bool ? "SAVE MISSION" : "ADD MISSION"
     console.log("BUTTON TEXT: ", buttonText)
-    if(this.state.addMission){
+    if (this.state.addMission) {
       // post challenge to database
     }
-    this.setState({addMission: bool, addOrSave: buttonText})
+    this.setState({ addMission: bool, addOrSave: buttonText })
   }
 
-  render () {
+  render() {
     return (
-           <div className="container jumbotron" style={{'padding-bottom': '15px'}}>
+      <div className="container jumbotron" style={{'padding-bottom': '15px'}}>
              <div className="row centered-form">
             <div>
       
@@ -94,10 +94,10 @@ export default class EditMissions extends Component {
 //     // do something
 //   }
 
-  
+
 //   render () {
 //     return (
-  
+
 //               <Card id={`mission-${this.props.mission.id}`} style={{padding: '10px', margin: '10px'}} key={this.props.mission.id}>
 //                 <CardHeader actAsExpander={true} 
 //                   showExpandableButton={true} title={this.props.mission.title}
@@ -114,7 +114,7 @@ export default class EditMissions extends Component {
 //                     )
 //                   })}
 //                   {this.state.addChallenge ? <ChallengeForm missionSpecific={true} refreshCards={this.props.findMissions} mission={this.props.mission} toggleAdd={this.toggleAdd}/> : null}
-    
+
 //             {this.state.addChallenge ? 
 //               (<RaisedButton type="submit" form="challenge-form" className="mission-button" label="SAVE CHALLENGE" />)
 //               : null}
@@ -137,13 +137,7 @@ export default class EditMissions extends Component {
 //                   </div>
 //                 </CardActions>
 //             </Card>
-        
+
 //     )
 //   }
 // }
-
-
-
-
-
-

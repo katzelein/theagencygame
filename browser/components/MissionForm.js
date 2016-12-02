@@ -2,41 +2,41 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { Form } from 'formsy-react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
-import {RaisedButton, FlatButton, IconButton} from 'material-ui';
+import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card'
+import { RaisedButton, FlatButton, IconButton } from 'material-ui';
 import MyInput from './Input';
 import axios from 'axios';
 import bluebird from 'bluebird';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
 export default class MissionForm extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
-    this.state = { fields: [], canSubmit: false, add: false, addOrSave: "ADD MISSION"}
-    //this.handleClick = this.handleClick.bind(this);
+    this.state = { fields: [], canSubmit: false, add: false, addOrSave: "ADD MISSION" }
+      //this.handleClick = this.handleClick.bind(this);
     this.submitAlert = this.submitAlert.bind(this)
     this.closeForm = this.closeForm.bind(this)
   }
 
-  submitAlert(e){
+  submitAlert(e) {
     e.preventDefault()
     let title = e.target.title.value
     let description = e.target.description.value
     let place = e.target.place.value
     let coordinates = e.target.location.value.split(",")
-    let location = {type: "Point", coordinates}
-    axios.post('/api/mission', {title, description, place, location})
-    .then(() => {
-      this.props.findMissions()
-      this.props.toggleAdd()
-    })
+    let location = { type: "Point", coordinates }
+    axios.post('/api/mission', { title, description, place, location })
+      .then(() => {
+        this.props.findMissions()
+        this.props.toggleAdd()
+      })
   }
 
-  closeForm(){
+  closeForm() {
     this.props.toggleAdd()
   }
 
-  render () {
+  render() {
     return (
       <Card id="new-mission-form" style={{padding: '10px', margin: '10px'}}>
         <CardHeader style={{position: 'relative', padding: '10px 16px 10px 16px', height: '50px'}} title="NEW MISSION"
@@ -60,12 +60,7 @@ export default class MissionForm extends Component {
             <input style={{color: 'black'}} type="text" name="location" /><br/>
           </form>
         </CardText>
-        </Card>   
+        </Card>
     )
   }
 }
-
-
-
-
-

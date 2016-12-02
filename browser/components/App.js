@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
-import {Grid, Row, Col} from 'react-flexbox-grid';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import RaisedButton from 'material-ui/RaisedButton';
 import Fingerprint from 'material-ui/svg-icons/action/fingerprint'
 
 export default class App extends Component {
 
-  render () {
+  render() {
     return (
       <Grid>
         <Row>

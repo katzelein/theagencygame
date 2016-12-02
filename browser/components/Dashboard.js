@@ -3,10 +3,10 @@ import { Link, browserHistory } from 'react-router';
 import axios from 'axios';
 import MissionDataBox from './MissionDataBox'
 
-import {Grid, Row, Col} from 'react-flexbox-grid';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import Paper from 'material-ui/Paper';
-import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}
-  from 'material-ui/Table';
+import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn }
+from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -34,7 +34,7 @@ const styles = {
 
 export default class Dashboard extends Component {
 
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -47,21 +47,21 @@ export default class Dashboard extends Component {
     this.handleClose = this.handleClose.bind(this)
   }
 
-  handleChange (event) { 
+  handleChange(event) {
     this.setState({
       height: event.target.value
     });
   }
 
-  handleOpen () {
-    this.setState({open: true})
+  handleOpen() {
+    this.setState({ open: true })
   }
 
-  handleClose () {
-    this.setState({open: false})
+  handleClose() {
+    this.setState({ open: false })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.findUser()
     this.props.findUserData()
     this.setState({
@@ -69,16 +69,16 @@ export default class Dashboard extends Component {
     })
   }
 
-  logout(){
+  logout() {
     this.props.logoutUser()
     axios.post('/api/logout')
-    .then(res => {
-      console.log("logout res: ", res)
-      browserHistory.push('/')
-    })
+      .then(res => {
+        console.log("logout res: ", res)
+        browserHistory.push('/')
+      })
   }
 
-  render () {
+  render() {
 
     const actions = [
       <FlatButton
@@ -172,8 +172,7 @@ export default class Dashboard extends Component {
                             <RaisedButton 
                               href='/admin' 
                               primary={true} 
-                              label="Admin Page" 
-                              onClick={this.logout} 
+                              label="Admin Page"
                               style={styles.raisedButton}/>
                           </div>
                         ) : null   

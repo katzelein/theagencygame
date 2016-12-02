@@ -3,39 +3,39 @@ import { Link } from 'react-router';
 
 import { Grid, Row, Col } from 'react-flexbox-grid/lib/index';
 
-import {Tabs, Tab} from 'material-ui/Tabs';
+import { Tabs, Tab } from 'material-ui/Tabs';
 
 import EditMissionsContainer from '../containers/EditMissionsContainer';
 import EditChallengesContainer from '../containers/EditChallengesContainer';
 
 export default class Admin extends Component {
 
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
 
-		this.state = {
-			value: 'missions'
-		};
-		this.handleChange.bind(this);
-	}
+    this.state = {
+      value: 'missions'
+    };
+    this.handleChange.bind(this);
+  }
 
-	handleChange (value) {
-		this.setState({
-			value: value,
-		});
-	}
+  handleChange(value) {
+    this.setState({
+      value: value,
+    });
+  }
 
-	componentDidMount () {
-		this.props.findUser();
-	}
+  componentDidMount() {
+    this.props.findUser();
+  }
 
-	render () {
-		return (
+  render() {
+    return (
       <Grid>
         <Row>
           <Col xs={12}>
             <Row center="xs">
-              {/* {this.props.user && this.props.user.isAdmin ? ( */}
+              {this.props.user && this.props.user.isAdmin ? (
                 <div>
                   <h3>Admin Page</h3>
                   <div className="adminContainer">
@@ -56,13 +56,13 @@ export default class Admin extends Component {
                     </Tabs>
                   </div>
                 </div>
-              {/* }) : ( 
+              ) : ( 
                 <div className="adminContainer">Access Denied. <Link to="/">Try again.</Link></div>
-              )}  */}
+              )}
             </Row>
           </Col>     
         </Row>
       </Grid>
-		);
-	}
+    );
+  }
 }

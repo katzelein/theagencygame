@@ -63,7 +63,7 @@
     "twilio": "^2.11.1",
     "volleyball": "^1.3.0",
     "watson-developer-cloud": "^2.9.0",
-    "webpack": "^1.13.2",
+    "webpack": "^1.13.2"
   },
   "devDependencies": {
     "eslint": "^3.11.1",

@@ -2,7 +2,7 @@
 
 const db = require('../_db')
 const User = require('../user')
-const {expect} = require('chai')
+const { expect } = require('chai')
 
 describe('User', () => {
   before('wait for the db', () => db.sync)
@@ -10,7 +10,7 @@ describe('User', () => {
   describe('validations', () => {
     let user;
     beforeEach('test challenge', () => {
-      user = User.build({username: 'Agent Smith'});
+      user = User.build({ username: 'Agent Smith' });
     })
 
     it('has valid objective', () => {

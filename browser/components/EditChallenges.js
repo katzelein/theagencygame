@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { Form } from 'formsy-react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
-import {RaisedButton, FlatButton, IconButton} from 'material-ui';
+import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card'
+import { RaisedButton, FlatButton, IconButton } from 'material-ui';
 import MyInput from './Input';
 import MissionForm from './MissionForm';
 import ChallengeCard from './ChallengeCard';
@@ -14,16 +14,16 @@ import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 
 
 export default class EditChallenges extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
-    this.state = {addChallenge: false}
-    //this.handleClick = this.handleClick.bind(this);
+    this.state = { addChallenge: false }
+      //this.handleClick = this.handleClick.bind(this);
     this.buttonAlert = this.buttonAlert.bind(this);
     this.toggleAdd = this.toggleAdd.bind(this);
     //this.componentDidMount = this.componentDidMount.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.findChallenges()
     this.props.findMissions()
   }
@@ -41,24 +41,24 @@ export default class EditChallenges extends Component {
   //   }
   // }
 
-  buttonAlert(){
+  buttonAlert() {
     alert("testing button")
   }
 
-  toggleAdd(){
+  toggleAdd() {
     let bool = !this.state.addChallenge
     let buttonText = bool ? "SAVE CHALLENGE" : "ADD CHALLENGE"
     console.log("BUTTON TEXT: ", buttonText)
-    if(this.state.addChallenge){
+    if (this.state.addChallenge) {
       // post challenge to database
     }
-    this.setState({addChallenge: bool})
+    this.setState({ addChallenge: bool })
   }
 
-  render () {
+  render() {
     return (
 
-           <div className="container jumbotron" style={{'padding-bottom': '15px'}}>
+      <div className="container jumbotron" style={{'padding-bottom': '15px'}}>
              <div className="row centered-form">
               <div>
       

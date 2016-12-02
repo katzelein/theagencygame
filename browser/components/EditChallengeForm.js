@@ -2,30 +2,30 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { Form } from 'formsy-react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import {RaisedButton, FlatButton, IconButton} from 'material-ui';
+import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
+import { RaisedButton, FlatButton, IconButton } from 'material-ui';
 import MyInput from './Input';
 import axios from 'axios';
 import bluebird from 'bluebird';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 
 export default class ChallengeForm extends Component {
-	constructor(props){
-		super(props);
-		this.state = {add: false, addOrSave: 'ADD MISSION'};
-		this.closeForm = this.closeForm.bind(this);
-	}
+  constructor(props) {
+    super(props);
+    this.state = { add: false, addOrSave: 'ADD MISSION' };
+    this.closeForm = this.closeForm.bind(this);
+  }
 
-  
 
-	closeForm(){
-		this.props.toggleAdd();
-	}
 
-	render () {
-		console.log('CHALLENGE MISSION ID IN RENDER: ', this.props.challenge.missionId, ' type ', typeof this.props.challenge.missionId);
-		return (
-          <form id="challenge-form" autoComplete="off"> 
+  closeForm() {
+    this.props.toggleAdd();
+  }
+
+  render() {
+    console.log('CHALLENGE MISSION ID IN RENDER: ', this.props.challenge.missionId, ' type ', typeof this.props.challenge.missionId);
+    return (
+      <form id="challenge-form" autoComplete="off"> 
             {this.props.missionSpecific ? null : <MissionDropDown onChange={this.props.onChange} missions={this.props.missions} challenge={this.props.challenge}/>}
             <label>Objective:</label><br/>
             <input type="text" style={{color: 'black'}} name="objective" value={this.props.challenge.objective} onChange={this.props.onChange}/><br/>
@@ -46,8 +46,8 @@ export default class ChallengeForm extends Component {
             <label>Order: </label><br/>
             <input type="text" style={{color: 'black'}} name="order" value={this.props.challenge.order} onChange={this.props.onChange}/><br/>
           </form>
-		);
-	}
+    );
+  }
 }
 
 export const MissionDropDown = ({ missions, onChange, challenge }) => (
@@ -56,9 +56,9 @@ export const MissionDropDown = ({ missions, onChange, challenge }) => (
   <select name="mission" value={challenge.missionId ? challenge.missionId : 'null'} onChange={onChange}>
     <option value="null">Leave Unassigned</option>
     {missions.map((mission, i) => {
-	return(
+  return(
         <option key={mission.id} value={mission.id}> {mission.title} </option>
-	);
+  );
 })}
   </select><br/>
   </div>
@@ -92,6 +92,4 @@ export const MissionDropDown = ({ missions, onChange, challenge }) => (
 //             <input type="text" style={{color: 'black'}} name="order" value={this.props.challenge.order} onChange={this.props.onChange}/><br/>
 //           </form>
 //         </CardText>
-//                   </Card> 
-
-
+//                   </Card>
