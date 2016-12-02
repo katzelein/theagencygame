@@ -155,7 +155,7 @@ const whichMessage = {
 						messageState: 'QUERY_MISSION',
 						location: {type: 'Point', coordinates: coordinates}
 					},
-					message: "Thank you for sending in your location.  Would you prefer to partner up for your next mission, or go it alone? Respond with 'lone wolf' or 'eager beaver'. "
+					message: "Thank you for sending in your location.  Would you prefer to partner up for your next mission, or go it alone? Respond with 'lone wolf' or 'eager beaver'."
 				}
 			} else {
 				console.log("coordinates is not an array")
@@ -352,13 +352,11 @@ const whichMessage = {
 					// let actualTags = [] // clarifai stuff
 
 					goodAnswer = getPhotoTags(message)
-					console.log(goodAnswer,goodAnswer.length);
-					// .then (actualTags => {
-					// 	// console.log(actualTags);
-					// 	if (checkTags(currentChallenge.targetTags, actualTags)) return true;
-					// 	else return false;
-					// })
-					goodAnswer = true;
+					.then (actualTags => {
+						// console.log(actualTags);
+						if (checkTags(currentChallenge.targetTags, actualTags)) return true;
+						else return false;
+					})
 					break;
 				case 'voice':
 					// put Kat's voice stuff here!!
@@ -382,7 +380,6 @@ const whichMessage = {
 			return goodAnswer;
 		})
 		.then(success => {
-			console.log('success: ', success);
 
 			if(!success) return {message: "Your answer doesn't quite match The Agency's records.  Please try again."};
 

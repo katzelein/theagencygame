@@ -21,7 +21,7 @@ const getChallenge = (currentMissionId, currentChallengeId) => {
 
 	return Mission.findById(currentMissionId, {include:[Challenge]})
 	.then(mission => {
-		console.log(mission);
+		// console.log(mission);
 		let challengeList = mission.challenges;
 
 		let chooseOrder = 1;

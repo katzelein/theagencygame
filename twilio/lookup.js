@@ -5,7 +5,7 @@ const UserMission = require('../models/userMission')
 
 const {whichMessage} = require('./whichMessage')
 
-const lookup = (phoneNumber, message) {
+const lookup = (phoneNumber, message) => {
 	return User.findOne({where: {phoneNumber}})
 	.then(user => {
 		if (user) return fetchMessage(user, message);
@@ -106,13 +106,39 @@ const fetchMessage = (user, message) => {
 		let hasPartner = false;
 		if (user.status == 'active_pair') hasPartner = true;
 
-		if (obj && obj.state) user.update(obj.state);
-		if (obj && obj.message) {
-			user.update({lastMessageTo: Date()})
-			if (hasPartner) sendMessageToPartner(user, obj.message)
-			return obj.message;
-		}
-		else return 'Sorry, The Agency\'s text processor has clearly failed.'
+		let updateObj = {}
+		let outMessage = 'Sorry, The Agency\'s text processor has clearly failed.'
+
+		if (obj && obj.state) 
+			Object.assign(
+				updateObj, 
+				obj.state, 
+				{lastMessageTo: Date()}
+			);
+		if (obj && obj.message) outMessage = obj.message;
+
+		if (hasPartner) 
+			return sendMessageToPartner(user, outMessage)
+			.then(() => {
+				return user.update(updateObj)
+			})
+			.then(() => {
+				return outMessage
+			})
+
+		else 
+			return user.update(updateObj)
+			.then(() => {
+				return outMessage
+			})
+
+		// if (obj && obj.state) user.update(obj.state);
+		// if (obj && obj.message) {
+		// 	user.update({lastMessageTo: Date()})
+		// 	if (hasPartner) sendMessageToPartner(user, obj.message)
+		// 	return obj.message;
+		// }
+		// else return 'Sorry, The Agency\'s text processor has clearly failed.'
 	})
 }
 

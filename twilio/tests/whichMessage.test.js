@@ -185,7 +185,7 @@ describe('Game Logic', () => {
 				// return Promise.resolve(createAll)
 			})
 
-			describe('text input: (PROBLEM: cannot read property toLowerCase of undefined)', () => {
+			describe('text input: ', () => {
 
 				before('set user\'s currentChallenge to textChallenge', () => {
 					return User.findById(nightwishUser.id)
@@ -336,7 +336,7 @@ describe('Game Logic', () => {
 			})
 		})
 
-		describe('fetchPartnerFromUserMission', () => {
+		xdescribe('fetchPartnerFromUserMission', () => {
 			let elanMission, elanChallenge, elanUser, elanPartner
 			before('create users, missions, challenges', () => {
 				const newMission = Mission.create({
