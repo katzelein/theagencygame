@@ -27,7 +27,7 @@ router.post('/verification/start', function(req, res, next){
     if (phone_number && country_code && via) {
         phoneReg.requestPhoneVerification(phone_number, country_code, via, function (err, response) {
             if (err) {
-                console.log('error creating phone reg request', err);
+                console.log('error creating phone reg request in verification start', err);
                 res.status(500).json(err);
             } else {
                 console.log('Success register phone API call: ', response);
