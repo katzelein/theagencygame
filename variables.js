@@ -11,7 +11,7 @@ if (process.env.IS_HEROKU === 'true'){
 
 //Twilio constants
 const accountSid = process.env.TWILIO_ACCOUNT_SID || localConst.accountSid
-const authToken = process.env.TWILIO_AUTH_TOKEN || localConst.authTokengit s
+const authToken = process.env.TWILIO_AUTH_TOKEN || localConst.authTokengit
 const twilioNum = process.env.TWILIO_NUM || localConst.twilioNum
 //Clarifai constants
 const clarifaiClientId = process.env.CLARIFAI_CLIENT_ID || localConst.clarifaiClientId
