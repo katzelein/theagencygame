@@ -16,11 +16,11 @@ const data = {
       phoneNumber: '+18607485586', 
       isAdmin: true},
     { username: 'Gator',
-      phoneNumber: '+19739975239',
+      phoneNumber: '+19146469702',
       isAdmin: true, 
     },
     { username: 'Karin',
-      phoneNumber: '+19146469702',
+      phoneNumber: '+19739975239',
       isAdmin: true,
       status: 'ready',
       location: {type: 'Point', coordinates: [40.705691, -74.009342]}
