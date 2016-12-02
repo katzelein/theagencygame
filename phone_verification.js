@@ -67,7 +67,7 @@ PhoneVerification.prototype.requestPhoneVerification = function (phone_number, c
 
 PhoneVerification.prototype._request = function (type, path, params, callback, qs) {
     qs = qs || {};
-    console.log("THIS IS THE AUTHY KEY IN PHONE VERIFICATION", constants.authyKey);
+    console.log("THIS IS THE AUTHY KEY IN PHONE VERIFICATION", this.apiKey);
 
     qs['api_key'] = this.apiKey;
 
