@@ -87,7 +87,8 @@ function getLocationFromText(message){
         }
       // do something with data 
         else{
-          LL = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
+          let LL = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
+          // console.log(data.results)
           // console.log("DATA: ", data)
           // console.log("RES: ", data.results)
           // console.log("RES TYPE: ", typeof data.results)
