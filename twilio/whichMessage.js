@@ -170,7 +170,7 @@ const whichMessage = {
 	},
 
 	SOLO_OK: (user, message) => {
-		
+
 		if(message === 'wait'){
 			return{
 				state: {
@@ -198,8 +198,10 @@ const whichMessage = {
 		let coordinates = user.location.coordinates
 		let soloAdventurePromise, pairAdventurePromise;
 		if(userInput === 'lone wolf'){
-			return missionChooser(coordinates)
-			.then(newMission => {
+			return missionChooser(user, coordinates)
+			.then(potentialMissions => {
+				if(potentialMissions.length){
+					let newMission = potentialMissions[0]
 				UserMission.create({
 					userId: user.id,
 					missionId: newMission.id,
@@ -213,6 +215,12 @@ const whichMessage = {
 					},
 					message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+user.username+"?"
 				}
+			}
+			else{
+				return {
+					message: "There are no missions in this area, or you have completed all of them! Try again later or when you have relocated."
+				}
+			}
 			})
 		}
 
@@ -341,7 +349,7 @@ const whichMessage = {
 						message: newChallenge.objective+": "+newChallenge.summary,
 					}
 				})
-				
+
 			} else {
 				if(user.status == 'active_pair') {
 					return fetchPartnerFromUserMission(
@@ -414,7 +422,7 @@ const whichMessage = {
 					goodAnswer = checkWatsonPromise(message)
 					.then((transcript) => {
 						console.log('transcript:',transcript);
-						if (transcript != currentChallenge.targetText) 
+						if (transcript != currentChallenge.targetText)
 							returnMessage = "Not quite what we were looking for, but the Agency will manage. ";
 						return true;
 					})
@@ -438,7 +446,7 @@ const whichMessage = {
 				}
 			})
 			.then(foundUserChallenge => {
-				if (foundUserChallenge) 
+				if (foundUserChallenge)
 					return foundUserChallenge.update({status: 'complete'});
 			})
 			waitForThese.push(temp);
@@ -567,7 +575,7 @@ const checkTags = (expectedTags, actualTags) => {
 	return tagExists
 }
 
-/* 
+/*
  * user:
  * 		// user who your are searching for
  * 		// assumes user is up-to-date, so will sometimes need to tweak
