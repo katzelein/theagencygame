@@ -1,5 +1,6 @@
 .error{
 	color: red;
+  margin: 20px;
 }
 
 .missions-row{
@@ -88,9 +89,14 @@ html, body
 
 #dashboard {
   text-align: center;
-  margin: 20px;
+  margin: 10px 10px 10px 10px;
 }
 
 .adminContainer {
   margin: 50px;
+}
+
+#missionDataBox{
+  margin: 20px 20px 20px 20px;
+  padding: 10px 10px 10px 10px;
 }

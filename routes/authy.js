@@ -7,8 +7,12 @@ var User = require('../models/user');
 // router.get('/', function (req, res, next) {
 //   res.send("I'm working!")
 // })
+<<<<<<< HEAD
 
 var phoneReg = require('../phone_verification')(authyKey);
+=======
+var phoneReg = require('../phone_verification')(constants.authyKey);
+>>>>>>> master
 
 // https://github.com/seegno/authy-client
 const Client = require('authy-client').Client;
