@@ -34,7 +34,8 @@ app.use(express.static(resolve(__dirname, 'public')));
 console.log("public: ", resolve(__dirname, 'public'))
 //app.get('/bundle.js', (_, res) => res.sendFile(resolve(__dirname, 'index.html')));
 app.use('/', routes);
-app.get('/*', (_, res) => res.sendFile(resolve(__dirname, 'public', 'index.html')))
+//app.get('/*', (_, res) => res.sendFile(resolve(__dirname, 'public', 'index.html')))
+app.get('/*', (_, res) => res.sendFile(resolve(__dirname, 'index.html')))
 
 app.use(function (err, req, res, next) {
     console.error(err.stack);

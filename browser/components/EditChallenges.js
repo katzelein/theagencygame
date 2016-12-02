@@ -13,38 +13,6 @@ import ActionDelete from 'material-ui/svg-icons/action/delete';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 
 
-const Fields = props => {
-  function onRemove(pos) {
-    return event => {
-      event.preventDefault();
-      props.onRemove(pos);
-    };
-  }
-  const foo = 'required';
-  return (
-    <div className="fields">
-      {props.data.map((field, i) => (
-        <div className="field" key={field.id}>
-          {
-            field.type === 'input' ?
-            (
-              <MyInput
-                value=""
-                name={`fields[${i}]`}
-                title={field.validations ? JSON.stringify(field.validations) : 'No validations'}
-                required={field.required}
-                validations={field.validations}
-              />
-            ) : null
-          }
-          <a href="#" className="remove-field" onClick={onRemove(i)}>X</a>
-        </div>
-      ))
-    }
-    </div>
-  );
-};
-
 export default class EditChallenges extends Component {
   constructor(props){
     super(props)
@@ -90,9 +58,9 @@ export default class EditChallenges extends Component {
   render () {
     return (
 
-           <div className="container jumbotron">
+           <div className="container jumbotron" style={{'padding-bottom': '15px'}}>
              <div className="row centered-form">
-            <div>
+              <div>
       
            {this.props.challenges.map((challenge, i) => {
               console.log("MISSION CHALLENGES: ", challenge.challenges)
@@ -104,17 +72,16 @@ export default class EditChallenges extends Component {
           
             )})}
             {this.state.addChallenge ? <ChallengeForm missionSpecific={false} missions={this.props.missions} refreshCards={this.props.findChallenges} toggleAdd={this.toggleAdd}/> : null}
-            </div>
+              </div>
             {this.state.addChallenge ? 
               (<RaisedButton type="submit" form="challenge-form" className="challenge-button" label="SAVE CHALLENGE" />)
               : null}
             {this.state.addChallenge ? null :
-              (<RaisedButton type="button" className="challenge-button" label="ADD CHALLENGE" onClick={this.toggleAdd}/>)
+              (<RaisedButton type="button" style={{margin: '20px 0px 0px 10px'}} labelColor="black" backgroundColor="#989898" className="challenge-button" label="ADD CHALLENGE" onClick={this.toggleAdd}/>)
             }
       
+              </div>
             </div>
-            </div>
-
     )
   }
 }

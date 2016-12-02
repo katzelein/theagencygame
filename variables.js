@@ -1,7 +1,13 @@
-const localConst = require('./constants') || null
 /*
 * On heroku, use heroku env variables, locally use .gitignored constants
 */
+let localConst
+if (process.env.IS_HEROKU){
+  console.log('!!!!the environment is', process.env.IS_HEROKU)
+} else {
+  console.log('*****the environment is', process.env.IS_HEROKU)
+  localConst = require('./constants')
+}
 
 //Twilio constants
 const accountSid = process.env.TWILIO_ACCOUNT_SID || localConst.accountSid

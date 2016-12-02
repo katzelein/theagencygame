@@ -13,12 +13,17 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import store from './store';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
+
 // Adding Material-UI
-import agencyBaseTheme from 'material-ui/styles/baseThemes/agencyBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Paper from 'material-ui/Paper'
 import {grey800, amberA700, grey400, amberA400, grey600, amberA100, fullWhite} from 'material-ui/styles/colors'
+import {fade} from 'material-ui/utils/colorManipulator';
+
+injectTapEventPlugin();
+
+import { Grid, Row, Col } from 'react-flexbox-grid/lib/index'
 
 const muiTheme = getMuiTheme ({
   palette: {
@@ -29,21 +34,15 @@ const muiTheme = getMuiTheme ({
     accent2Color: grey800,
     accent3Color: amberA100,
     textColor: fullWhite,
-    secondaryTextColor: fullWhite,
+    secondaryTextColor: fade(fullWhite, 0.7),
     alternateTextColor: '#303030',
     canvasColor: '#303030',
-    borderColor: fullWhite,
-    disabledColor: fullWhite,
-    pickerHeaderColor: fullWhite,
-    clockCircleColor: fullWhite
+    borderColor: fade(fullWhite, 0.3),
+    disabledColor: fade(fullWhite, 0.3),
+    pickerHeaderColor: fade(fullWhite, 0.12),
+    clockCircleColor: fade(fullWhite, 0.12)
   }
 });
-
-
-import { Grid, Row, Col } from 'react-flexbox-grid/lib/index'
-
-
-injectTapEventPlugin();
 
 
 ReactDOM.render(

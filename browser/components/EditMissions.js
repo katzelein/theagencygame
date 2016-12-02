@@ -36,7 +36,7 @@ export default class EditMissions extends Component {
 
   render () {
     return (
-           <div className="container jumbotron">
+           <div className="container jumbotron" style={{'padding-bottom': '15px'}}>
              <div className="row centered-form">
             <div>
       
@@ -54,7 +54,7 @@ export default class EditMissions extends Component {
               (<RaisedButton type="submit" form="mission-form" className="mission-button" label="SAVE MISSION" />)
               : null}
             {this.state.addMission ? null :
-              (<RaisedButton type="button" className="mission-button" label="ADD MISSION" onClick={this.toggleAdd}/>)
+              (<RaisedButton type="button" className="mission-button" style={{margin: "20px 0px 0px 10px"}} label="ADD MISSION" onClick={this.toggleAdd}/>)
             }
       
             </div>
