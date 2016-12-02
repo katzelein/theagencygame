@@ -69,7 +69,7 @@ const missionChooser = (user, coordinates) => {
 
 //console.log("PARTNER CHOOSER: ", partnerChooser([40, 70]))
 
-module.exports = {adventureDetails, missionChooser, partnerChooser}
+module.exports = {missionChooser, partnerChooser}
 
 // return Neighborhood.findById(id).then(neighborhood => {
 //   return neighborhood.getAddress().then(address => {
