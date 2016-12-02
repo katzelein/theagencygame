@@ -6,18 +6,8 @@ const db = require('../models')
 const User = db.models.users
 const UserMission = db.models.userMissions
 
-const adventureDetails = (location, solo) => {
-	console.log("location in ADVENTURE DETAILS: ", location)
-	
-	if(solo) return missionChooser(location.coordinates)
-		// in the case that the partner shares same uncompleted mission
-	else return Promise.all([partnerChooser(location.coordinates), missionChooser(location.coordinates)])
-	
-}
-
-
 const partnerChooser = (userId, coordinates) => {
-// 	db.query("SELECT * FROM users WHERE ST_DWithin(user.location, 'POINT(1000 1000)', 100.0)", 
+// 	db.query("SELECT * FROM users WHERE ST_DWithin(user.location, 'POINT(1000 1000)', 100.0)",
 // 		{ type: sequelize.QueryTypes.SELECT }).then(function (results) {
 
 // 			console.log("RESULTS: ", results)
@@ -37,7 +27,7 @@ return User.findAll({
 	include: [{
 		model: UserMission,
 		attributes:['missionId']}],
-	order: [['readyAt', 'ASC']]	
+	order: [['readyAt', 'ASC']]
 })
 // .then(res => {console.log("RES: ", res)
 // 	console.log("OPERAGIRL MISSIONS: ", res[0].userMissions)
@@ -53,7 +43,7 @@ const missionChooser = (user, coordinates) => {
 	// can also fetch mission based on labelled place
 	// set default to return Grace Hopper mission
 	// if (!place) place = "Grace Hopper"; 
-	return Mission.findOne({where: {place: 'Grace Hopper'}})
+	return Mission.findAll({where: {place: 'Grace Hopper'}})
 
 	let coordString = `POINT(${coordinates[0]} ${coordinates[1]})`
 	return user.getMissions()
@@ -73,14 +63,14 @@ const missionChooser = (user, coordinates) => {
 			)
 		})
 		//.then(res => console.log("RES: ", res))
-		.catch(err => console.log(err))	
+		.catch(err => console.log(err))
 
 	})
 }
 
 //console.log("PARTNER CHOOSER: ", partnerChooser([40, 70]))
 
-module.exports = {adventureDetails, missionChooser, partnerChooser}
+module.exports = {missionChooser, partnerChooser}
 
 // return Neighborhood.findById(id).then(neighborhood => {
 //   return neighborhood.getAddress().then(address => {

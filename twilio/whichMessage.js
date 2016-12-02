@@ -2,7 +2,7 @@ const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
 const getPhotoTags = require('./clarifai')
-const {adventureDetails, missionChooser, partnerChooser} = require('./missionChooser')
+const {missionChooser, partnerChooser} = require('./missionChooser')
 
 const {checkWatsonPromise} = require('./watson');
 
@@ -170,7 +170,7 @@ const whichMessage = {
 	},
 
 	SOLO_OK: (user, message) => {
-		
+
 		if(message === 'wait'){
 			return{
 				state: {
@@ -198,8 +198,11 @@ const whichMessage = {
 		let coordinates = user.location.coordinates
 		let soloAdventurePromise, pairAdventurePromise;
 		if(userInput === 'lone wolf'){
-			return missionChooser(user,coordinates)
-			.then(newMission => {
+
+			return missionChooser(user, coordinates)
+			.then(potentialMissions => {
+				let newMission = potentialMissions;
+				if(potentialMissions.length) newMission = potentialMissions[0]
 				UserMission.create({
 					userId: user.id,
 					missionId: newMission.id,
@@ -213,6 +216,12 @@ const whichMessage = {
 					},
 					message: newMission.title+": "+newMission.description+" Do you accept this mission, Agent "+user.username+"?"
 				}
+			}
+			else{
+				return {
+					message: "There are no missions in this area, or you have completed all of them! Try again later or when you have relocated."
+				}
+			}
 			})
 		}
 
@@ -341,7 +350,7 @@ const whichMessage = {
 						message: newChallenge.objective+": "+newChallenge.summary,
 					}
 				})
-				
+
 			} else {
 				if(user.status == 'active_pair') {
 					return fetchPartnerFromUserMission(
@@ -438,7 +447,7 @@ const whichMessage = {
 				}
 			})
 			.then(foundUserChallenge => {
-				if (foundUserChallenge) 
+				if (foundUserChallenge)
 					return foundUserChallenge.update({status: 'complete'});
 			})
 			waitForThese.push(temp);
@@ -567,7 +576,7 @@ const checkTags = (expectedTags, actualTags) => {
 	return tagExists
 }
 
-/* 
+/*
  * user:
  * 		// user who your are searching for
  * 		// assumes user is up-to-date, so will sometimes need to tweak
