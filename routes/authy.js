@@ -21,6 +21,7 @@ router.post('/verification/start', function(req, res, next){
     var via = req.body.via;
 
     console.log("body: ", req.body);
+    console.log('THIS IS AN ARBITRARY CONSOLE LOG')
     console.log("THIS IS THE AUTHY KEY IN VERIFICATION START", constants.authyKey);
 
     if (phone_number && country_code && via) {
