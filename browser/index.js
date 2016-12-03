@@ -3,6 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AppContainer from './containers/AppContainer';
+import Splash from './components/Splash';
 import {SendVerificationContainer} from './containers/VerificationContainer';
 import {VerifyContainer} from './containers/VerificationContainer';
 import DashboardContainer from './containers/DashboardContainer';
@@ -61,7 +62,7 @@ ReactDOM.render(
                 <Route path="editChallenge" component={EditChallengesContainer}/>
                 <Route path="editMission" component={EditMissionsContainer}/>
               </Route>
-              <IndexRoute component={AppContainer}/>
+              <IndexRoute component={Splash}/>
             </Route>
           </Router>
         </Paper>
