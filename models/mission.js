@@ -15,8 +15,7 @@ const Mission = db.define('missions', {
   	type: Sequelize.INTEGER,
   	defaultValue: 0
 	}
-}
-)
+})
 
 module.exports = Mission
 

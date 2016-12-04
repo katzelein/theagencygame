@@ -15,23 +15,17 @@ Mission.belongsToMany(User, {through: UserMissions})
 User.belongsToMany(Challenge, {through: UserChallenges})
 Challenge.belongsToMany(User, {through: UserChallenges})
 Mission.hasMany(Challenge)
-// Mission.hasMany(Challenge, {foreignKey: challenge_id})
-// Challenge.belongsToMany(Mission, {through: MissionChallenges})
 Challenge.belongsTo(Mission)
 UserMissions.belongsTo(Mission)
 UserMissions.belongsTo(User)
 User.hasMany(UserMissions)
 
 // sync the db, creating it if necessary
-function sync(force=appEnv) { //appEnv
-	console.log("DB.DIDSYNC")
+function sync(force = appEnv) {
   return db.sync({})
    .then(ok => console.log(`Synced models to db ${name}`))
 }
 
-db.didSync = sync()
-// if (appEnv) { //appEnv
-// 	console.log("SEED isTesting")
-//   db.didSeed = require('./seed')(false)
-// }
+db.didSync = sync();
+
 module.exports = db;
