@@ -24,7 +24,7 @@ describe('Game Logic', () => {
 	// 	}
 	// })
 	
-	xdescribe('state: FETCH_CHALLENGE (PROBLEM: cannot read property challenges of null)',() => {
+	describe('state: FETCH_CHALLENGE (PROBLEM: cannot read property challenges of null)',() => {
 		describe('preceding message: [Do you accept this mission?, Are you ready for your next challenge?]', () => {
 
 			let missionId, challengeId, firstChallenge, secondChallenge, programmerUser;
@@ -267,7 +267,7 @@ describe('Game Logic', () => {
 				})
 			})
 
-			xdescribe('voice input:', () => {
+			xdescribe('voice input: (PROBLEM: timing out)', () => {
 				it('should return conclusion if voice message is correct', () => {
 					let message = {RecordingUrl: "https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE75eed5e89a494ce14683e246b38a3928"} // 'hello'
 					return whichMessage.CHALLENGE_ANSWER(nightwishUser, message)

@@ -6,6 +6,8 @@ const send_sms = require('./send-sms')
 const sendSimpleText = send_sms.sendSimpleText
 const {whichMessage} = require('./whichMessage')
 
+
+
 const lookup = (phoneNumber, message) => {
 	return User.findOne({where: {phoneNumber}})
 	.then(user => {

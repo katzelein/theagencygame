@@ -31,7 +31,7 @@ let getPhotoTags = function (message){
       })
     } else {
       // console.log('Clarifai: There was no media in this message')
-      return tags;
+      return Promise.resolve([]);
     }
   }
 

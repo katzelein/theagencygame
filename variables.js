@@ -25,7 +25,5 @@ const watsonURL = process.env.WATSON_URL || localConst.watsonURL
 const authyKey = process.env.AUTHY_KEY || localConst.authyKey
 
 
-const testing = typeof global.it === 'function'
-
 module.exports = { accountSid, authToken, twilioNum, clarifaiClientId, clarifaiClientSecret,
-  clarifaiAccessToken, watsonUsername, watsonPassword, watsonURL, authyKey, testing}
+  clarifaiAccessToken, watsonUsername, watsonPassword, watsonURL, authyKey }

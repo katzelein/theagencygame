@@ -24,14 +24,6 @@ let sendSimpleText = (phoneNumber, message) => {
 	})
 }
 
-
-// comment out for live, leave in for testing
-
-if (constants.testing) sendSimpleText = () => {
-	console.log('sinon in sms: sending .....')
-	return Promise.resolve('constants testing in sms: sending .....')
-}
-
 module.exports = {sendSimpleText}
 
 
