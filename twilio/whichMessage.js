@@ -2,21 +2,34 @@ const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
 
-const clarifai = require('./clarifai')
-const {getPhotoTags} = clarifai
-
 const {missionChooser, partnerChooser} = require('./missionChooser')
 
-const watson = require('./watson');
-const {checkWatsonPromise} = watson;
+let {getPhotoTags} = require('./clarifai')
+let {checkWatsonPromise} = require('./watson');
 
 const User = require('../models/user')
 const UserMission = require('../models/userMission')
 const UserChallenge = require('../models/userChallenge')
 const Challenge = require('../models/challenge')
 
-const send_sms = require('./send-sms')
-const {sendSimpleText} = send_sms;
+let {sendSimpleText} = require('./send-sms')
+
+
+const testing = typeof global.it === 'function'
+if (testing) {
+	checkWatsonPromise = () => {
+		console.log('testing checkWatsonPromise')
+		return Promise.resolve('some transcript')
+	}
+	getPhotoTags = () => {
+		console.log('testing getPhotoTags')
+		return Promise.resolve(['gha_logo', 'bowl'])
+	}
+	sendSimpleText = (phoneNumber, message) => {
+		console.log('testing sendSimpleText')
+		return Promise.resolve(`sending text to ${phoneNumber}`)
+	}
+}
 
 const whichMessage = {
 

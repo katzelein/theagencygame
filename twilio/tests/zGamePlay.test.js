@@ -11,7 +11,7 @@ const expect = chai.expect
 const {fetchMessage} = require('../lookup')
 
 describe('Game Play', () => {
-	xdescribe('single player', () => {
+	describe('single player', () => {
 		let spiderUser, missionId, challengeIds;
 
 		before('Create user, fetch important id\'s', () => {
@@ -66,7 +66,7 @@ describe('Game Play', () => {
 		})
 
 		it('user texts in location | server asks lone wolf or eager beaver', () => {
-			return fetchMessage(spiderUser, {Body: 'manhattan'})
+			return fetchMessage(spiderUser, {Body: 'Hanover Square'})
 			.then(message => {
 				expect(message).to.be.equal("Thank you for sending in your location.  Would you prefer to partner up for your next mission, or go it alone? Respond with 'lone wolf' or 'eager beaver'.")
 			})
