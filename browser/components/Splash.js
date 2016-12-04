@@ -29,43 +29,47 @@ const styles = {
   },
 };
 
-export default class Admin extends Component {
+export default class Splash extends Component {
 
   constructor() {
     super();
-    this.state = {
-      value: "missions"
-    }
-    this.handleChange.bind(this)
   }
 
-  handleChange (value) {
-    this.setState({
-      value: value,
-    })
-  }
 
   componentDidMount () {
-   this.props.findUser()
+
   }
 
   render () {
-    console.log("admin component: ", this.props.user)
+
     return (
       <div style={{height: '100%', width: '100%', backgroundColor: 'black'}}>
       <Grid>
         <Row>
           <Col lg={12}>
-            <Row left="lg">
+            <Row center="lg">
               {/* {this.props.user.user && this.props.user.user.isAdmin ? ( */}
-                <div>
-                <div>
-                <span className="console"/>
-                </div>
-                <div>
-                <span className="console1"/>
-                </div>
-                </div>
+                <p id="src1">
+&lt;TEST&gt;&013;&010;&nbsp;
+</p>
+<p id="src2">
+&lt;THIS&gt; 
+</p>
+{/*<p id="src3">
+&lt;OUT&gt; 
+</p>
+<p id="src4">
+&lt;NOW&gt; 
+</p>*/}
+
+<p id="typed-paragraph">
+<div id="target1" className="target1"></div>
+<span id="target2" className="target2"></span>
+<span id="typed-cursor">|</span>
+</p>
+
+
+
             </Row>
           </Col>     
         </Row>
