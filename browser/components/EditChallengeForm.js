@@ -31,7 +31,7 @@ export default class ChallengeForm extends Component {
 
   render() {
     return (
-      <form id="challenge-form" autoComplete="off"> 
+      <form className="form-style" autoComplete="off"> 
         
         {this.props.missionSpecific ? null : 
           <MissionDropDown 
@@ -43,23 +43,23 @@ export default class ChallengeForm extends Component {
         <label>Objective:</label><br/>
         <input 
           type="text" 
-          style={styles.form} 
+          style={{width: '340px'}}
           name="objective" 
           value={this.props.challenge.objective} 
-          onChange={this.props.onChange}/>
+          onChange={this.props.onChange}
+          required/>
         <br/>
         <label>Summary: </label><br/>
         <textArea 
-          style={styles.form}
           type="text" 
           name="summary" 
           value={this.props.challenge.summary} 
-          onChange={this.props.onChange}/>
+          onChange={this.props.onChange}
+          required/>
         <br/>
         <label>Target Tags: </label><br/>
         <input 
           type="text" 
-          style={styles.form}
           name="targetTags" 
           value={this.props.challenge.targetTags} 
           onChange={this.props.onChange}/>
@@ -67,7 +67,6 @@ export default class ChallengeForm extends Component {
         <label>Target Text: </label><br/>
         <input 
           type="text" 
-          style={styles.form}
           name="targetText" 
           value={this.props.challenge.targetText} 
           onChange={this.props.onChange}/>
@@ -75,17 +74,17 @@ export default class ChallengeForm extends Component {
         <label>Conclusion: </label><br/>
         <textArea 
           type="text" 
-          style={styles.form}
           name="conclusion" 
           value={this.props.challenge.conclusion} 
-          onChange={this.props.onChange}/>
+          onChange={this.props.onChange}
+          required/>
         <br/>
         <label>Type: </label><br/>
         <select 
           name="category" 
-          style={styles.form}
           value={this.props.challenge.category} 
-          onChange={this.props.onChange}>
+          onChange={this.props.onChange}
+          required>
           <option value="text">Text</option>
           <option value="image">Image</option>
           <option value="voice">Voice</option>
@@ -94,10 +93,10 @@ export default class ChallengeForm extends Component {
         <label>Order:</label><br/>
         <input 
           type="text" 
-          style={styles.form}
           name="order" 
           value={this.props.challenge.order} 
-          onChange={this.props.onChange}/>
+          onChange={this.props.onChange}
+          required/>
         <br/>
       </form>
     );
@@ -110,7 +109,8 @@ export const MissionDropDown = ({ missions, onChange, challenge }) => (
     <select 
       name="mission" 
       value={challenge.missionId ? challenge.missionId : 'null'} 
-      onChange={onChange}>
+      onChange={onChange}
+      required>
       <option value="null">Leave Unassigned</option>
       
       {missions.map((mission, i) => {

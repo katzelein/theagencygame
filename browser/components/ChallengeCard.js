@@ -10,7 +10,7 @@ import ActionDelete from 'material-ui/svg-icons/action/delete';
 import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 import ActionDone from 'material-ui/svg-icons/action/done';
-
+import Dialog from 'material-ui/Dialog';
 
 const styles = {
   card: {
@@ -60,6 +60,8 @@ export default class ChallengeCard extends Component {
     this.saveChallenge = this.saveChallenge.bind(this);
     this.updatePrevMission = this.updatePrevMission.bind(this);
     this.updateNextMission = this.updateNextMission.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
   }
 
   deleteChallenge(id) {
@@ -141,7 +143,29 @@ export default class ChallengeCard extends Component {
     return axios.put(`/api/challenge/${this.props.challenge.id}/addToMission/${this.state.challenge.missionId}`)
   }
 
+  handleOpen() {
+    this.setState({ open: true });
+  };
+
+  handleClose() {
+    this.setState({ open: false });
+  };
+
   render() {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onClick={this.handleClose} />, 
+      <FlatButton
+        label = "Delete"
+        primary = { true }
+        onClick = {() => {
+          this.handleClose
+          this.deleteChallenge(this.props.challenge.id)
+        }} />
+    ];
+
     if (this.state.isEditing) {
       return (
         <Card 
@@ -230,6 +254,14 @@ export default class ChallengeCard extends Component {
                   </div>
             )}
           </CardText>
+          <Dialog
+            actions={actions}
+            modal={false}
+            open={this.state.open}
+            onRequestClose={this.handleClose}
+            overlayStyle={{background: 'rgba(250, 110, 60, .5)'}} >
+            Are you sure you want to delete this challenge?
+          </Dialog>
           <CardActions 
             id="challenge-actions" 
             style={styles.cardActions} 
@@ -239,7 +271,7 @@ export default class ChallengeCard extends Component {
               style={styles.muiButton}>
               <IconButton 
                 className="inside-mui-button" 
-                tooltip="edit"
+                tooltip="Edit"
                 tooltipPosition="top-center" 
                 onClick={this.editChallenge}
                 iconStyle={{color: 'black'}} 
@@ -248,11 +280,11 @@ export default class ChallengeCard extends Component {
               </IconButton>
               <IconButton 
                 className="inside-mui-button" 
-                tooltip="delete"
+                tooltip="Delete"
                 tooltipPosition="top-center" 
                 style={styles.iconButton}    
                 iconStyle={{color: 'black'}} 
-                onClick={() => this.deleteChallenge(this.props.challenge.id)} >
+                onClick={this.handleOpen} >
                 <ActionDelete/>
               </IconButton>
             </div>

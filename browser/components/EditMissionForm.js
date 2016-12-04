@@ -26,17 +26,19 @@ export default class MissionForm extends Component {
 
   render() {
     return (
-      <form 
-        id="mission-form" 
+      <form
+        className="form-style"
         style={{color: 'black'}} 
         autoComplete="off"> 
         <label style={{color: 'white'}}>Title:</label>
         <br/>
         <input 
+          style={{width: '340px'}}
           type="text" 
           name="title" 
           value={this.props.mission.title} 
-          onChange={this.props.onChange}/>
+          onChange={this.props.onChange}
+          required/>
         <br/>
         <label style={{color: 'white'}}>Description: </label>
         <br/>
@@ -44,7 +46,8 @@ export default class MissionForm extends Component {
           type="text" 
           name="description" 
           value={this.props.mission.description} 
-          onChange={this.props.onChange}/>
+          onChange={this.props.onChange}
+          required/>
         <br/>
         <label style={{color: 'white'}}>Place: </label>
         <br/>
@@ -52,7 +55,8 @@ export default class MissionForm extends Component {
           type="text" 
           name="place" 
           value={this.props.mission.place} 
-          onChange={this.props.onChange}/>
+          onChange={this.props.onChange}
+          required/>
         <br/>
         <label style={{color: 'white'}}>Location: </label>
         <br/>
@@ -60,7 +64,8 @@ export default class MissionForm extends Component {
           type="text" 
           name="location" 
           value={this.props.mission.location.coordinates} 
-          onChange={this.props.onChange} />
+          onChange={this.props.onChange}
+          required />
         <br/>
       </form>
     )
