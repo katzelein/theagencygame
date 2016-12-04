@@ -2,8 +2,17 @@ const User = require('../models/user')
 const Sequelize = require('sequelize')
 
 const UserMission = require('../models/userMission')
-const {sendSimpleText} = require('./send-sms')
+
+let {sendSimpleText} = require('./send-sms')
 const {whichMessage} = require('./whichMessage')
+
+const testing = typeof global.it === 'function'
+if (testing) {
+	sendSimpleText = (phoneNumber, message) => {
+		console.log('testing sendSimpleText')
+		return Promise.resolve(`sending text to ${phoneNumber}`)
+	}
+}
 
 const lookup = (phoneNumber, message) => {
 	return User.findOne({where: {phoneNumber}})
@@ -142,6 +151,8 @@ const fetchMessage = (user, message) => {
 	})
 }
 
+
+
 const sendMessageToPartner = (user, message) => {
 	return UserMission.findOne({
 		where: {
@@ -159,4 +170,5 @@ const sendMessageToPartner = (user, message) => {
 	})
 }
 
-module.exports = {lookup, fetchMessage, sendMessageToPartner}
+
+module.exports = {lookup, fetchMessage, sendMessageToPartner, sendDumbMessage, smsStub}
