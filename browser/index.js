@@ -2,29 +2,32 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AppContainer from './containers/AppContainer';
-import { SendVerificationContainer } from './containers/VerificationContainer';
-import { VerifyContainer } from './containers/VerificationContainer';
-import DashboardContainer from './containers/DashboardContainer';
-import AdminContainer from './containers/AdminContainer';
-import EditMissionsContainer from './containers/EditMissionsContainer';
-import EditChallengesContainer from './containers/EditChallengesContainer';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import store from './store';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 
+
+import AppContainer from './containers/AppContainer';
+import { SendVerificationContainer, VerifyContainer } from './containers/VerificationContainer';
+import DashboardContainer from './containers/DashboardContainer';
+import AdminContainer from './containers/AdminContainer';
+import EditMissionsContainer from './containers/EditMissionsContainer';
+import EditChallengesContainer from './containers/EditChallengesContainer';
+
+
+
 // Adding Material-UI
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import Paper from 'material-ui/Paper';
 import { grey800, amberA700, grey400, amberA400, grey600, amberA100, fullWhite } from 'material-ui/styles/colors';
 import { fade } from 'material-ui/utils/colorManipulator';
-
+import Paper from 'material-ui/Paper';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 import { Grid, Row, Col } from 'react-flexbox-grid/lib/index';
 
+// setting up custom Material-UI theme through darkBaseTheme
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: grey400,

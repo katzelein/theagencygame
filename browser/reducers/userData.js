@@ -7,7 +7,6 @@ export const getUserData = (userData) => ({
 })
 
 export const fetchUserData = () => ((dispatch) => {
-  console.log("dispatching userData")
   axios.get('/api/whoami')
     .then(res => res.data)
     .then(user => {
@@ -15,7 +14,6 @@ export const fetchUserData = () => ((dispatch) => {
         axios.get(`/api/user/${user.id}/history`)
           .then(res => res.data)
           .then(userData => {
-            console.log("USERDATA in fetchUserData: ", userData)
             dispatch(getUserData(userData))
           });
       } else {
@@ -25,7 +23,6 @@ export const fetchUserData = () => ((dispatch) => {
 })
 
 export const userData = (userData = [], action) => {
-  console.log("userData dispatcher")
   switch (action.type) {
     case GET_USER_DATA:
       return action.userData
