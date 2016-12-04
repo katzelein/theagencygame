@@ -2,7 +2,8 @@ const User = require('../models/user')
 const Sequelize = require('sequelize')
 
 const UserMission = require('../models/userMission')
-const {sendSimpleText} = require('./send-sms')
+const send_sms = require('./send-sms')
+const sendSimpleText = send_sms.sendSimpleText
 const {whichMessage} = require('./whichMessage')
 
 const lookup = (phoneNumber, message) => {
@@ -142,6 +143,8 @@ const fetchMessage = (user, message) => {
 	})
 }
 
+
+
 const sendMessageToPartner = (user, message) => {
 	return UserMission.findOne({
 		where: {
@@ -159,4 +162,18 @@ const sendMessageToPartner = (user, message) => {
 	})
 }
 
-module.exports = {lookup, fetchMessage, sendMessageToPartner}
+const sinon = require('sinon');
+let smsStub = sinon.stub(send_sms, 'sendSimpleText', () => {
+	console.log('sinon in sms: sending .....')
+	return Promise.resolve('sinon in sms: sending .....')
+})
+
+const sendDumbMessage = () => {
+	return sendSimpleText()
+	.then(returnObj => {
+		console.log('sendDumbMessage: '+ returnObj)
+		return 'sendDumbMessage: '+ returnObj
+	})
+}
+
+module.exports = {lookup, fetchMessage, sendMessageToPartner, sendDumbMessage, smsStub}

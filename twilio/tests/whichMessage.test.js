@@ -27,7 +27,7 @@ describe('Game Logic', () => {
 	xdescribe('state: FETCH_CHALLENGE (PROBLEM: cannot read property challenges of null)',() => {
 		describe('preceding message: [Do you accept this mission?, Are you ready for your next challenge?]', () => {
 
-			let missionId, challengeId, firstChallenge, secondChallenge, newUser;
+			let missionId, challengeId, firstChallenge, secondChallenge, programmerUser;
 			
 			before('create mission and challenges', () => {
 				const newMission = Mission.create({
@@ -53,6 +53,7 @@ describe('Game Logic', () => {
 					order: 2,
 					hasNext: true
 				})
+				
 				return Promise.all([
 					newMission,
 					newChallenge1,
@@ -65,32 +66,30 @@ describe('Game Logic', () => {
 					missionId = mission.id;
 					return mission.setChallenges([firstChallenge,secondChallenge])
 				})
+				
 			})
 
-			beforeEach('create user', () => {
-				newUser = {
-					messageState: 'FETCH_CHALLENGE',
+			beforeEach('create new user', () => {
+				return User.create({
 					currentMission: missionId
-				}
-			})
-
-			it('should return a promise', () => {
-				let ch = whichMessage.FETCH_CHALLENGE(missionId, null, 'yes');
-				// console.log(ch)
-				expect(ch.constructor.name).to.be.equal('Promise')
+				})
+				.then(newUser => {
+					programmerUser = newUser;
+				})
 			})
 
 			it('returns a promise that resolves to a state object', () => {
-				return whichMessage.FETCH_CHALLENGE(missionId, null, 'yes')
+				const returnObj = whichMessage.FETCH_CHALLENGE(programmerUser, 'yes')
+				return returnObj
 				.then(result => {
 					let keys = Object.keys(result);
 					expect(keys.length).to.be.equal(2);
-					expect(result.state)
+					expect(result.state).to.not.be.null;
 				})
 			})
 
 			it('should fetch first challenge', () => {
-				return whichMessage.FETCH_CHALLENGE(missionId, null, 'yes')
+				return whichMessage.FETCH_CHALLENGE(programmerUser, 'yes')
 				.then(result => {
 					challengeId = result.state.currentChallenge
 					expect(result.state.currentChallenge).to.be.equal(firstChallenge.id);
@@ -98,7 +97,11 @@ describe('Game Logic', () => {
 			})
 
 			it('should fetch second challenge', () => {
-				return whichMessage.FETCH_CHALLENGE(missionId, challengeId, 'yes')
+				programmerUser.update({currentChallenge: firstChallenge})
+				.then(updatedUser => {
+					programmerUser = updatedUser;
+					return whichMessage.FETCH_CHALLENGE(programmerUser, 'yes')
+				})
 				.then(result => {
 					challengeId = result.state.currentChallenge
 					expect(result.state.currentChallenge).to.be.equal(secondChallenge.id);
@@ -106,7 +109,11 @@ describe('Game Logic', () => {
 			})
 
 			it ('should reset mission and challenge if there are no more challenges', () => {
-				return whichMessage.FETCH_CHALLENGE(missionId, challengeId)
+				programmerUser.update({currentChallenge: firstChallenge})
+				.then(updatedUser => {
+					programmerUser = updatedUser;
+					return whichMessage.FETCH_CHALLENGE(programmerUser, 'yes')
+				})
 				.then(result => {
 					// console.log(result)
 					expect(result.state.messageState).to.be.equal('STANDBY')
@@ -200,7 +207,6 @@ describe('Game Logic', () => {
 				it('should return conclusion if text is correct', () => {
 					let message = {Body: 'Deafens me with endless love'}
 
-
 					return whichMessage.CHALLENGE_ANSWER(nightwishUser, message)
 					.then(result => {
 						let resultConclusion = result.message.slice(0,25);
@@ -221,13 +227,24 @@ describe('Game Logic', () => {
 			})
 
 			xdescribe ('image input: (success - don\'t overuse Clarifai in testing)', () => {
+
+				before('set user\'s currentChallenge to imageChallenge', () => {
+					return User.findById(nightwishUser.id)
+					.then(foundUser => {
+						return foundUser.update({currentChallenge: imageChallenge.id})
+					})
+					.then(updatedUser => {
+						nightwishUser = updatedUser;
+					})
+				})
+
 				it('should return conclusion if image is correct', () => {
 					let message = {
 						MediaUrl0: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Messages/MM28717150f4aa31afbfceb4d7e15af8e0/Media/MEf55921bbfc74d012ca5ecc11a472493d',
 						MediaContentType0: 'image/jpeg', // gha logo
 					}
 
-					return whichMessage.CHALLENGE_ANSWER(imageChallenge.id, message)
+					return whichMessage.CHALLENGE_ANSWER(nightwishUser, message)
 					.then(result => {
 						let resultConclusion = result.message.slice(0,20);
 						// console.log(resultConclusion);
@@ -241,7 +258,7 @@ describe('Game Logic', () => {
 						MediaContentType0: 'image/jpeg',
 					}
 					
-					return whichMessage.CHALLENGE_ANSWER(imageChallenge.id, message)
+					return whichMessage.CHALLENGE_ANSWER(nightwishUser, message)
 					.then(result => {
 						let resultConclusion = result.message.slice();
 						// console.log(resultConclusion);
@@ -253,7 +270,7 @@ describe('Game Logic', () => {
 			xdescribe('voice input:', () => {
 				it('should return conclusion if voice message is correct', () => {
 					let message = {RecordingUrl: "https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE75eed5e89a494ce14683e246b38a3928"} // 'hello'
-					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)
+					return whichMessage.CHALLENGE_ANSWER(nightwishUser, message)
 					.then(result => {
 						let resultConclusion = result.message.slice(0,40);
 						console.log(resultConclusion);
@@ -263,7 +280,7 @@ describe('Game Logic', () => {
 
 				it('should return error message if voice message is incorrect', () => {
 					let message = {RecordingUrl: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/REe4ae4c77a5aa2c7d866a6494ff8a3318'}
-					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)
+					return whichMessage.CHALLENGE_ANSWER(nightwishUser, message)
 					.then(result => {
 						console.log(result)
 						let resultConclusion = result.message.slice(0,34);
@@ -278,7 +295,7 @@ describe('Game Logic', () => {
 				// need to replace checkWatsonPromise with a spy
 				it('should return conclusion if voice message is correct', () => {
 					let message = {RecordingUrl: "https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE75eed5e89a494ce14683e246b38a3928"} // 'hello'
-					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)
+					return whichMessage.CHALLENGE_ANSWER(nightwishUser, message)
 					.then(result => {
 						let resultConclusion = result.message.slice(0,40);
 						console.log(resultConclusion);
@@ -288,7 +305,7 @@ describe('Game Logic', () => {
 
 				it('should return error message if voice message is incorrect', () => {
 					let message = {RecordingUrl: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/REe4ae4c77a5aa2c7d866a6494ff8a3318'}
-					return whichMessage.CHALLENGE_ANSWER(voiceChallenge.id, message)
+					return whichMessage.CHALLENGE_ANSWER(nightwishUser, message)
 					.then(result => {
 						console.log(result)
 						let resultConclusion = result.message.slice(0,34);
@@ -300,16 +317,7 @@ describe('Game Logic', () => {
 		})
 	})
 
-	describe ('QUERY_QUIT_MISSION', () => {
-		describe('state is reached by texting in \'quit\'', () => {
-			it ('should send back error message if user texts quit when not on a mission', () => {
-				
-			})
-		})
-	})
-
-
-	describe('helper functions:', () => {
+	xdescribe('helper functions:', () => {
 		describe('checkTags', () => {
 			xit('returns false if inputs are not arrays', () => {
 
@@ -336,7 +344,7 @@ describe('Game Logic', () => {
 			})
 		})
 
-		xdescribe('fetchPartnerFromUserMission', () => {
+		describe('fetchPartnerFromUserMission', () => {
 			let elanMission, elanChallenge, elanUser, elanPartner
 			before('create users, missions, challenges', () => {
 				const newMission = Mission.create({
