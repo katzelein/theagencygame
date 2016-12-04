@@ -7,16 +7,13 @@ export const setUser = (user) => ({
 })
 
 export const fetchUser = () => ((dispatch) => {
-  console.log("dispatching users")
   axios.get('/api/whoami')
   .then(res => res.data)
   .then(user => {
-    console.log("USER IN FETCH USER REDUCER: ", user)
     if(user.id){
       axios.get(`/api/user/${user.id}`)
       .then(res => res.data)
       .then(user => {
-        console.log("USER in fetchUser: ", user)
         dispatch(setUser(user))
       });
     }
@@ -27,7 +24,6 @@ export const fetchUser = () => ((dispatch) => {
 })
 
 export const user = (user = {}, action) => {
-  console.log("user dispatcher")
   switch (action.type) {
     case SET_USER:
       return action.user;
