@@ -84,6 +84,13 @@ const whichMessage = {
 				message: "The main purpose of this training mission is to get you, our newest recruit, used to our system.  Now first things first, before every mission you will be encouraged to send in your location. This enables us to tailor our missions to your location, perhaps even assign you missions that require interactions with other agents.  Most smartphones have the ability to send or share your current location through text.  Please send your current location to The Agency now."
 			}
 		}
+
+		else{
+
+			return{
+				message: "We did not recognize your answer, please respond 'yes' or 'no'."
+			}
+		}
 	},
 
 	TUTORIAL_MISSION_2: (username, message) => {
@@ -145,6 +152,12 @@ const whichMessage = {
 				message: "Ah, Agent "+username+", good of you to call in! Before we assign you a new mission, please send in your location."
 			}
 		}
+		else {
+				console.log("coordinates is not an array")
+				return {
+					message: "We did not recognize your request."
+				}
+			}
 	},
 
 	SOLO_YN: (username, message) => {
@@ -310,6 +323,12 @@ const whichMessage = {
 					}
 				}
 			})
+		}
+
+		else{
+			return{
+				message: "We did not recognize your response. Please respond with 'lone wolf' or 'eager beaver'."
+			}
 		}
 	},
 

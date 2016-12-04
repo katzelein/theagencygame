@@ -76,7 +76,7 @@ export default class ChallengeForm extends Component {
 
   render() {
     return (
-      <Card id="new-challenge-form" style={styles.card}>
+      <Card style={styles.card}>
         <CardHeader 
           style={styles.cardHeader} 
           title="NEW CHALLENGE"
@@ -91,8 +91,9 @@ export default class ChallengeForm extends Component {
           </IconButton>
         </CardHeader>
         <CardText>
-          <form 
-            id="challenge-form" 
+          <form
+            id="challenge-form"
+            className="form-style"
             onSubmit={this.submitAlert} 
             autoComplete="off">        
             
@@ -100,19 +101,22 @@ export default class ChallengeForm extends Component {
             
             <label>Objective:</label>
             <br/>
-            <input 
+            <input
+              style={{width: '340px'}}
               type="text" 
-              name="objective" />
+              name="objective"
+              required />
             <br/>
             <label>Summary:</label><br/>
             <textArea 
               type="text" 
-              name="summary"/>
+              name="summary"
+              required/>
             <br/>
             <label>Target Tags:</label><br/>
             <input 
               type="text" 
-              name="targetTags" />
+              name="targetTags"/>
             <br/>
             <label>Target Text:</label><br/>
             <input 
@@ -123,17 +127,24 @@ export default class ChallengeForm extends Component {
             <br/>
             <textArea 
               type="text" 
-              name="conclusion"/>
+              name="conclusion"
+              required/>
             <br/>
             <label>Type:</label><br/>
-            <input 
-              type="text" 
-              name="category" />
+            <select 
+              name="category"
+              style={{appearance: 'menulist'}}
+              required>
+            <option value="text">Text</option>
+            <option value="image">Image</option>
+            <option value="voice">Voice</option>
+            </select>
             <br/>
             <label>Order:</label><br/>
             <input 
               type="text" 
-              name="order" />
+              name="order"
+              required />
             <br/>
           </form>
         </CardText>
@@ -146,7 +157,8 @@ export const MissionDropDown = ({ missions }) => (
   <div>
     <label>Mission:</label>
     <br/>
-    <select name="mission">
+    <select name="mission"
+    required>
     <option value="null">Leave Unassigned</option>
     
     {missions.map((mission, i) => {

@@ -131,9 +131,12 @@ export default class MissionCard extends Component {
               onChange={this.updateMissionState}
               editMission={this.props.editMission} />
           </CardText>
-          <div> 
+          {this.props.mission.challenges && this.props.mission.challenges.length ? (
+          <div style={{"padding-left": "16px"}}> 
             Challenges 
-          </div>
+          </div> ) : (
+          null
+          )}
                   
           {this.props.mission.challenges.map((challenge, i) => {
             return (
@@ -186,9 +189,12 @@ export default class MissionCard extends Component {
             </div>
           </CardHeader>
           <CardText expandable={true}>
-            <div>
-              Challenges 
-            </div>
+            {this.props.mission.challenges && this.props.mission.challenges.length ? (
+          <div style={{marginLeft: "10px"}}> 
+            Challenges 
+          </div> ) : (
+          null
+          )}
             
             {this.props.mission.challenges.map((challenge, i) => {
               return(
@@ -239,7 +245,7 @@ export default class MissionCard extends Component {
               style={styles.muiButton} >
               <IconButton 
                 className="inside-mui-button" 
-                tooltip="edit"
+                tooltip="Edit"
                 tooltipPosition="top-center" 
                 onClick={this.editMission}
                 style={styles.iconButton} >
@@ -247,7 +253,7 @@ export default class MissionCard extends Component {
               </IconButton>
               <IconButton 
                 className="inside-mui-button" 
-                tooltip="delete" 
+                tooltip="Delete" 
                 onClick={this.handleOpen}
                 tooltipPosition="top-center" 
                 style={styles.iconButton} >
