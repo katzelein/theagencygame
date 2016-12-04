@@ -48,17 +48,18 @@ export default class Admin extends Component {
   render () {
     return (
       <div style={{height: '100%', width: '100%', backgroundColor: 'black'}}>
-      <Grid>
-        <Row>
-          <Col lg={12}>
-            <Row center="lg">
+      <Grid id="myGrid" style={{margin: '0px 0px 0px 30px'}}>
+        <Row id="myFirstRow" start="lg">
+          <Col id="myCol" start="lg">
+            <Row id="myRow" start="lg">
               {/* {this.props.user.user && this.props.user.user.isAdmin ? ( */}
+                <div style={{margin: '30px 0px 0px 0px'}}>
                 <div>
-                <div>
-                <span className="console"/>
+                <span className="preConsole">Agency:covert_ops host$ </span>
+                <span className="console"></span>
                 </div>
-                <div>
-                <span className="console1"/>
+                <div style={{margin: "20px 0px 0px 0px"}}>
+                <Link id="enter" to="login"> ENTER </Link>
                 </div>
                 </div>
             </Row>

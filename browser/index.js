@@ -48,9 +48,9 @@ const muiTheme = getMuiTheme ({
 
 ReactDOM.render(
 
-  <MuiThemeProvider muiTheme={muiTheme}>
+  <MuiThemeProvider id="mui" style={{width: "100%"}} muiTheme={muiTheme}>
     <Provider store={store}>
-      <Grid fluid>
+      <Grid fluid id="OuterGrid">
         <Paper style={{position: 'absolute', top: 0, bottom: 0, overflow: 'auto', width: '100%'}}>
           <Router history={browserHistory}>
             <Route path="/">

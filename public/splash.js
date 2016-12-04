@@ -1,14 +1,25 @@
 $(function(){
         $.when($(".console").typed({
-            strings: ["First <br> sentence."],
-            typeSpeed: 30
-        })).done(function(){
-        $(".console1").delay(10000).typed({
-            strings: ["Second sentence."],
-            typeSpeed: 0
-        })
-    })
+            strings: ["^1000 Welcome, Agent. ^500 You found us. <br> > ^500 To be a member of The Agency is a great honor. <br> > ^500 This is no place for the weak. <br> > ^500 As long as you prove yourself to be an asset to us, <br> > ^500 we will do what we can to look after you. <br> > ^1000 But remember... <br> > ^2000 this is risky business. <br> > ^2000 We cannot guarantee your safety. <br> > ^500 You have been warned. <br> > ^500 We urge you to proceed with caution."],
+            typeSpeed: 50
+        }))
     });
+
+// $(function(){
+//         $("#typed").typed({
+//             stringsElement: $('#typed-strings')
+//         });
+//     });
+
+
+$(function(){
+
+        $(document).keydown(function() {
+            $('#enter').fadeIn()
+
+});
+    });
+
 
 // function first(){
 //         $(".console").typed({

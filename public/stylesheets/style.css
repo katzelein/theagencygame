@@ -100,13 +100,21 @@ html, body
 	height: 100%;
 }
 
-.console{
+/*.console{
   font-family: Monaco, Consolas, "Lucida Console", monospace;
   background-color: 'black';
   color: #1EFF00;
- }
+ }*/
 
- #typed-cursor{
+#enter, .preConsole, .console, .typed-cursor, #typed-cursor {
+    color: #6b6b6b;
+    font-family: monospace;
+    line-height: 1.5;
+    font-size: 1em;
+}
+
+
+ #typed-cursor, .typed-cursor{
     opacity: 1;
     font-weight: 100;
     -webkit-animation: blink 0.7s infinite;
@@ -115,6 +123,22 @@ html, body
     -o-animation: blink 0.7s infinite;
     animation: blink 0.7s infinite;
 }
+
+#enter{
+    opacity: 1;
+    font-weight: 100;
+    -webkit-animation: blink 3s infinite;
+    -moz-animation: blink 3s infinite;
+    -ms-animation: blink 3s infinite;
+    -o-animation: blink 3s infinite;
+    animation: blink 3s infinite;
+}
+
+#enter{
+  display: none;
+}
+
+
 @-keyframes blink{
     0% { opacity:1; }
     50% { opacity:0; }
