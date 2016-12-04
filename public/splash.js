@@ -1,16 +1,23 @@
-// $(function(){
+$(function(){
+        $(".console").typed({
+            strings: ["First sentence."],
+            typeSpeed: 0
+        });
+    });
+
+// function first(){
 //         $(".console").typed({
 //             strings: ["First sentence."],
 //             typeSpeed: 0
 //         });
-//     });
+//     }();
 
-// $(function(){
-//         $(".console1").typed({
-//             strings: ["Second sentence."],
-//             typeSpeed: 0
-//         });
-//     });
+$(function(){
+        $(".console1").typed({
+            strings: ["Second sentence."],
+            typeSpeed: 0
+        });
+    });
 
 // $(function(){
 // 		$(".console1").css("display", "inherit");
@@ -37,12 +44,7 @@
 
 
 
-$.when(function(){
-        $(".console").typed({
-            strings: ["First sentence."],
-            typeSpeed: 0
-        });
-    }
+$.when(first()
 ).done(
 function(){
         $(".console1").typed({
