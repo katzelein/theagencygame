@@ -45,18 +45,13 @@ export default class Admin extends Component {
     })
   }
 
-  componentDidMount () {
-   this.props.findUser()
-  }
-
   render () {
-    console.log("admin component: ", this.props.user)
     return (
       <div style={{height: '100%', width: '100%', backgroundColor: 'black'}}>
       <Grid>
         <Row>
           <Col lg={12}>
-            <Row left="lg">
+            <Row center="lg">
               {/* {this.props.user.user && this.props.user.user.isAdmin ? ( */}
                 <div>
                 <div>
