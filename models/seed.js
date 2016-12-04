@@ -309,10 +309,11 @@ return db.sync({force: true})
     .then(() => {
       let challengeMission = data.challengeMission(missions);
       let challengeKeys = Object.keys(challenges);
-      challengeKeys.forEach(key => {
+      return challengeKeys.forEach(key => {
         return challengeMission[key].addChallenge(challenges[key]);
       })
     })
+    .then(() => console.log("******************   DONE   ******************"))
 })
 
 }}

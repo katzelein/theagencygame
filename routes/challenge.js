@@ -10,45 +10,39 @@ router.post('/setMission/:missionId', function(req, res, next){
 	console.log("posting challenge")
 	console.log("REQ BODY FROM FORM: ", req.body)
 	//mustBeAdmin()(req, res, next)
-	let {objective, summary, targetTags, targetText, conclusion, type, order} = req.body
+	let {objective, summary, targetTags, targetText, conclusion, category, order} = req.body
 	Challenge.create({
-		objective, summary, targetTags, targetText, conclusion, type, order
+		objective, summary, targetTags, targetText, conclusion, category, order
 	})
 	.then(challenge => {
 		return challenge.setMission(req.params.missionId)
 		.then(() => {
 			Mission.findById(req.params.missionId)
 			.then(mission => {
-				// mission.getChallenges()
-				// .then(challenges => {
-				// 	mission.update({
-				// 		numChallenges: challenges.length
-				// 	})
-				// })
 				mission.increment('numChallenges')
 			})
 		})
+		.then(() => res.status(201).json(challenge))
 	})
-	.then(challenge => res.status(200).json(challenge))
 	.catch(next)
 })
 
 router.post('/', function(req, res, next){
 	console.log("posting challenge")
 	console.log("REQ BODY FROM FORM: ", req.body)
-	//mustBeAdmin()(req, res, next)
-	let {objective, summary, targetTags, targetText, conclusion, type, order} = req.body
+	mustBeAdmin()(req, res, next)
+	let {objective, summary, targetTags, targetText, conclusion, category, order} = req.body
 	Challenge.create({
-		objective, summary, targetTags, targetText, conclusion, type, order
+		objective, summary, targetTags, targetText, conclusion, category, order
 	})
 	.then(challenge => {
-		res.status(200).json(challenge)
+		res.status(201).json(challenge)
 	})
 	.catch(next)
 })
 
 router.put('/:id/update', function(req, res, next){
-	let {missionId, objective, summary, targetTags, targetText, conclusion, type, order} = req.body
+	let {missionId, objective, summary, targetTags, targetText, conclusion, category, order} = req.body
 	//missionId = parseInt(missionId)
 	console.log("IS MISSION NULL? : type ", typeof missionId, " val ", missionId)
 	Challenge.findById(req.params.id)
@@ -62,7 +56,7 @@ router.put('/:id/update', function(req, res, next){
 			//if(prevMission === missionId){
 				console.log("MISSION WAS UNCHANGED")
 				challenge.update({
-					missionId, objective, summary, targetTags, targetText, conclusion, type, order
+					missionId, objective, summary, targetTags, targetText, conclusion, category, order
 				})
 				.then(challenge => res.status(200).json(challenge))
 			//}
