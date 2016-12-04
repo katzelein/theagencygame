@@ -25,9 +25,9 @@ if (testing) {
 		console.log('testing getPhotoTags')
 		return Promise.resolve(['gha_logo', 'bowl'])
 	}
-	sendSimpleText = () => {
+	sendSimpleText = (phoneNumber, message) => {
 		console.log('testing sendSimpleText')
-		return Promise.resolve('sending text to ...')
+		return Promise.resolve(`sending text to ${phoneNumber}`)
 	}
 }
 
