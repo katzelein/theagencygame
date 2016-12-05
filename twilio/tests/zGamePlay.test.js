@@ -410,7 +410,7 @@ describe('Game Play', () => {
 
 // ===============================================================================
 
-	describe('pair player', () => {
+	xdescribe('pair player', () => {
 		let spiderUser, spiderPartner, missionId, challengeIds;
 
 		before('Create user, fetch important id\'s, set all users in table to status standby', () => {

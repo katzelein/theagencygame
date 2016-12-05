@@ -6,6 +6,10 @@ const UserMission = require('../models/userMission')
 let {sendSimpleText} = require('./send-sms')
 const {whichMessage} = require('./whichMessage')
 
+/*
+ * if run by mocha (if in testing mode),
+ * replace problematic functions with dummy functions
+ */
 const testing = typeof global.it === 'function'
 if (testing) {
 	sendSimpleText = (phoneNumber, message) => {
@@ -14,6 +18,14 @@ if (testing) {
 	}
 }
 
+/*
+ * paramenters:	phoneNumber	// phone number of message
+ *				message		// entire req.body
+ * 
+ * phoneNumber is used to look up user
+ * pass the user found and the whole message into fetchMessage
+ *		to find the message to return to the user
+ */
 const lookup = (phoneNumber, message) => {
 	return User.findOne({where: {phoneNumber}})
 	.then(user => {
@@ -35,50 +47,62 @@ const lookup = (phoneNumber, message) => {
 	})
 }
 
+/*
+ * essentially a gatekeeper function
+ * based on user's current messageState, determines which function to call
+ * also provides some help menu shortcuts
+ */
 const fetchMessage = (user, message) => {
 
 	user.update({lastMessageFrom: Date()})	
 
 	let simpleInput = "";
 	if (message.Body != undefined) simpleInput = message.Body.toLowerCase();
+
+	/*
+	 * help menu shortcuts
+	 * not fully functional yet!!
+	 */
 	switch(simpleInput) {
 		case 'help':
 		case 'options':
 			return "You have reached The Agency\'s automated help menu! Text 'tutorial' to redo the training mission.  Text 'quit' to quit any ongoing mission.  Text 'skip' to skip any particular challenge in a mission. Text 'resign' to retire from The Agency."
-		case 'tutorial':
-			user.update({
-				prevState: user.messageState,
-				messageState: 'QUERY_TUTORIAL',
-				lastMessageTo: Date()
-			})
-			return "You have indicated you wish to redo your training mission.  Are you certain?"
-		case 'skip':
-			user.update({
-				prevState: user.messageState,
-				messageState: 'QUERY_SKIP_CHALLENGE',
-				lastMessageTo: Date()
-			})
-			return "You have indicated you wish to skip this challenge.  Are you certain?"
-		case 'quit':
-			user.update({
-				prevState: user.messageState,
-				messageState: 'QUERY_QUIT_MISSION',
-				lastMessageTo: Date()
-			})
-			return "You have indicated you wish to quit this mission.  Are you certain?"
-		case 'resign':
-			user.update({
-				prevState: user.messageState,
-				messageState: 'QUERY_RESIGN',
-				lastMessageTo: Date()
-			})
-			return "You have indicated you wish to resign from The Agency.  Are you certain?"
+		// case 'tutorial':
+		// 	user.update({
+		// 		prevState: user.messageState,
+		// 		messageState: 'QUERY_TUTORIAL',
+		// 		lastMessageTo: Date()
+		// 	})
+		// 	return "You have indicated you wish to redo your training mission.  Are you certain?"
+		// case 'skip':
+		// 	user.update({
+		// 		prevState: user.messageState,
+		// 		messageState: 'QUERY_SKIP_CHALLENGE',
+		// 		lastMessageTo: Date()
+		// 	})
+		// 	return "You have indicated you wish to skip this challenge.  Are you certain?"
+		// case 'quit':
+		// 	user.update({
+		// 		prevState: user.messageState,
+		// 		messageState: 'QUERY_QUIT_MISSION',
+		// 		lastMessageTo: Date()
+		// 	})
+		// 	return "You have indicated you wish to quit this mission.  Are you certain?"
+		// case 'resign':
+		// 	user.update({
+		// 		prevState: user.messageState,
+		// 		messageState: 'QUERY_RESIGN',
+		// 		lastMessageTo: Date()
+		// 	})
+		// 	return "You have indicated you wish to resign from The Agency.  Are you certain?"
 		default:
 			break;
 	}
 
 	let returnObj;
-
+	/*
+	 * based off messageState
+	 */
 	switch(user.messageState) {
 		case 'NEED_USERNAME': 
 		// actual text with capitalization
@@ -140,19 +164,18 @@ const fetchMessage = (user, message) => {
 			.then(() => {
 				return outMessage
 			})
-
-		// if (obj && obj.state) user.update(obj.state);
-		// if (obj && obj.message) {
-		// 	user.update({lastMessageTo: Date()})
-		// 	if (hasPartner) sendMessageToPartner(user, obj.message)
-		// 	return obj.message;
-		// }
-		// else return 'Sorry, The Agency\'s text processor has clearly failed.'
 	})
 }
 
-
-
+/*
+ * parameters:	user	// user whose partner we're looking for
+ * 				message	// message to send
+ * looks up user's current UserMission model,
+ * looks up the partner attached to the UserMission
+ * sends the message to the partner
+ *
+ * NOTE: could refactor this into the fetchPartnerFromUserMission in whichMessage??
+ */
 const sendMessageToPartner = (user, message) => {
 	return UserMission.findOne({
 		where: {
@@ -171,4 +194,3 @@ const sendMessageToPartner = (user, message) => {
 }
 
 module.exports = {lookup, fetchMessage, sendMessageToPartner}
-
