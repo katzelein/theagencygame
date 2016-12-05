@@ -171,4 +171,4 @@ const sendMessageToPartner = (user, message) => {
 }
 
 
-module.exports = {lookup, fetchMessage, sendMessageToPartner, sendDumbMessage, smsStub}
+module.exports = {lookup, fetchMessage, sendMessageToPartner}
