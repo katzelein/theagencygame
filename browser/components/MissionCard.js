@@ -158,7 +158,7 @@ export default class MissionCard extends Component {
           style={styles.card}>
           <CardText expandable={true} style={{margin: '16px 30px'}}>
             <EditMissionForm 
-              mission={this.state.mission}
+              mission={this.props.mission}
               challenges={this.props.mission.challenges} 
               onChange={this.updateMissionState}
               editMission={this.props.editMission}

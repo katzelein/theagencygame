@@ -108,7 +108,7 @@ export default class MissionForm extends Component {
           null
           )}
                   
-          {this.props.mission.challenges.map((challenge, i) => {
+          {this.props.challenges.map((challenge, i) => {
             return (
               <div style={{display: 'block'}}>
               <ChallengeCard 
