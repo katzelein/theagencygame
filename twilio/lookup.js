@@ -67,34 +67,34 @@ const fetchMessage = (user, message) => {
 		case 'help':
 		case 'options':
 			return "You have reached The Agency\'s automated help menu! Text 'tutorial' to redo the training mission.  Text 'quit' to quit any ongoing mission.  Text 'skip' to skip any particular challenge in a mission. Text 'resign' to retire from The Agency."
-		case 'tutorial':
-			user.update({
-				prevState: user.messageState,
-				messageState: 'QUERY_TUTORIAL',
-				lastMessageTo: Date()
-			})
-			return "You have indicated you wish to redo your training mission.  Are you certain?"
-		case 'skip':
-			user.update({
-				prevState: user.messageState,
-				messageState: 'QUERY_SKIP_CHALLENGE',
-				lastMessageTo: Date()
-			})
-			return "You have indicated you wish to skip this challenge.  Are you certain?"
-		case 'quit':
-			user.update({
-				prevState: user.messageState,
-				messageState: 'QUERY_QUIT_MISSION',
-				lastMessageTo: Date()
-			})
-			return "You have indicated you wish to quit this mission.  Are you certain?"
-		case 'resign':
-			user.update({
-				prevState: user.messageState,
-				messageState: 'QUERY_RESIGN',
-				lastMessageTo: Date()
-			})
-			return "You have indicated you wish to resign from The Agency.  Are you certain?"
+		// case 'tutorial':
+		// 	user.update({
+		// 		prevState: user.messageState,
+		// 		messageState: 'QUERY_TUTORIAL',
+		// 		lastMessageTo: Date()
+		// 	})
+		// 	return "You have indicated you wish to redo your training mission.  Are you certain?"
+		// case 'skip':
+		// 	user.update({
+		// 		prevState: user.messageState,
+		// 		messageState: 'QUERY_SKIP_CHALLENGE',
+		// 		lastMessageTo: Date()
+		// 	})
+		// 	return "You have indicated you wish to skip this challenge.  Are you certain?"
+		// case 'quit':
+		// 	user.update({
+		// 		prevState: user.messageState,
+		// 		messageState: 'QUERY_QUIT_MISSION',
+		// 		lastMessageTo: Date()
+		// 	})
+		// 	return "You have indicated you wish to quit this mission.  Are you certain?"
+		// case 'resign':
+		// 	user.update({
+		// 		prevState: user.messageState,
+		// 		messageState: 'QUERY_RESIGN',
+		// 		lastMessageTo: Date()
+		// 	})
+		// 	return "You have indicated you wish to resign from The Agency.  Are you certain?"
 		default:
 			break;
 	}

@@ -266,10 +266,12 @@ const whichMessage = {
 	 * parameters:	username	// default parameter of whichMessage functions
 	 * 				message	// needs whole req.body to 
 	 *
-	 * previous state: 
-	 * preceding message from server: 
+	 * previous state: QUERY_MISSION
+	 * preceding message from server: "There are no agents currently available.  Text 'wait' if you would like to wait for a partner or 'go' if you would like to fly solo instead."
 	 * 
-	 * next state: reached by:
+	 * next state: FETCH_CHALLENGE reached by: 'go' - user status set to 'active_solo'
+	 * next state: SOLO_OK reached by: 'wait' - user status set to 'ready'
+	 * next state: FETCH_CHALLENGE reached by: 'wait' and a partner coming online- user status set to 'active_pair'
 	 */
 	SOLO_OK: (user, message) => {
 
@@ -296,13 +298,15 @@ const whichMessage = {
 	},
 
 	/*
-	 * parameters:	username	// default parameter of whichMessage functions
+	 * parameters:	user	// whole user model
 	 * 				userInput	// default parameter of whichMessage functions
 	 *
-	 * previous state: 
-	 * preceding message from server: 
+	 * previous state: SOLO_OK, SOLO_YN
+	 * preceding message from server: "Thank you for sending in your location.  Would you prefer to partner up for your next mission, or go it alone? Respond with 'lone wolf' or 'eager beaver'."
 	 * 
-	 * next state: reached by:
+	 * next state: SOLO_OK reached by: 'eager beaver' but no partners available
+	 * next state: FETCH_CHALLENGE reached by: 'eager beaver' and partner assigned
+	 * next state: FETCH_CHALLENGE reached by: 'lone wolf'
 	 */
 	QUERY_MISSION: (user, userInput) => {
 		// assume we were able to access and process location
@@ -433,10 +437,10 @@ const whichMessage = {
 	 * parameters:	username	// default parameter of whichMessage functions
 	 * 				userInput	// default parameter of whichMessage functions
 	 *
-	 * previous state: 
-	 * preceding message from server: 
+	 * previous state: QUERY_MISSION / CHALLENGE_ANSWER
+	 * preceding message from server: Do you accept this mission? Are you ready for the next challenge?
 	 * 
-	 * next state: reached by:
+	 * next state: CHALLENGE_ANSWER reached by: 'ready' or 'yes'
 	 */
 	FETCH_CHALLENGE: (user, userInput) => {
 		// still need to adjust based on userInput
@@ -642,9 +646,6 @@ const whichMessage = {
 			})
 		})
 	},
-
-
-	QUERY_HIATUS: () =>{return ""},
 
 	/*
 	 * parameters:	username	// default parameter of whichMessage functions
