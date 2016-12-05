@@ -13,14 +13,6 @@ let speech_to_text = new SpeechToTextV1({
 
 const checkWatsonPromise = function (body) {
 
-  // needs internet -___-''
-  // get the WAV file from twilio
-
-  // request(body.RecordingUrl).pipe(fs.createWriteStream('message.wav')).on('end', ok => console.log('wrote message.wav'))
-
-  // do we need this if params includes recordingurl???
-
-  // check it in Watson
   let params = {
     audio: request(body.RecordingUrl),
     content_type: 'audio/wav',
@@ -41,39 +33,4 @@ const checkWatsonPromise = function (body) {
   })
 }
 
-module.exports = {checkWatsonPromise}; //,checkWatsonAPI
-
-/*
-let checkWatsonAPI = function (body) {
-
-  // get the WAV file from twilio
-  request(body.RecordingUrl).pipe(fs.createWriteStream('message.wav')).on('end', ok => console.log('wrote message.wav'))
-
-  // check it in Watson
-  let params = {
-    audio: request(body.RecordingUrl),
-    content_type: 'audio/wav',
-    model: 'en-US_NarrowbandModel'
-  }
-  
-  let result;
-
-  speech_to_text.recognize(params, function (err, res) {
-    if (err) {
-      console.log("Watson cannot detect transcript", err)
-      return '';
-    }
-    else {
-      console.log("Message transcript detected")
-      // returns a string to match, ex: "how are you today"
-      console.log(res);
-      console.log(res.results[0])
-      result = res.results[0].alternatives[0].transcript.toLowerCase().trim();
-      console.log(result)
-      return result;
-    }
-  });
-
-  return result;
-}
-*/
+module.exports = {checkWatsonPromise};

@@ -9,6 +9,13 @@ const client = require('twilio')(accountSid, authToken);
 const checkWatsonPromise = require('./watson')
 const {lookup} = require('./lookup')
 
+const {sendSimpleText} = require('./send-sms')
+
+/*
+ * voice cals are directed here
+ * tells twilio to create a recording of the voice call
+ *    and send the recording to /voice/recording
+ */
 twilioAPI.post('/voice', function (req, res, next) {
   let twiml = new twilio.TwimlResponse();
   twiml.say('Go ahead agent.', {
@@ -21,28 +28,18 @@ twilioAPI.post('/voice', function (req, res, next) {
   res.send(twiml.toString())
 });
 
+/*
+ * recordings of voice calls are directed here
+ */
 twilioAPI.post('/recording', function (req, res, next) {
-  console.log("THIS IS THE REQ YOU WANT", req.body)
-  // req.body.From still gives us the user phone number
-
-  // let result = checkWatsonPromise(req.body)
-
-  // console.log('result:', result);
-  // result.then(resolved => {
-  //   console.log('resolved:', resolved)
-  // })
 
   var answer = lookup(req.body.From, req.body)
 
-  // this doesn't work. Help
+  // send text to caller
   return answer
   .then(message => {
     console.log("answer message: ",message)
-    return client.sendMessage({
-      to: req.body.From,
-      from: twilioNum,
-      body: message
-    })
+    sendSimpleText(req.body.From, message)
   })
   .then(() => {
     res.sendStatus(200);
