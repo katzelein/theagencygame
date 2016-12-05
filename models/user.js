@@ -10,7 +10,7 @@ const User = db.define('users', {
   phoneNumber: Sequelize.STRING, 
   status: Sequelize.ENUM('standby', 'ready', 'active_solo', 'active_pair', 'retired'),
     /*
-     * standy: between missions
+     * standby: between missions
      * ready: waiting for a partner
      * active_solo: on a mission alone
      * active_pair: on a mission with a partner

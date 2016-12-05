@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-register seed.test.js ./models/tests/*.test.js ./twilio/tests/*.test.js reminders.js",
+    "test": "mocha --compilers js:babel-register seed.test.js ./models/tests/*.test.js ./twilio/tests/*.test.js reminders.js ./browser/components/tests/test.js --require ignore-styles",
     "coverage": "istanbul cover test",
     "build": "webpack",
     "build-watch": "webpack -w",
@@ -38,6 +38,7 @@
     "flexboxgrid": "^6.3.1",
     "formsy-react": "^0.18.1",
     "geocoder": "^0.2.2",
+    "lodash": "^4.17.2",
     "material-ui": "^0.16.4",
     "mocha": "^3.1.2",
     "nodemon": "^1.11.0",
@@ -68,9 +69,15 @@
     "webpack": "^1.13.2"
   },
   "devDependencies": {
+    "chai-enzyme": "^0.6.1",
+    "cheerio": "^0.22.0",
+    "enzyme": "^2.6.0",
     "eslint": "^3.11.1",
     "eslint-plugin-react": "^6.7.1",
+    "faker": "^3.1.0",
+    "ignore-styles": "^5.0.1",
     "istanbul": "^0.4.5",
-    "npm": "^4.0.2"
+    "npm": "^4.0.2",
+    "react-addons-test-utils": "^15.4.1"
   }
 }
