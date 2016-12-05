@@ -17,16 +17,38 @@ export default class MissionForm extends Component {
     super(props)
     this.state = { 
       add: false, 
-      addOrSave: "ADD MISSION" 
+      addOrSave: "ADD MISSION",
+      mission: this.props.mission
     }
+    this.mission = Object.assign({}, this.props.mission)
     this.closeForm = this.closeForm.bind(this)
+    this.updateHere = this.updateHere.bind(this)
   }
 
   closeForm() {
     this.props.toggleAdd()
   }
 
+  updateHere(e){
+    let val = e.target.value
+
+    if(e.target.name.indexOf('order') !== -1){
+      let challengeId = e.target.name.slice(6)
+
+      console.log("CHALLENGE ID: ", challengeId)
+      console.log("target: ", e.target)
+      console.log("target ID: ", e.target.id)
+      let id = parseInt(e.target.id)
+      this.mission.challenges[id].order = val
+    }
+    
+    this.setState({ mission: this.mission})
+    this.props.findMissions()
+  }
+
   render() {
+    console.log("EDIT MISSION FORM STATE: ", this.state.mission.challenges)
+    console.log("EDIT MISSION FORM PROPS: ", this.props.mission.challenges)
     return (
       <form
         className="form-style"
@@ -80,13 +102,13 @@ export default class MissionForm extends Component {
         <br/>
 
         {this.props.challenges && this.props.challenges.length ? (
-          <div style={{"padding-left": "16px", color: 'white'}}> 
+          <div style={{paddingLeft: "16px", paddingTop: "20px", color: 'white'}}> 
             Challenges 
           </div> ) : (
           null
           )}
                   
-          {this.props.challenges.map((challenge, i) => {
+          {this.props.mission.challenges.map((challenge, i) => {
             return (
               <div style={{display: 'block'}}>
               <ChallengeCard 
@@ -100,8 +122,11 @@ export default class MissionForm extends Component {
                     style={{display: 'inline-block', width: '60px'}}
                     type="text"
                     id={i.toString()}
-                    value={this.props.mission.challenges[i].order}
-                    onChange={this.props.onChange}
+                    value={this.state.mission.challenges[i].order}
+                    onChange={(e) => {
+                      this.props.onChange(e)
+                      this.updateHere(e)
+                    }}
                     name={`order_${challenge.id}`}
                     floatingLabelText="Order" />
               </div>

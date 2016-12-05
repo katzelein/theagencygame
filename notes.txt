@@ -86,6 +86,8 @@ expander style
 
 before adding challenge give it a num order
 
+if i am on challenges page and i set the mission, how will it affect the challenge order
+
 
 
 LATER

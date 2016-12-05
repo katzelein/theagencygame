@@ -96,11 +96,22 @@ export default class MissionCard extends Component {
 
   saveMission() {
     let missionId = this.state.mission.id
+    let PromiseArray = []
     axios.put(`/api/mission/${missionId}/update`, this.state.mission)
       .then(() => {
-        this.props.findMissions()
-        let bool = !this.state.isEditing
-        this.setState({ isEditing: bool })
+        let key;
+        for(key in this.state.challengeOrder){
+          console.log("KEY: ", key)
+          console.log("Order: ", this.state.challengeOrder[key])
+          let p = axios.put(`/api/challenge/${key}/update`, {order: this.state.challengeOrder[key]})
+          PromiseArray.push(p)
+        }
+        Promise.all(PromiseArray)
+        .then(() => {
+          this.props.findMissions()
+          let bool = !this.state.isEditing
+          this.setState({ isEditing: bool })
+        })
       })
   }
 
@@ -151,7 +162,7 @@ export default class MissionCard extends Component {
               challenges={this.props.mission.challenges} 
               onChange={this.updateMissionState}
               editMission={this.props.editMission}
-              refreshCards={this.props.findMissions} />
+              findMissions={this.props.findMissions} />
           </CardText>
 
           <CardActions id="actions" expandable={true}>

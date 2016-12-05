@@ -16,10 +16,14 @@ router.post('/setMission/:missionId', function(req, res, next){
 	})
 	.then(challenge => {
 		return challenge.setMission(req.params.missionId)
-		.then(() => {
+		.then((challenge) => {
 			Mission.findById(req.params.missionId)
 			.then(mission => {
 				mission.increment('numChallenges')
+				.then((mission) => {
+					console.log("NUM CHALLENGES: ", mission.numChallenges)
+					challenge.update({order: mission.numChallenges})
+				})
 			})
 		})
 		.then(() => res.status(201).json(challenge))
@@ -46,6 +50,7 @@ router.post('/', function(req, res, next){
 router.put('/:id/update', function(req, res, next){
 	let {missionId, objective, summary, targetTags, targetText, conclusion, category, order} = req.body
 	//missionId = parseInt(missionId)
+	order = parseInt(order)
 	console.log("IS MISSION NULL? : type ", typeof missionId, " val ", missionId)
 	if(mustBeAdmin()(req, res, next) === "continue"){
 	Challenge.findById(req.params.id)
