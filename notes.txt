@@ -75,5 +75,29 @@ missionChooser
 - make sure mission is not required for challenge model
 - make drop down arrow show
 
+phone number and username should be unique
+add self only to routes
+
+context.stop is not stopping
+add meetingPlace to forms
+
+test save challenge function on challenge card
+
+
+
+LATER
+as admin view all users
+stats on how many users have completed each mission
+average time to complete each mission/ each challenge
+missions done solo vs missions done in pair
+dashboard should show who the partner was
+send in photo to be stored on your account and for face recognition
+send photo of partners face
+
+add self only to routes
+
+context.stop is not stopping
+
+
 
 

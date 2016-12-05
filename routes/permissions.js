@@ -7,10 +7,10 @@ const mustBeAdmin = message => (req, res, context) => {
   if (!req.session.user || !req.session.user.isAdmin) {
     console.log("thinks user is not Admin")
     res.status(403).send('You do not have access to this page')
-    return context.stop
+    return "stop"
   }
   else if(req.session.user && req.session.user.isAdmin){
-    return context.continue
+    return "continue"
   }
 }
 
