@@ -76,6 +76,12 @@ missionChooser
 - make drop down arrow show
 
 phone number and username should be unique
+add self only to routes
+
+context.stop is not stopping
+add meetingPlace to forms
+
+test save challenge function on challenge card
 
 
 

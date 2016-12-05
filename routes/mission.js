@@ -10,7 +10,7 @@ router.post('/', function(req, res, next){
 	console.log("posting mission")
 	console.log("REQ BODY FROM FORM: ", req.body)
 	//mustBeAdmin()(req, res, next)
-	let {title, description, place, location} = req.body
+	let {title, description, place, meetingPlace, location} = req.body
 	Mission.create({
 		title, description, place, location, 
 		numChallenges: 0

@@ -16,7 +16,7 @@ router.get('/whoami', (req, res, next) => {
 
 router.get('/missions', function(req, res, next){
 	console.log("getting missions")
-	mustBeAdmin()(req, res, next)
+	if(mustBeAdmin()(req, res, next) === "continue"){
 	Mission.findAll({
 		include: [
      		{ model: Challenge }
@@ -28,11 +28,12 @@ router.get('/missions', function(req, res, next){
 		res.status(200).json(missions)
 	})
 	.catch(next)
+}
 })
 
 router.get('/challenges', function(req, res, next){
 	console.log("getting challenges")
-	mustBeAdmin()(req, res, next)
+	if(mustBeAdmin()(req, res, next) === "continue"){
 	Challenge.findAll({
 		include: [
      		{ model: Mission}
@@ -44,11 +45,12 @@ router.get('/challenges', function(req, res, next){
 		res.status(200).json(challenges)
 	})
 	.catch(next)
+}
 
 })
 
 router.get('/users', function(req, res, next){
-	mustBeAdmin()(req, res, next)
+	if(mustBeAdmin()(req, res, next) === "continue"){
 	User.findAll({
   		order: 'id'
 	})
@@ -56,7 +58,7 @@ router.get('/users', function(req, res, next){
 		res.status(200).json(users)
 	})
 	.catch(next)
-
+	}
 })
 
 
