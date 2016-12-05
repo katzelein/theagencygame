@@ -6,6 +6,9 @@ const UserMission = require('../models/userMission')
 let {sendSimpleText} = require('./send-sms')
 const {whichMessage} = require('./whichMessage')
 
+/*
+ * if run by mocha (if in testing mode), replace problematic functions
+ */
 const testing = typeof global.it === 'function'
 if (testing) {
 	sendSimpleText = (phoneNumber, message) => {
@@ -41,6 +44,10 @@ const fetchMessage = (user, message) => {
 
 	let simpleInput = "";
 	if (message.Body != undefined) simpleInput = message.Body.toLowerCase();
+
+	/*
+	 * help menu shortcuts
+	 */
 	switch(simpleInput) {
 		case 'help':
 		case 'options':
@@ -140,14 +147,6 @@ const fetchMessage = (user, message) => {
 			.then(() => {
 				return outMessage
 			})
-
-		// if (obj && obj.state) user.update(obj.state);
-		// if (obj && obj.message) {
-		// 	user.update({lastMessageTo: Date()})
-		// 	if (hasPartner) sendMessageToPartner(user, obj.message)
-		// 	return obj.message;
-		// }
-		// else return 'Sorry, The Agency\'s text processor has clearly failed.'
 	})
 }
 

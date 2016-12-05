@@ -96,7 +96,7 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user messageState at FETCH_CHALLENGE', () => {
+		xit('user messageState at FETCH_CHALLENGE', () => {
 			expect(spiderUser.messageState).to.be.equal('FETCH_CHALLENGE')
 			expect(spiderUser.status).to.be.equal('active_solo');
 			expect(spiderUser.currentMission).to.be.equal(missionId)
@@ -125,14 +125,14 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user texts in to accept mission | server sends challenge description: Ben\'s Bowl', () => {
+		xit('user texts in to accept mission | server sends challenge description: Ben\'s Bowl', () => {
 			return fetchMessage(spiderUser, {Body: 'yes'})
 			.then(message => {
 				expect(message).to.be.equal("Find GHA\'s Newest Hero, Ceren: Ceren, Ben\'s doting mom who, in an incredible feat of strength and love, pulled him from the grips of an oncoming subway just a few weeks ago, spends her days in the CSS room. Find her office where Ben\'s orange water bowl sits and send us a picture; we need a warrant to dust the bowl for fingerprints.")
 			})
 		})
 
-		it('user messageState at CHALLENGE_ANSWER', () => {
+		xit('user messageState at CHALLENGE_ANSWER', () => {
 			expect(spiderUser.messageState).to.be.equal('CHALLENGE_ANSWER')
 			expect(spiderUser.status).to.be.equal('active_solo');
 			expect(spiderUser.currentMission).to.be.equal(missionId)
@@ -150,7 +150,7 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user texts in a picture of the bowl | server asks to continue to next challenge', () => {
+		xit('user texts in a picture of the bowl | server asks to continue to next challenge', () => {
 			let answer = {
 				MediaUrl0: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Messages/MM26aa8d1a6ee78d96e0579ee0d2b797df/Media/ME97234e6fe389ca73761e882278b4aeb3',
 				MediaContentType0: 'image/jpeg', 
@@ -161,7 +161,7 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user messageState at FETCH_CHALLENGE', () => {
+		xit('user messageState at FETCH_CHALLENGE', () => {
 			expect(spiderUser.messageState).to.be.equal('FETCH_CHALLENGE')
 			expect(spiderUser.status).to.be.equal('active_solo');
 			expect(spiderUser.currentMission).to.be.equal(missionId)
@@ -179,14 +179,14 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user texts in \'yes\' | server sends challenge description: Fire Extinguisher', () => {
+		xit('user texts in \'yes\' | server sends challenge description: Fire Extinguisher', () => {
 			return fetchMessage(spiderUser, {Body: 'yes'})
 			.then(message => {
 				expect(message).to.be.equal("Putting Out Kitchen Fires: Ben loves to wander the hallways of Grace Hopper, finding the occasional student eager to scratch his belly, or scooping up the remains of a forgotten blueberry muffin. On the day of the theft, Ben was seen more than usual around the kitchen yesterday during an incoming shipment of cereal; we think this may be where the thief saw their opportunity. Please send the license number for the fire extinguisher on the left by the passcoded door. We believe the thief may use this as the passcode for their own office.")
 			})
 		})
 
-		it('user messageState at CHALLENGE_ANSWER', () => {
+		xit('user messageState at CHALLENGE_ANSWER', () => {
 			expect(spiderUser.messageState).to.be.equal('CHALLENGE_ANSWER')
 			expect(spiderUser.status).to.be.equal('active_solo');
 			expect(spiderUser.currentMission).to.be.equal(missionId)
@@ -204,14 +204,14 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user texts in \'133w\' | server asks to continue to next challenge', () => {
+		xit('user texts in \'133w\' | server asks to continue to next challenge', () => {
 			return fetchMessage(spiderUser, {Body: '133w'})
 			.then(message => {
 				expect(message).to.be.equal("You\'re on the mark, shouldn\'t be long now.\n\nAre you ready for your next challenge?")
 			})
 		})
 
-		it('user messageState at FETCH_CHALLENGE', () => {
+		xit('user messageState at FETCH_CHALLENGE', () => {
 			expect(spiderUser.messageState).to.be.equal('FETCH_CHALLENGE')
 			expect(spiderUser.status).to.be.equal('active_solo');
 			expect(spiderUser.currentMission).to.be.equal(missionId)
@@ -229,14 +229,14 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user texts in \'yes\' | server sends challenge description: Voice call', () => {
+		xit('user texts in \'yes\' | server sends challenge description: Voice call', () => {
 			return fetchMessage(spiderUser, {Body: 'yes'})
 			.then(message => {
 				expect(message).to.be.equal("Tracking the Teacher: We have a list of all the offices linked to the passcode you found, and one of the teachers of Grace Hopper and Fullstack Academy, Ashi Krishnan, spent the day in the office implicated during the theft of Ben\'s bone. Find Ashi and find out the name of her childhood dog -- but do it covertly. She can\'t know that she\'s a suspect. Then call this number, speak the name of the dog when prompted, and quickly hang up. Secrecy is key.")
 			})
 		})
 
-		it('user messageState at CHALLENGE_ANSWER', () => {
+		xit('user messageState at CHALLENGE_ANSWER', () => {
 			expect(spiderUser.messageState).to.be.equal('CHALLENGE_ANSWER')
 			expect(spiderUser.status).to.be.equal('active_solo');
 			expect(spiderUser.currentMission).to.be.equal(missionId)
@@ -254,7 +254,7 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user calls in | servers sends a text message to continue', () => {
+		xit('user calls in | servers sends a text message to continue', () => {
 			let answer = {
 				RecordingUrl: "https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Recordings/RE75eed5e89a494ce14683e246b38a3928"
 			}
@@ -264,7 +264,7 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user messageState at FETCH_CHALLENGE', () => {
+		xit('user messageState at FETCH_CHALLENGE', () => {
 			expect(spiderUser.messageState).to.be.equal('FETCH_CHALLENGE')
 			expect(spiderUser.status).to.be.equal('active_solo');
 			expect(spiderUser.currentMission).to.be.equal(missionId)
@@ -282,14 +282,14 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user texts in \'yes\' | server sends challenge description: GHA Logo', () => {
+		xit('user texts in \'yes\' | server sends challenge description: GHA Logo', () => {
 			return fetchMessage(spiderUser, {Body: 'yes'})
 			.then(message => {
 				expect(message).to.be.equal("Grace Hopper Academy\'s Secret Storage: We think that the thief may have an even bigger profile at the school than we thought possible. The corruption runs deep. The thief may have been so smart as to code a clue into the Grace Hopper logo in plain sight. Head to the lobby of the school and send us a picture of the logo.")
 			})
 		})
 
-		it('user messageState at CHALLENGE_ANSWER', () => {
+		xit('user messageState at CHALLENGE_ANSWER', () => {
 			expect(spiderUser.messageState).to.be.equal('CHALLENGE_ANSWER')
 			expect(spiderUser.status).to.be.equal('active_solo');
 			expect(spiderUser.currentMission).to.be.equal(missionId)
@@ -307,7 +307,7 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user texts in image of the GHA logo | server asks to continue to next challenge', () => {
+		xit('user texts in image of the GHA logo | server asks to continue to next challenge', () => {
 			let answer = {
 				MediaUrl0: 'https://api.twilio.com/2010-04-01/Accounts/ACc41e6487bcf3da0f8bdde627b28740d2/Messages/MM28717150f4aa31afbfceb4d7e15af8e0/Media/MEf55921bbfc74d012ca5ecc11a472493d',
 				MediaContentType0: 'image/jpeg'
@@ -318,7 +318,7 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user messageState at FETCH_CHALLENGE', () => {
+		xit('user messageState at FETCH_CHALLENGE', () => {
 			expect(spiderUser.messageState).to.be.equal('FETCH_CHALLENGE')
 			expect(spiderUser.status).to.be.equal('active_solo');
 			expect(spiderUser.currentMission).to.be.equal(missionId)
@@ -336,14 +336,14 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user texts in \'yes\' | server sends challenge description: Cereal', () => {
+		xit('user texts in \'yes\' | server sends challenge description: Cereal', () => {
 			return fetchMessage(spiderUser, {Body: 'yes'})
 			.then(message => {
 				expect(message).to.be.equal("The Voice of Ultimate Betrayal: This is where the rubber meets the road, agent. You will need to be your most stealthy. Find David Yang; he is never far away. We believe his taste in cereal could confirm whether or not he was interested in Ben\'s bone. Find out which cereal he is most excited to see in the Grace Hopper kitchen, and text it to us.")
 			})
 		})
 
-		it('user messageState at CHALLENGE_ANSWER', () => {
+		xit('user messageState at CHALLENGE_ANSWER', () => {
 			expect(spiderUser.messageState).to.be.equal('CHALLENGE_ANSWER')
 			expect(spiderUser.status).to.be.equal('active_solo');
 			expect(spiderUser.currentMission).to.be.equal(missionId)
@@ -372,14 +372,14 @@ describe('Game Play', () => {
 			})
 		})
 
-		it('user texts in \'fruity pebbles\' | server sends end of mission', () => {
+		xit('user texts in \'fruity pebbles\' | server sends end of mission', () => {
 			return fetchMessage(spiderUser, {Body: 'fruity pebbles'})
 			.then(message => {
 				expect(message).to.be.equal("We have a match. David Yang is the thief of the missing bone. It is a dark day for Grace Hopper, but a proud day for the Agency. Well done, agent. Your country, and Ben, thanks you.\n\nYou have completed your mission.  Text \'new mission\' to start a new mission")
 			})
 		})
 
-		it('user messageState at STANDBY', () => {
+		xit('user messageState at STANDBY', () => {
 			expect(spiderUser.messageState).to.be.equal('STANDBY')
 			expect(spiderUser.status).to.be.equal('standby');
 			expect(spiderUser.currentMission).to.be.equal(0);
@@ -410,7 +410,7 @@ describe('Game Play', () => {
 
 // ===============================================================================
 
-	describe('pair player', () => {
+	xdescribe('pair player', () => {
 		let spiderUser, spiderPartner, missionId, challengeIds;
 
 		before('Create user, fetch important id\'s, set all users in table to status standby', () => {

@@ -319,10 +319,7 @@ describe('Game Logic', () => {
 
 	xdescribe('helper functions:', () => {
 		describe('checkTags', () => {
-			xit('returns false if inputs are not arrays', () => {
-
-			})
-
+			 
 			it('returns true if at least one of expected tags exists in actual tags', () => {
 
 				let expectedTags = ['yes'];
