@@ -28,7 +28,6 @@ router.get('/missions', function(req, res, next){
   ]
 	})
 	.then(missions => {
-		console.log("MISSION CHALLENGES: ", missions[2].challenges)
 		res.status(200).json(missions)
 	})
 	.catch(next)

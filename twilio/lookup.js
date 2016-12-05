@@ -106,7 +106,7 @@ const fetchMessage = (user, message) => {
 	switch(user.messageState) {
 		case 'NEED_USERNAME': 
 		// actual text with capitalization
-			returnObj = whichMessage[user.messageState] (user.username, message.Body);
+			returnObj = whichMessage[user.messageState] (user, message.Body);
 			break;
 		case 'TUTORIAL_MISSION_2': // need location
 		case 'TUTORIAL_MISSION_3': // need image

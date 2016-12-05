@@ -30,6 +30,8 @@ const data = {
   mission: [
     { title: 'Intrigue on Wall Street',  // mission 1
       description: 'One of our agents disappeared somewhere into the depths of the Trump Building on Wall Street. We need you to investigate his disappearance, which may be ever more dire with the upcoming inauguration.',
+      place: 'Financial District',
+      meetingPlace: 'NW corner of Wall St and Broad St',
       numChallenges: 3,
       location: {type: 'Point', coordinates: [41.705691, -73.009342]}
     },
@@ -52,15 +54,20 @@ const data = {
     { objective: 'Head to the Trump Building', // mission 1
       summary: 'We need photographic evidence of the specific street address assigned to this building. We believe that the etchings on the gold may somehow contain his fingerprints. When found, send photograph to this number. Show no others.',
       conclusion: 'Great work. The fingerprints are being to the lab for analysis. In the meantime, we have another task for you.',
+      order: 1,
+      hasNext: true
     },
     { objective: 'Dine with the Finest', // mission 1
       summary: 'Cipriani on Wall St is as classy as it gets. Go to the restaurant and find out what the special of the day is.',
-      conclusion: 'That does sound special. Might as well treat yourself to some grub while you are there'
+      conclusion: 'That does sound special. Might as well treat yourself to some grub while you are there',
+      order: 2,
+      hasNext: true
     },
     { objective: 'Origins of the Open Market', // mission 1
       summary: 'According to our surveillance, agent SoAndSo bought an omelette with spinach and broccoli every morning at the Open Market. Head to the store and talk to Vinnie, the guy behind the omelette counter. Give him the passcode and, if he deems you trustworthy, send us his return passcode.', targetText: 'What are you talking about', 
       category: 'voice',
       conclusion: 'Vinnie may be connected to the mob. He trusted you with the right passcode, so our way deeper into the depths may be open. Please await your next mission.',
+      order: 3
     },
 
     { objective: 'Find GHA\'s Newest Hero, Ceren', // mission 3

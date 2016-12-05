@@ -11,7 +11,10 @@ const Challenge = db.define('challenges', {
   conclusion: Sequelize.TEXT,
   category: Sequelize.ENUM('text', 'image', 'voice'),
   order: Sequelize.INTEGER,
-  hasNext: Sequelize.BOOLEAN
+  hasNext: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  }
 }, {
   hooks: {
     beforeDestroy: function(challenge, options) {
@@ -22,7 +25,17 @@ const Challenge = db.define('challenges', {
             mission.removeChallenge(challenge.id)
               .then(() => {
                 mission.decrement("numChallenges")
-                  .then(() => console.log("UPDATED MISSION BEFORE DESTROY"))
+                  .then(() => {
+                    mission.getChallenges({where: {
+                      order: {$gt: challenge.order}
+                    }})
+                    .then(challenges => {
+                      let promiseArr = []
+                      challenges.forEach(challenge => {promiseArr.push(challenge.decrement('order'))})
+                      return Promise.all(promiseArr)
+                    })
+                    .then(() => console.log("UPDATED MISSION BEFORE DESTROY"))
+                  })
               })
           } else {
             console.log("NO MISSION")

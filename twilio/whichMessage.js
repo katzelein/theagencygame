@@ -57,6 +57,23 @@ const whichMessage = {
 				message: "Ah, it's seems The Agency has a new recruit! And what is your name, Trainee?  Feel free to use an alias, we respect the secrets of our agents."
 			}
 		}
+		else if((/(decline)/i).test(userInput)){
+  			console.log("IT FOUND Decline")
+  			user.destroy({force: true})
+  			.then(() => {
+  				return {
+	  				state: {
+	  					messageState: 'NEED_USERNAME'
+					},
+					message: "Please contact us again if you change your mind."
+				}
+  			})
+		}
+		else{
+			return {
+				message: "We did not recognize your response, please text back 'join' or 'decline'"
+			}
+		}
 	},
 
 	/*

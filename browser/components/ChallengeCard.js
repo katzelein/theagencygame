@@ -66,7 +66,7 @@ export default class ChallengeCard extends Component {
   }
 
   deleteChallenge(id) {
-
+    console.log("THIS.PROPS.DELETEFROM.MISSION: ", this.props.deleteFromMission)
     // delete challenge from a mission, not from the database
     let bool = !this.state.refresh;
     if (this.props.deleteFromMission) {
@@ -153,7 +153,6 @@ export default class ChallengeCard extends Component {
   };
 
   render() {
-    console.log("EDITING MISSION: ", this.props.editingMission)
     if(this.state.editingMission){
       styles.card = {
         padding: 10, 
@@ -270,6 +269,7 @@ export default class ChallengeCard extends Component {
             overlayStyle={{background: 'rgba(250, 110, 60, .5)'}} >
             Are you sure you want to delete this challenge?
           </Dialog>
+          {this.state.editingMission ? null : (
           <CardActions 
             id="challenge-actions" 
             style={styles.cardActions} 
@@ -296,7 +296,7 @@ export default class ChallengeCard extends Component {
                 <ActionDelete/>
               </IconButton>
             </div>
-          </CardActions>
+          </CardActions> ) }
         </Card>
       )
     }

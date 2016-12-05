@@ -103,6 +103,8 @@ add self only to routes
 
 context.stop is not stopping
 
+don't update user until message is sent
+don't delete user
 
 
 

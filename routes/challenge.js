@@ -96,16 +96,17 @@ router.delete('/:id/mission/:missionId', function(req, res, next){
 		.then(mission => {
 			mission.removeChallenge(challenge.id)
 		
-		.then(() => {
-			console.log("MISSION after remove challenge: ", mission)
-			mission.decrement('numChallenges')
-			.then((mission) => {
-				challenge.getUsers()
-				.then(() => {
-					res.status(200).json(mission)
+			.then(() => {
+				console.log("MISSION after remove challenge: ", mission)
+				mission.decrement('numChallenges')
+				.then((mission) => {
+					console.log("MISSION IN DELETE: ", mission)
+					updateHasNext(mission)
+					.then(() => challenge.getUsers())
+					.then(() => {
+						res.status(200).json(mission)
+					})
 				})
-				
-})
 	})})})}})
 
 // delete challenge from database
@@ -127,4 +128,37 @@ router.delete('/:id', function(req, res, next){
 }
 })
 
+function updateHasNext(mission){
+	console.log("IN UPDATE HAS NEXT")
+	let numChallenges = mission.numChallenges
+	return Challenge.update({
+			hasNext: true
+		},
+		{ where: {
+			missionId: mission.id,
+			order: {$lt: numChallenges}
+		}
+	})
+	.then(() => {
+		return Challenge.update({
+			hasNext: false},
+			{where: {
+				missionId: mission.id,
+				order: numChallenges
+			}
+	})})
+
+
+	// mission.getChallenges({where: {
+	// 	order: {$lt: numChallenges}
+	// }})
+	// .then(challenges => {
+	// 	if(challenges.length){
+
+	// 	}
+	// })
+
+}
+
 module.exports = router;
+
