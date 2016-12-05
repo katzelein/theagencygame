@@ -193,5 +193,4 @@ const sendMessageToPartner = (user, message) => {
 	})
 }
 
-
 module.exports = {lookup, fetchMessage, sendMessageToPartner}

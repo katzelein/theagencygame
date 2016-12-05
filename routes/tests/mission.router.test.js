@@ -1,125 +1,76 @@
-const request = require('supertest-as-promised');
 const {expect} = require('chai');
+const session = require('supertest-session')
 const db = require('../../models');
-const Mission = require('../../models/mission');
-const User = require('../../models/user');
-const Challenge = require('../../models/challenge')
+const User = db.models.users
+const Mission = db.models.missions
+const Challenge = db.models.challenges
 const app = require('../../app');
 const supertest = require('supertest');
-const agent = supertest.agent(app);
+const request = supertest(app);
+const seed = require('../../models/seed')
+const express = require('express')
+var testApp = require('../../testApp')
+//var testSession = session(app);
+var api = require('../')
+
+const agent = supertest.agent(testApp);
 
 
-describe('Orders routes', function(){
+describe('Mission routes', function(){
 
-  var items = [
-      {name: "Anti Gravity Hat", description: "Ruin a gentleman's day by making his hat fly away!", price: 11, inventory: 20},
-      {name: "Aviatomobile", description: "A flying toy car", price: 12, inventory: 23},
-      {name: "Headless Hats", description: "Make the wearer's head invisible (along with the hat itself).", price: 17, inventory: 40},
-    ];
-
-    before(function () {
-      return db.sync({force: true});
-    });
+    before('Before testing mission routes, reseed the db', () => seed());
 
     // afterEach(function () {
     //   return db.sync({force: true});
     // });
 
-    describe('GETs orders', function(){
-      var theOrder;
+    describe('GETs missions', function(){
 
-      //create an order instance
-      beforeEach(function() {
-        var ordArray = [
-          {
-            user: 1,
-            userType: 'user'
-          },
-          {
-            user: 1,
-            userType: 'user',
-            status: 'completed'
-          },
-          {
-            user: 2,
-            userType: 'user'
-          },
-          {
-            user: 1,
-            userType: 'session'
-          }
-        ];
+    it('if admin is logged in', function(done){
+      process.env['ADMIN'] = true;
+          agent
+          .get('/api/missions')
+          //.set('Cookie', 'user=1234')
+          .expect(200)
+          .end(function(err, res){
+            if(err) return done(err);
+            expect(res.body).to.be.instanceof(Array);
+            expect(res.body).to.have.length(3);
+            // console.log("RES.BODY.WALL ST: ", res.body[0])
+            // console.log("RES.BODY.BROADWAY: ", res.body[1])
+            // console.log("RES.BODY.GHA CHALLENGE: ", res.body[2])
+            // console.log("RES.BODY.GHA CHALLENGE: ", res.body[2])
+            // expect(res.body[2].challenges).to.have.length(5)
+            // console.log(res.body);
+            done();
+          });
+        })
 
-        return Order.bulkCreate(ordArray);
+    it('returns missions in order and returns associated challenges', function(done){
+          agent
+          .get('/api/missions')
+          //.set('Cookie', 'user=1234')
+          .expect(200)
+          .end(function(err, res){
+            if(err) return done(err);
+            expect(res.body[2].title).to.equal('Grace Hopper and the Missing Bone')
+            expect(res.body[2].challenges).to.have.length(5)
+            done();
+          });
+        })
 
-      });
-
-      it('by user id (logged in)', function(done){
+    it('-sends error if not an admin', function(done){
+      process.env['ADMIN'] = false;
         agent
-        .get('/api/order/user/1')
-        .expect(200)
+        .get('/api/missions')
+        .expect(403)
         .end(function(err, res){
           if(err) return done(err);
-          expect(res.body).to.be.instanceof(Array);
-          expect(res.body).to.have.length(2);
+          expect(res.text).to.equal('You do not have access to this page');
           // console.log(res.body);
           done();
         });
-      });
-
-      it('by order id', function(done){
-        agent.get('/api/order/1')
-        .expect(200)
-        .end(function(err, res){
-          if(err) return done(err);
-          expect(res.body.userType).to.be.equal('user');
-          expect(res.body.user).to.be.equal(1);
-          expect(res.body.status).to.be.equal('pending');
-          done()
-        });
-      });
-
-      it('by user id and pending status', function(done){
-        agent
-        .get('/api/order/user/pending/1')
-        .expect(200)
-        .end(function(err, res){
-          if(err) return done(err);
-          expect(res.body).to.be.instanceof(Array);
-          expect(res.body).to.have.length(1);
-          // console.log(res.body);
-          expect(res.body[0].user).to.be.equal(1);
-          done();
-        })
-      })
-
-      it('by user id and completed status', function(done){
-        agent
-        .get('/api/order/user/completed/1')
-        .expect(200)
-        .end(function(err, res){
-          if(err) return done(err);
-          expect(res.body).to.be.instanceof(Array);
-          expect(res.body).to.have.length(1);
-          // console.log(res.body);
-          done();
-        })
-      })
-
-      it('by session id (not logged in)', function(done){
-        agent
-        .get('/api/order/session/1')
-        .expect(200)
-        .end(function(err, res){
-          if(err) return done(err);
-          expect(res.body).to.be.instanceof(Object);
-          expect(res.body.userType).to.be.equal('session');
-          expect(res.body.user).to.be.equal(1);
-          expect(res.body.status).to.be.equal('pending');
-          // console.log(res.body);
-          done();
-        })
-      })
-
-
     })
+
+  })
+})

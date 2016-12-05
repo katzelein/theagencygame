@@ -9,48 +9,45 @@ const {mustBeAdmin, mustBeLoggedIn, selfOnly} = require('./permissions')
 router.post('/setMission/:missionId', function(req, res, next){
 	console.log("posting challenge")
 	console.log("REQ BODY FROM FORM: ", req.body)
-	//mustBeAdmin()(req, res, next)
-	let {objective, summary, targetTags, targetText, conclusion, type, order} = req.body
+	if(mustBeAdmin()(req, res, next) === "continue"){
+	let {objective, summary, targetTags, targetText, conclusion, category, order} = req.body
 	Challenge.create({
-		objective, summary, targetTags, targetText, conclusion, type, order
+		objective, summary, targetTags, targetText, conclusion, category, order
 	})
 	.then(challenge => {
 		return challenge.setMission(req.params.missionId)
 		.then(() => {
 			Mission.findById(req.params.missionId)
 			.then(mission => {
-				// mission.getChallenges()
-				// .then(challenges => {
-				// 	mission.update({
-				// 		numChallenges: challenges.length
-				// 	})
-				// })
 				mission.increment('numChallenges')
 			})
 		})
+		.then(() => res.status(201).json(challenge))
 	})
-	.then(challenge => res.status(200).json(challenge))
 	.catch(next)
+}
 })
 
 router.post('/', function(req, res, next){
 	console.log("posting challenge")
 	console.log("REQ BODY FROM FORM: ", req.body)
-	//mustBeAdmin()(req, res, next)
-	let {objective, summary, targetTags, targetText, conclusion, type, order} = req.body
+	if(mustBeAdmin()(req, res, next) === "continue"){
+	let {objective, summary, targetTags, targetText, conclusion, category, order} = req.body
 	Challenge.create({
-		objective, summary, targetTags, targetText, conclusion, type, order
+		objective, summary, targetTags, targetText, conclusion, category, order
 	})
 	.then(challenge => {
-		res.status(200).json(challenge)
+		res.status(201).json(challenge)
 	})
 	.catch(next)
+}
 })
 
 router.put('/:id/update', function(req, res, next){
-	let {missionId, objective, summary, targetTags, targetText, conclusion, type, order} = req.body
+	let {missionId, objective, summary, targetTags, targetText, conclusion, category, order} = req.body
 	//missionId = parseInt(missionId)
 	console.log("IS MISSION NULL? : type ", typeof missionId, " val ", missionId)
+	if(mustBeAdmin()(req, res, next) === "continue"){
 	Challenge.findById(req.params.id)
 	.then(challenge => {
 		challenge.getMission()
@@ -62,30 +59,16 @@ router.put('/:id/update', function(req, res, next){
 			//if(prevMission === missionId){
 				console.log("MISSION WAS UNCHANGED")
 				challenge.update({
-					missionId, objective, summary, targetTags, targetText, conclusion, type, order
+					missionId, objective, summary, targetTags, targetText, conclusion, category, order
 				})
 				.then(challenge => res.status(200).json(challenge))
-			//}
-			// else{ 
-			// 	if(prevMission !== null){
-			// 	console.log("MISSION WAS NULL BUT CHANGING")
-			// 	// remove challenge from mission and decrement numChallenges
-			// 	mission.removeChallenge(req.params.id)
-			// 	.then(() => {
-			// 		mission.decrement('numChallenges')
-			// 	})
-
-			// 	}
-			// 	if(missionId !== null){
-			// 	// add challenge to mission and increment numChallenges
-			// 	}
-			// 	res.sendStatus(200)
-			// }
 		})
 	})
+	}
 })
 
 router.put('/:id/addToMission/:missionId', function(req, res, next){
+	if(mustBeAdmin()(req, res, next) === "continue"){
 	Mission.findById(req.params.missionId)
 	.then(mission => {
 		console.log("FOUND MISSION")
@@ -94,13 +77,14 @@ router.put('/:id/addToMission/:missionId', function(req, res, next){
 			console.log("INCREMENTING NUM CHALLENGES")
 			return mission.increment('numChallenges')
 		})
-		.then(() => res.sendStatus(200))
+		.then((newMission) => res.status(200).json(newMission))
 	})
+}
 })
 
 // delete challenge from mission but not from database
 router.delete('/:id/mission/:missionId', function(req, res, next){
-	//mustBeAdmin()(req, res, next)
+	if(mustBeAdmin()(req, res, next) === "continue"){
 	Challenge.findById(req.params.id)
 	.then((challenge) => {
 		Mission.findById(req.params.missionId)
@@ -110,18 +94,18 @@ router.delete('/:id/mission/:missionId', function(req, res, next){
 		.then(() => {
 			console.log("MISSION after remove challenge: ", mission)
 			mission.decrement('numChallenges')
-			.then(() => {
+			.then((mission) => {
 				challenge.getUsers()
 				.then(() => {
-					res.sendStatus(200)
+					res.status(200).json(mission)
 				})
 				
 })
-	})})})})
+	})})})}})
 
 // delete challenge from database
 router.delete('/:id', function(req, res, next){
-	//mustBeAdmin()(req, res, next)
+	if(mustBeAdmin()(req, res, next) === "continue"){
 	Challenge.findById(req.params.id)
 	.then((challenge) => {
 		challenge.getUsers()
@@ -135,6 +119,7 @@ router.delete('/:id', function(req, res, next){
 		})
 		.then(() => res.sendStatus(200))
 	})
+}
 })
 
 module.exports = router;
