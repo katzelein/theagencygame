@@ -231,47 +231,35 @@ export default class ChallengeCard extends Component {
       return (
         <Card style={styles.card}>
           <CardHeader 
+            style={{marginLeft: "10px", color: 'block'}}
             className="white-challenge-card" 
             actAsExpander={true} 
             showExpandableButton={true} 
             title={this.props.challenge.objective}
-            titleStyle={{fontWeight: "bold", color: 'black'}} 
-            style={styles.cardHeader} >
-          </CardHeader>
-          <CardText style={styles.cardText} expandable={true}>
-            <div>
-              <h5> Summary </h5>
+            titleStyle={{fontWeight: "bold", fontSize:'22px', color: 'black'}} 
+            >
+             <div className="card-header"> 
               {this.props.challenge.summary} 
             </div>
-            <div>
-              <h4> Target Answers </h4>
-              <div>
-                <h5> Tags: </h5>
-                {this.props.challenge.tagetTags} 
+          </CardHeader>
+          <CardText style={styles.cardText} expandable={true}>
+            <div style={{marginLeft: "10px"}}>
+              <h3> Target Answers </h3>
+                <span style={{fontWeight: 'bold'}}> Tags: </span>
+                {this.props.challenge.tagetTags ? this.props.challenge.tagetTags : "None Given"} 
+                <span style={{fontWeight: 'bold'}}> Text: </span>
+                {this.props.challenge.tagetText ? this.props.challenge.tagetText : "None Given"} 
+              <h3> Conclusion </h3> 
+              {this.props.challenge.conclusion ? this.props.challenge.conclusion : "None Given"} 
+              <h3> Type </h3> 
+              {this.props.challenge.category ? this.props.challenge.category : "None Given"} 
               </div>
-              <div>
-                <h5> Text: </h5>
-                {this.props.challenge.tagetText} 
-              </div>
-            </div>
-            <div>
-              <h5> Conclusion </h5> 
-              {this.props.challenge.conclusion} 
-            </div>
-            <div>
-              <h5> Type </h5> 
-              {this.props.challenge.category} 
-            </div>
             {this.props.missionSpecific ? null : (
-              this.props.challenge.mission ? 
-                <div>
-                  <h5> Mission </h5> 
-                  {this.props.challenge.mission.title} 
+                <div style={{marginLeft: "10px"}}>
+                  <h3> Mission </h3> 
+                  {this.props.challenge.mission ? 
+                  this.props.challenge.mission.title : "None Given"}
                 </div>
-              : 
-                <div>
-                  <h5> Not assigned to mission </h5>
-                  </div>
             )}
           </CardText>
           <Dialog
