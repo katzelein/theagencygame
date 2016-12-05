@@ -5,7 +5,7 @@ const db = require('../../models/index')
 const Mission = require('../../models/mission');
 const Challenge = require('../../models/challenge');
 
-describe('Mission / Challenge selection', () => {
+xdescribe('Mission / Challenge selection', () => {
 	
 	let missionId, challengeId, firstChallenge, secondChallenge, newUser;
 

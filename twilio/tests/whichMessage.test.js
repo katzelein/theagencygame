@@ -14,7 +14,7 @@ const {
 	fetchPartnerFromUserMission
 } = require('../whichMessage');
 
-describe('Game Logic', () => {
+xdescribe('Game Logic', () => {
 
 	// let newUser;
 

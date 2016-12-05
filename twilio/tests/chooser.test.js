@@ -5,7 +5,7 @@ const db = require('../../models/index')
 const Mission = require('../../models/mission');
 const Challenge = require('../../models/challenge');
 
-describe('Selecting a mission / challenge', () => {
+xdescribe('Selecting a mission / challenge', () => {
 	let missionId, challengeId;
 
 	before ('create mission and challenges', () => {
@@ -54,7 +54,7 @@ describe('Selecting a mission / challenge', () => {
 		})
 	})
 	
-	describe('getChallenge', () => {
+	xdescribe('getChallenge', () => {
 		it('should fetch first challenge', () => {
 
 			let ch = getChallenge(missionId);

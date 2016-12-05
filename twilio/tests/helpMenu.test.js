@@ -6,7 +6,7 @@ const User = require('../../models/user')
 
 const {fetchMessage} = require('../lookup')
 
-describe('Help Menu', () => {
+xdescribe('Help Menu', () => {
 
 	describe('help', () => {
 		let miracleUser, returnObj

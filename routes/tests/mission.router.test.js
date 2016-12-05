@@ -54,7 +54,7 @@ describe('Orders routes', function(){
 
       });
 
-      it('by user id (logged in)', function(done){
+      xit('by user id (logged in)', function(done){
         agent
         .get('/api/order/user/1')
         .expect(200)
@@ -67,7 +67,7 @@ describe('Orders routes', function(){
         });
       });
 
-      it('by order id', function(done){
+      xit('by order id', function(done){
         agent.get('/api/order/1')
         .expect(200)
         .end(function(err, res){
@@ -79,7 +79,7 @@ describe('Orders routes', function(){
         });
       });
 
-      it('by user id and pending status', function(done){
+      xit('by user id and pending status', function(done){
         agent
         .get('/api/order/user/pending/1')
         .expect(200)
@@ -93,7 +93,7 @@ describe('Orders routes', function(){
         })
       })
 
-      it('by user id and completed status', function(done){
+      xit('by user id and completed status', function(done){
         agent
         .get('/api/order/user/completed/1')
         .expect(200)
@@ -106,7 +106,7 @@ describe('Orders routes', function(){
         })
       })
 
-      it('by session id (not logged in)', function(done){
+      xit('by session id (not logged in)', function(done){
         agent
         .get('/api/order/session/1')
         .expect(200)

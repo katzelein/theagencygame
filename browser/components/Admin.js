@@ -80,7 +80,7 @@ export default class Admin extends Component {
                         </Tab>
                         <Tab 
                           label="View/Edit Challenges" 
-                          value="order">
+                          value="challenges">
                           <EditChallengesContainer/> 
                         </Tab>
                       </Tabs>
