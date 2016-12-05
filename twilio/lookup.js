@@ -7,7 +7,8 @@ let {sendSimpleText} = require('./send-sms')
 const {whichMessage} = require('./whichMessage')
 
 /*
- * if run by mocha (if in testing mode), replace problematic functions
+ * if run by mocha (if in testing mode),
+ * replace problematic functions with dummy functions
  */
 const testing = typeof global.it === 'function'
 if (testing) {
@@ -17,6 +18,14 @@ if (testing) {
 	}
 }
 
+/*
+ * paramenters:	phoneNumber	// phone number of message
+ *				message		// entire req.body
+ * 
+ * phoneNumber is used to look up user
+ * pass the user found and the whole message into fetchMessage
+ *		to find the message to return to the user
+ */
 const lookup = (phoneNumber, message) => {
 	return User.findOne({where: {phoneNumber}})
 	.then(user => {
@@ -38,6 +47,11 @@ const lookup = (phoneNumber, message) => {
 	})
 }
 
+/*
+ * essentially a gatekeeper function
+ * based on user's current messageState, determines which function to call
+ * also provides some help menu shortcuts
+ */
 const fetchMessage = (user, message) => {
 
 	user.update({lastMessageFrom: Date()})	
@@ -47,6 +61,7 @@ const fetchMessage = (user, message) => {
 
 	/*
 	 * help menu shortcuts
+	 * not fully functional yet!!
 	 */
 	switch(simpleInput) {
 		case 'help':
@@ -85,7 +100,9 @@ const fetchMessage = (user, message) => {
 	}
 
 	let returnObj;
-
+	/*
+	 * based off messageState
+	 */
 	switch(user.messageState) {
 		case 'NEED_USERNAME': 
 		// actual text with capitalization
@@ -150,8 +167,15 @@ const fetchMessage = (user, message) => {
 	})
 }
 
-
-
+/*
+ * parameters:	user	// user whose partner we're looking for
+ * 				message	// message to send
+ * looks up user's current UserMission model,
+ * looks up the partner attached to the UserMission
+ * sends the message to the partner
+ *
+ * NOTE: could refactor this into the fetchPartnerFromUserMission in whichMessage??
+ */
 const sendMessageToPartner = (user, message) => {
 	return UserMission.findOne({
 		where: {

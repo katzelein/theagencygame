@@ -14,7 +14,10 @@ const Challenge = require('../models/challenge')
 
 let {sendSimpleText} = require('./send-sms')
 
-
+/*
+ * if run by mocha (if in testing mode),
+ * replace problematic functions with dummy functions
+ */
 const testing = typeof global.it === 'function'
 if (testing) {
 	checkWatsonPromise = () => {
@@ -33,6 +36,17 @@ if (testing) {
 
 const whichMessage = {
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 *							// not particularly needed by this function
+	 * 				userInput	// default parameter of whichMessage functions
+	 *							// expecting lower case text
+	 *
+	 * This is the first state user is set to when user account created
+	 * Preceding essage by server: "The Agency has no record of you in our system. Would you like to join our forces? If so, text 'join'"
+	 *
+	 * next state: NEED_USERNAME reached by userInput:'join'
+	 */
 	CONFIRM_JOIN: (username, userInput) => {
 		if((/(join)/i).test(userInput)){
   			console.log("IT FOUND JOIN")
@@ -45,6 +59,17 @@ const whichMessage = {
 		}
 	},
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 *							// not particularly needed by this function
+	 * 				userInput	// user's text message preserving capitalization
+	 *
+	 * previous state: CONFIRM_JOIN
+	 * preceding message by server: "Ah, it's seems The Agency has a new recruit! And what is your name, Trainee?  Feel free to use an alias, we respect the secrets of our agents."
+	 * 
+	 * next state: TUTORIAL_MISSION_1 reached by userInput: <some name>
+	 * if name submitted does not conform to rules or is already taken, user stays at this state
+	 */
 	NEED_USERNAME: (username, userInput) => {
 		//let re = new RegExp("^[A-Za-z0-9]+$");
 		let re = new RegExp("^[\\w\\s]+$", "g");
@@ -79,6 +104,17 @@ const whichMessage = {
 		    }}
 	},
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 * 				userInput	// default parameter of whichMessage functions
+	 *
+	 * previous state: NEED_USERNAME
+	 * preceding message from server: "Welcome to the Agency, Agent <name>! Would you like to participate in a training mission?"
+	 * 
+	 * next state: TUTORIAL_MISSION_1 reached by: 'yes'
+	 * next state: STANDBY reached by: 'no'
+	 */
+
 	TUTORIAL_MISSION_1: (username, userInput) => {
 		//can't expect just a yes or no
 		console.log("userInput: ", userInput)
@@ -106,6 +142,18 @@ const whichMessage = {
 		}
 	},
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 * 				message	// needs whole req.body to access location
+	 *
+	 * previous state: TUTORIAL_MISSION_1 
+	 * preceding message from server: "Please send your current location to The Agency now."
+	 * 
+	 * req.body passed wholly into getLocation
+	 *		cannot determine beforehand which part of req.body is needed for getlocation, so allow getlocation to read everything
+	 * 
+	 * next state: TUTORIAL_MISSION_3 reached by: successfully sending in a location (either by fancy smartphone app, or by street address)
+	 */
 	TUTORIAL_MISSION_2: (username, message) => {
 		var coordinatesPromise = getLocation(message)
 		console.log("coordinatesPromise: ", coordinatesPromise)
@@ -129,14 +177,19 @@ const whichMessage = {
 		})
 	},
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 * 				message	// needs whole req.body to access picture URL
+	 *
+	 * previous state: TUTORIAL_MISSION_2
+	 * preceding message from server: "Thank you for sending in your location. [...] Go on and take of picture of something - anything you like - and send it in."
+	 * 
+	 * next state: STANDBY reached by: sending in a picture
+	 */
 	TUTORIAL_MISSION_3: (username, message) => {
-		// assuming they sent in a picture
-
-		// put clarifai function here!!!
 		/*
-		 * parameters:	currentChallenge.targetTags // array of target tags
-		 * 				message // whole body of twilio request
-		 * returns: true / false
+		 * parameters:	message // whole body of twilio request
+		 * returns: list of tags
 		 */
 		return getPhotoTags(message)
 		.then (actualTags => {
@@ -153,26 +206,39 @@ const whichMessage = {
 		})
 	},
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 * 				userInput	// default parameter of whichMessage functions
+	 *
+	 * previous state: lots of things
+	 * this is the basic state of the user 
+	 * 
+	 * next state: SOLO_YN reached by: 'new' or 'new mission'
+	 */
 	STANDBY: (username, userInput) => {
-		if (userInput == 'no') {
-			return {
-				state: {messageState: 'QUERY_HIATUS'},
-				message: "Agent "+username+", you are currently between missions. Do you wish to take a hiatus from missions?"
-			}
-		} else if (userInput == 'new' || userInput == 'new mission') {
+		if (userInput == 'new' || userInput == 'new mission') {
 			return {
 				state: {messageState: 'SOLO_YN'},
 				message: "Ah, Agent "+username+", good of you to call in! Before we assign you a new mission, please send in your location."
 			}
 		}
-		else {
-				console.log("coordinates is not an array")
-				return {
-					message: "We did not recognize your request."
+		else return {
+					message: `Agent ${username}, you are not currently on a mission.  Text in 'new' or 'new mission' to start a new mission`
 				}
-			}
 	},
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 * 				message	// needs whole req.body to access location
+	 *
+	 * previous state: STANDBY
+	 * preceding message from server: "Before we assign you a new mission, please send in your location."
+	 *  
+	 * req.body passed wholly into getLocation
+	 *		cannot determine beforehand which part of req.body is needed for getlocation, so allow getlocation to read everything
+	 *
+	 * next state: QUERY_MISSION reached by: sending location
+	 */
 	SOLO_YN: (username, message) => {
 		var coordinatesPromise = getLocation(message)
 		console.log("coordinatesPromise: ", coordinatesPromise)
@@ -196,6 +262,15 @@ const whichMessage = {
 		})
 	},
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 * 				message	// needs whole req.body to 
+	 *
+	 * previous state: 
+	 * preceding message from server: 
+	 * 
+	 * next state: reached by:
+	 */
 	SOLO_OK: (user, message) => {
 
 		if(message === 'wait'){
@@ -220,6 +295,15 @@ const whichMessage = {
 
 	},
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 * 				userInput	// default parameter of whichMessage functions
+	 *
+	 * previous state: 
+	 * preceding message from server: 
+	 * 
+	 * next state: reached by:
+	 */
 	QUERY_MISSION: (user, userInput) => {
 		// assume we were able to access and process location
 		let coordinates = user.location.coordinates
@@ -345,8 +429,20 @@ const whichMessage = {
 		}
 	},
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 * 				userInput	// default parameter of whichMessage functions
+	 *
+	 * previous state: 
+	 * preceding message from server: 
+	 * 
+	 * next state: reached by:
+	 */
 	FETCH_CHALLENGE: (user, userInput) => {
 		// still need to adjust based on userInput
+		if (userInput !== 'yes' || userInput !== 'ready') return {
+			message: "Please text in 'ready' or 'yes' to advance to next challenge."
+		}
 		console.log('FETCH_CHALLENGE')
 		return getChallenge(user.currentMission, user.currentChallenge)
 		.then(newChallenge => {
@@ -408,6 +504,16 @@ const whichMessage = {
 		})
 	},
 
+	/*
+	 * parameters:	user	// need whole user model 
+	 * 				userInput	// default parameter of whichMessage functions
+	 *
+	 * previous state: FETCH_CHALLENGE
+	 * preceding message from server: <challenge description> Go take a picture
+	 * 
+	 * next state: FETCH_CHALLENGE / STANDBY depending on if there are more challenges in a mission
+	 *		reached by: sending in the correct answer
+	 */
 	CHALLENGE_ANSWER: (user, message) => {
 
 		let returnMessage = "";
@@ -540,6 +646,15 @@ const whichMessage = {
 
 	QUERY_HIATUS: () =>{return ""},
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 * 				userInput	// default parameter of whichMessage functions
+	 *
+	 * previous state: 
+	 * preceding message from server: 
+	 * 
+	 * next state: reached by:
+	 */
 	QUERY_TUTORIAL: (user, userInput) => {
 		if (userInput == 'no') return {
 			state: {
@@ -550,10 +665,28 @@ const whichMessage = {
 		}
 	},
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 * 				userInput	// default parameter of whichMessage functions
+	 *
+	 * previous state: 
+	 * preceding message from server: 
+	 * 
+	 * next state: reached by:
+	 */
 	QUERY_SKIP_CHALLENGE: (prevState, userInput) => {
 
 	},
 
+	/*
+	 * parameters:	username	// default parameter of whichMessage functions
+	 * 				userInput	// default parameter of whichMessage functions
+	 *
+	 * previous state: 
+	 * preceding message from server: 
+	 * 
+	 * next state: reached by:
+	 */
 	QUERY_QUIT_MISSION: () => {
 		if (userInput == 'yes') return {
 			state: {
@@ -572,6 +705,12 @@ const whichMessage = {
 	QUERY_RESIGN: () => {},
 }
 
+/*
+ * parameters:	userNonMissions	// list of missions user has NOT taken
+ * 				partnerMissions	// list of missions partner has FINISHED
+ * returns one mission that exists in userNonMissions that does not exist in partnerMissions
+ * if no such mission exists, returns null
+ */
 function sharedMission(userNonMissions, partnerMissions){
 	//there is at least one mission in userMissions that is NOT in partnerMissions
 	let newMission = null;
@@ -587,6 +726,14 @@ function sharedMission(userNonMissions, partnerMissions){
 	return newMission;
 }
 
+/*
+ * parameters:	expectedTags	// array of tags we want to see
+ * 				actualTags		// array of tags returned by Clarifai
+ *
+ * so long as any tag in expected list exists in actual list, returns true
+ * ideally will eventually return true based on percentage???
+ */
+
 const checkTags = (expectedTags, actualTags) => {
 	// at least one of expectedTags exists in actualTags
 
@@ -601,6 +748,7 @@ const checkTags = (expectedTags, actualTags) => {
 }
 
 /*
+ * PARAMETERS:
  * user:
  * 		// user who your are searching for
  * 		// assumes user is up-to-date, so will sometimes need to tweak
@@ -611,6 +759,10 @@ const checkTags = (expectedTags, actualTags) => {
  *			userMission: {} // update state of partner's userMission model
  *			userChallenge: {} // update state of partner's userChallenge model
  *		 }
+ * function will	1) look up the user's current UserMission model
+ * 					2) lookup the partner attached to the UserMission
+ * 					3) update the partner according to the entries in 
+ * 							allTheStates
  */
 const fetchPartnerFromUserMission = (user, allTheStates) => {
 	return UserMission.findOne({
