@@ -50,9 +50,10 @@ export default class MissionForm extends Component {
     let title = e.target.title.value
     let description = e.target.description.value
     let place = e.target.place.value
+    let meetingPlace = e.target.meetingPlace.value
     let coordinates = e.target.location.value.split(",")
     let location = { type: "Point", coordinates }
-    axios.post('/api/mission', { title, description, place, location })
+    axios.post('/api/mission', { title, description, place, meetingPlace, location })
       .then(() => {
         this.props.findMissions()
         this.props.toggleAdd()
@@ -107,6 +108,14 @@ export default class MissionForm extends Component {
               style={{color: 'black'}} 
               type="text" 
               name="place"
+              required />
+            <br/>
+            <label>Meeting Place: </label>
+            <br/>
+            <input 
+              style={{color: 'black'}} 
+              type="text" 
+              name="meetingPlace"
               required />
             <br/>
             <label>Location: </label><br/>

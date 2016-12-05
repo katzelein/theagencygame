@@ -16,7 +16,8 @@ import EditChallengesContainer from '../containers/EditChallengesContainer';
 const styles = {
   paper: {
     margin: 30,
-    padding: 10
+    padding: 10,
+    overflow: 'auto'
   },
   table: {
     margin: 20,
@@ -66,7 +67,7 @@ export default class Admin extends Component {
             <Row center="xs">
               {this.props.user && this.props.user.isAdmin ? (
                 <div>
-                  <h3>Admin Page</h3>
+                  <h4>ADMIN PAGE</h4>
                   <Paper style={styles.paper} zDepth={5}>
                     <div className="adminContainer">
                       <Tabs

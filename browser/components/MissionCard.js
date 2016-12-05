@@ -42,10 +42,15 @@ export default class MissionCard extends Component {
       addOrSave: "ADD CHALLENGE", 
       isEditing: false, 
       mission: this.props.mission, 
-      open: false 
+      open: false,
+      challengeOrder: {}
     }
-
+  
+    this.challengeOrder = {}
     this.mission = Object.assign({}, this.state.mission)
+    this.props.mission.challenges.forEach(i => {
+      this.challengeOrder[i.id] = i.order
+    })
     this.toggleAdd = this.toggleAdd.bind(this);
     this.deleteMission = this.deleteMission.bind(this);
     this.editMission = this.editMission.bind(this);
@@ -70,17 +75,43 @@ export default class MissionCard extends Component {
       let coordinates = val.split(",")
       val = { type: "Point", coordinates }
     }
-    this.mission[e.target.name] = val
-    this.setState({ mission: this.mission })
+
+    if(e.target.name.indexOf('order') !== -1){
+      let challengeId = e.target.name.slice(6)
+
+      console.log("CHALLENGE ID: ", challengeId)
+      console.log("target: ", e.target)
+      console.log("target ID: ", e.target.id)
+      let id = parseInt(e.target.id)
+      this.mission.challenges[id].order = val
+      this.challengeOrder[challengeId] = val
+
+    }
+    else{
+      this.mission[e.target.name] = val
+    }
+    this.setState({ mission: this.mission, challengeOrder: this.challengeOrder })
+    console.log("CHALLENGE ORDER: ", this.state.challengeOrder)
   }
 
   saveMission() {
     let missionId = this.state.mission.id
+    let PromiseArray = []
     axios.put(`/api/mission/${missionId}/update`, this.state.mission)
       .then(() => {
-        this.props.findMissions()
-        let bool = !this.state.isEditing
-        this.setState({ isEditing: bool })
+        let key;
+        for(key in this.state.challengeOrder){
+          console.log("KEY: ", key)
+          console.log("Order: ", this.state.challengeOrder[key])
+          let p = axios.put(`/api/challenge/${key}/update`, {order: this.state.challengeOrder[key]})
+          PromiseArray.push(p)
+        }
+        Promise.all(PromiseArray)
+        .then(() => {
+          this.props.findMissions()
+          let bool = !this.state.isEditing
+          this.setState({ isEditing: bool })
+        })
       })
   }
 
@@ -125,29 +156,14 @@ export default class MissionCard extends Component {
         <Card 
           id={`mission-${this.props.mission.id}`} 
           style={styles.card}>
-          <CardText expandable={true}>
+          <CardText expandable={true} style={{margin: '16px 30px'}}>
             <EditMissionForm 
-              mission={this.state.mission} 
+              mission={this.props.mission}
+              challenges={this.props.mission.challenges} 
               onChange={this.updateMissionState}
-              editMission={this.props.editMission} />
+              editMission={this.props.editMission}
+              findMissions={this.props.findMissions} />
           </CardText>
-          {this.props.mission.challenges && this.props.mission.challenges.length ? (
-          <div style={{"padding-left": "16px"}}> 
-            Challenges 
-          </div> ) : (
-          null
-          )}
-                  
-          {this.props.mission.challenges.map((challenge, i) => {
-            return (
-              <ChallengeCard 
-                key={challenge.id} 
-                challenge={challenge} 
-                mission={this.props.mission} 
-                refreshCards={this.props.findMissions}
-                missionSpecific={true} />
-            )
-          })}
 
           <CardActions id="actions" expandable={true}>
             <div 
@@ -179,18 +195,37 @@ export default class MissionCard extends Component {
         <Card 
           id={`mission-${this.props.mission.id}`} 
           style={styles.card} >
-          <CardHeader 
+          <CardHeader
+            style={{marginLeft: "10px"}}
             actAsExpander={true} 
             showExpandableButton={true} 
             title={this.props.mission.title}
-            titleStyle={{fontWeight: "bold"}}>
+            titleStyle={{fontWeight: "bold", fontSize:'22px'}}>
             <div className="card-header"> 
               {this.props.mission.description} 
             </div>
           </CardHeader>
           <CardText expandable={true}>
+            <div style={{marginLeft: "10px"}}>
+              <h3>
+              Place
+              </h3>
+              {this.props.mission.place ? this.props.mission.place : "None Listed"} 
+              <h3>
+              Meeting Place
+              </h3>
+              {this.props.mission.meetingPlace ? this.props.mission.meetingPlace : "None Listed"}
+              <h3>
+              Location
+              </h3>
+              {this.props.mission.location ? this.props.mission.location.coordinates : "None Listed"}
+              <h3>
+              Number of Challenges
+              </h3>
+              {this.props.mission.numChallenges}
+            </div>
             {this.props.mission.challenges && this.props.mission.challenges.length ? (
-          <div style={{marginLeft: "10px"}}> 
+          <div style={{marginLeft: "10px", marginTop: "20px"}}> 
             Challenges 
           </div> ) : (
           null
@@ -203,7 +238,8 @@ export default class MissionCard extends Component {
                   challenge={challenge} 
                   mission={this.props.mission} 
                   refreshCards={this.props.findMissions}
-                  missionSpecific={true}/>
+                  missionSpecific={true}
+                  editingMission={false}/>
               )
             })}
 
@@ -228,6 +264,7 @@ export default class MissionCard extends Component {
                 type="button" 
                 className="mission-button" 
                 label="ADD CHALLENGE" 
+                style={{marginTop: '10px'}}
                 onClick={this.toggleAdd} />
             )}
           </CardText>

@@ -34,7 +34,10 @@ const data = {
       location: {type: 'Point', coordinates: [41.705691, -73.009342]}
     },
     { title: 'The Dark Underbelly of Broadway\'s Bright Lights', // mission 2
-      description: 'Agent Natasha Klimikov was a rising star in the 1950s during Rodgers and Hammerstein\'s golden age. You\'ll be heading towards 42nd Street to retrace Natasha\'s steps and to see if her mission remains active.'
+      description: 'Agent Natasha Klimikov was a rising star in the 1950s during Rodgers and Hammerstein\'s golden age. You\'ll be heading towards 42nd Street to retrace Natasha\'s steps and to see if her mission remains active.',
+      place: 'Theater District',
+      meetingPlace: 'The Nederlander Theater',
+      location: {type: 'Point', coordinates: [40.7556995,-73.9881632]}
     },
     { title: 'Grace Hopper and the Missing Bone', // mission 3
       description: 'Ben, one of Grace Hopper Academy\'s proudest members, has had his favorite bone stolen out from under his nose. Can you identify the thief?',
@@ -136,16 +139,8 @@ const data = {
 };
 
 const seed = (db) => {
-let bool;
+
 if(db){
-    console.log("IF DB")
-    bool = true;
-}
-else{
-  console.log("IF NOT DB")
-  bool = false;
-}
-if(bool){
 console.log("DB PROVIDED")
 const User = db.models.users
 const Challenge = db.models.challenges

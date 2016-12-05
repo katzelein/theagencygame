@@ -50,7 +50,8 @@ export default class ChallengeCard extends Component {
       refresh: true,
       isEditing: false,
       challenge: this.props.challenge,
-      prevMission: this.props.challenge.missionId
+      prevMission: this.props.challenge.missionId,
+      editingMission: this.props.editingMission
     }
 
     this.challenge = Object.assign({}, this.state.challenge);
@@ -152,6 +153,25 @@ export default class ChallengeCard extends Component {
   };
 
   render() {
+    console.log("EDITING MISSION: ", this.props.editingMission)
+    if(this.state.editingMission){
+      styles.card = {
+        padding: 10, 
+        margin: 10, 
+        backgroundColor: 'white', 
+        color: 'black', 
+        display: 'inline-block',
+        width: 700
+      }
+    }
+    else{
+      styles.card = {
+        padding: 10, 
+        margin: 10, 
+        backgroundColor: 'white', 
+        color: 'black'
+      }
+    }
     const actions = [
       <FlatButton
         label="Cancel"

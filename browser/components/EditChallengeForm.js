@@ -90,14 +90,6 @@ export default class ChallengeForm extends Component {
           <option value="voice">Voice</option>
         </select>
         <br/>
-        <label>Order:</label><br/>
-        <input 
-          type="text" 
-          name="order" 
-          value={this.props.challenge.order} 
-          onChange={this.props.onChange}
-          required/>
-        <br/>
       </form>
     );
   }
