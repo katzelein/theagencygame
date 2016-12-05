@@ -42,10 +42,15 @@ export default class MissionCard extends Component {
       addOrSave: "ADD CHALLENGE", 
       isEditing: false, 
       mission: this.props.mission, 
-      open: false 
+      open: false,
+      challengeOrder: {}
     }
-
+  
+    this.challengeOrder = {}
     this.mission = Object.assign({}, this.state.mission)
+    this.props.mission.challenges.forEach(i => {
+      this.challengeOrder[i.id] = i.order
+    })
     this.toggleAdd = this.toggleAdd.bind(this);
     this.deleteMission = this.deleteMission.bind(this);
     this.editMission = this.editMission.bind(this);
@@ -70,8 +75,23 @@ export default class MissionCard extends Component {
       let coordinates = val.split(",")
       val = { type: "Point", coordinates }
     }
-    this.mission[e.target.name] = val
-    this.setState({ mission: this.mission })
+
+    if(e.target.name.indexOf('order') !== -1){
+      let challengeId = e.target.name.slice(6)
+
+      console.log("CHALLENGE ID: ", challengeId)
+      console.log("target: ", e.target)
+      console.log("target ID: ", e.target.id)
+      let id = parseInt(e.target.id)
+      this.mission.challenges[id].order = val
+      this.challengeOrder[challengeId] = val
+
+    }
+    else{
+      this.mission[e.target.name] = val
+    }
+    this.setState({ mission: this.mission, challengeOrder: this.challengeOrder })
+    console.log("CHALLENGE ORDER: ", this.state.challengeOrder)
   }
 
   saveMission() {
@@ -125,29 +145,14 @@ export default class MissionCard extends Component {
         <Card 
           id={`mission-${this.props.mission.id}`} 
           style={styles.card}>
-          <CardText expandable={true}>
+          <CardText expandable={true} style={{margin: '16px 30px'}}>
             <EditMissionForm 
-              mission={this.state.mission} 
+              mission={this.state.mission}
+              challenges={this.props.mission.challenges} 
               onChange={this.updateMissionState}
-              editMission={this.props.editMission} />
+              editMission={this.props.editMission}
+              refreshCards={this.props.findMissions} />
           </CardText>
-          {this.props.mission.challenges && this.props.mission.challenges.length ? (
-          <div style={{"padding-left": "16px"}}> 
-            Challenges 
-          </div> ) : (
-          null
-          )}
-                  
-          {this.props.mission.challenges.map((challenge, i) => {
-            return (
-              <ChallengeCard 
-                key={challenge.id} 
-                challenge={challenge} 
-                mission={this.props.mission} 
-                refreshCards={this.props.findMissions}
-                missionSpecific={true} />
-            )
-          })}
 
           <CardActions id="actions" expandable={true}>
             <div 
@@ -203,7 +208,8 @@ export default class MissionCard extends Component {
                   challenge={challenge} 
                   mission={this.props.mission} 
                   refreshCards={this.props.findMissions}
-                  missionSpecific={true}/>
+                  missionSpecific={true}
+                  editingMission={false}/>
               )
             })}
 

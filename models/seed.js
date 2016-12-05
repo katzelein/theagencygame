@@ -136,16 +136,8 @@ const data = {
 };
 
 const seed = (db) => {
-let bool;
+
 if(db){
-    console.log("IF DB")
-    bool = true;
-}
-else{
-  console.log("IF NOT DB")
-  bool = false;
-}
-if(bool){
 console.log("DB PROVIDED")
 const User = db.models.users
 const Challenge = db.models.challenges

@@ -49,11 +49,13 @@ export default class ChallengeForm extends Component {
     let targetText = e.target.targetText.value
     let conclusion = e.target.conclusion.value
     let category = e.target.category.value
-    let order = e.target.order.value
+    //let order = e.target.order.value
+
+
 
     if (this.props.missionSpecific || (e.target.mission && e.target.mission.value !== "null")) {
       let missionId = (this.props.missionSpecific ? this.props.mission.id : e.target.mission.value)
-      axios.post(`/api/challenge/setMission/${missionId}`, { objective, summary, targetTags, targetText, conclusion, category, order })
+      axios.post(`/api/challenge/setMission/${missionId}`, { objective, summary, targetTags, targetText, conclusion, category})
         .then((res) => res.data)
         .then(challenge => {
           this.props.refreshCards()
@@ -61,7 +63,7 @@ export default class ChallengeForm extends Component {
         })
     } 
     else {
-      axios.post('/api/challenge', { objective, summary, targetTags, targetText, conclusion, category, order })
+      axios.post('/api/challenge', { objective, summary, targetTags, targetText, conclusion, category})
         .then((res) => res.data)
         .then(challenge => {
           this.props.refreshCards()
@@ -139,12 +141,6 @@ export default class ChallengeForm extends Component {
             <option value="image">Image</option>
             <option value="voice">Voice</option>
             </select>
-            <br/>
-            <label>Order:</label><br/>
-            <input 
-              type="text" 
-              name="order"
-              required />
             <br/>
           </form>
         </CardText>

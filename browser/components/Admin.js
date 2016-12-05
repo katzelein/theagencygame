@@ -16,7 +16,8 @@ import EditChallengesContainer from '../containers/EditChallengesContainer';
 const styles = {
   paper: {
     margin: 30,
-    padding: 10
+    padding: 10,
+    overflow: 'auto'
   },
   table: {
     margin: 20,

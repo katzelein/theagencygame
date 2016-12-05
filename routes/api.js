@@ -19,12 +19,16 @@ router.get('/missions', function(req, res, next){
 	if(mustBeAdmin()(req, res, next) === "continue"){
 	Mission.findAll({
 		include: [
-     		{ model: Challenge }
+     		{ model: Challenge}
   		],
 
-  		order: 'id'
+  		order: [
+    ['id', 'ASC' ],
+    [ Challenge, 'order', 'ASC' ]
+  ]
 	})
 	.then(missions => {
+		console.log("MISSION CHALLENGES: ", missions[2].challenges)
 		res.status(200).json(missions)
 	})
 	.catch(next)

@@ -12,7 +12,7 @@ router.post('/', function(req, res, next){
 	//mustBeAdmin()(req, res, next)
 	let {title, description, place, meetingPlace, location} = req.body
 	Mission.create({
-		title, description, place, location, 
+		title, description, place, meetingPlace, location, 
 		numChallenges: 0
 	})
 	.then(mission => {
@@ -23,11 +23,11 @@ router.post('/', function(req, res, next){
 
 
 router.put('/:id/update', function(req, res, next){
-	let {title, description, place, location} = req.body
+	let {title, description, place, meetingPlace, location} = req.body
 	Mission.findById(req.params.id)
 	.then(mission => {
 		mission.update({
-			title, description, place, location
+			title, description, place, meetingPlace, location
 		})
 		.then(mission => res.status(200).json(mission))
 	})

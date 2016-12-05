@@ -36,6 +36,23 @@ const Challenge = db.define('challenges', {
     //   .then(() => console.log("hook done"))
     //   })
     // }
+    afterCreate: function(challenge, options){
+      console.log("AFTER CREATE ******************")
+      if(challenge.order === null){
+        console.log("CHALLENGE ORDER IS NULL")
+        challenge.getMission()
+        .then(mission => {
+          console.log("MY MISSION: ", mission)
+          if(mission){
+            console.log("found mission!")
+            let numOrder = mission.numChallenges
+            console.log("NUM ORDER: ", numOrder)
+            challenge.update({order: numChallenges})
+          }
+      })
+    }
+    },
+
     beforeDestroy: function(challenge, options) {
       challenge.getMission()
         .then(mission => {

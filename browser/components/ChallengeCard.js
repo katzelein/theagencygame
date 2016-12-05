@@ -152,6 +152,17 @@ export default class ChallengeCard extends Component {
   };
 
   render() {
+    console.log("EDITING MISSION: ", this.props.editingMission)
+    if(this.props.editingMission){
+      styles.card = {
+        padding: 10, 
+        margin: 10, 
+        backgroundColor: 'white', 
+        color: 'black', 
+        display: 'inline-block',
+        width: 700
+      }
+    }
     const actions = [
       <FlatButton
         label="Cancel"

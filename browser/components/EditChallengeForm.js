@@ -95,8 +95,7 @@ export default class ChallengeForm extends Component {
           type="text" 
           name="order" 
           value={this.props.challenge.order} 
-          onChange={this.props.onChange}
-          required/>
+          onChange={this.props.onChange}/>
         <br/>
       </form>
     );

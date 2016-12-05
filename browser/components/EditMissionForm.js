@@ -5,9 +5,11 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card'
 import { RaisedButton, FlatButton, IconButton } from 'material-ui';
 import MyInput from './Input';
+import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import bluebird from 'bluebird';
 import ContentClear from 'material-ui/svg-icons/content/clear';
+import ChallengeCard from './ChallengeCard';
 
 
 export default class MissionForm extends Component {
@@ -58,6 +60,15 @@ export default class MissionForm extends Component {
           onChange={this.props.onChange}
           required/>
         <br/>
+        <label style={{color: 'white'}}>Meeting Place: </label>
+        <br/>
+        <input 
+          type="text" 
+          name="meetingPlace" 
+          value={this.props.mission.meetingPlace} 
+          onChange={this.props.onChange}
+          required/>
+        <br/>
         <label style={{color: 'white'}}>Location: </label>
         <br/>
         <input 
@@ -67,6 +78,35 @@ export default class MissionForm extends Component {
           onChange={this.props.onChange}
           required />
         <br/>
+
+        {this.props.challenges && this.props.challenges.length ? (
+          <div style={{"padding-left": "16px", color: 'white'}}> 
+            Challenges 
+          </div> ) : (
+          null
+          )}
+                  
+          {this.props.challenges.map((challenge, i) => {
+            return (
+              <div style={{display: 'block'}}>
+              <ChallengeCard 
+                key={challenge.id} 
+                challenge={challenge} 
+                mission={this.props.mission} 
+                refreshCards={this.props.refreshCards}
+                missionSpecific={true}
+                editingMission={true} />
+              <TextField
+                    style={{display: 'inline-block', width: '60px'}}
+                    type="text"
+                    id={i.toString()}
+                    value={this.props.mission.challenges[i].order}
+                    onChange={this.props.onChange}
+                    name={`order_${challenge.id}`}
+                    floatingLabelText="Order" />
+              </div>
+            )
+          })}
       </form>
     )
   }
