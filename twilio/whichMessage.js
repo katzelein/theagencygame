@@ -2,21 +2,34 @@ const {chooseMission} = require('./chooser')
 const {getChallenge} = require('./chooser')
 const {getLocation} = require('./location')
 
-const clarifai = require('./clarifai')
-const {getPhotoTags} = clarifai
-
 const {missionChooser, partnerChooser} = require('./missionChooser')
 
-const watson = require('./watson');
-const {checkWatsonPromise} = watson;
+let {getPhotoTags} = require('./clarifai')
+let {checkWatsonPromise} = require('./watson');
 
 const User = require('../models/user')
 const UserMission = require('../models/userMission')
 const UserChallenge = require('../models/userChallenge')
 const Challenge = require('../models/challenge')
 
-const send_sms = require('./send-sms')
-const {sendSimpleText} = send_sms;
+let {sendSimpleText} = require('./send-sms')
+
+
+const testing = typeof global.it === 'function'
+if (testing) {
+	checkWatsonPromise = () => {
+		console.log('testing checkWatsonPromise')
+		return Promise.resolve('some transcript')
+	}
+	getPhotoTags = () => {
+		console.log('testing getPhotoTags')
+		return Promise.resolve(['gha_logo', 'bowl'])
+	}
+	sendSimpleText = (phoneNumber, message) => {
+		console.log('testing sendSimpleText')
+		return Promise.resolve(`sending text to ${phoneNumber}`)
+	}
+}
 
 const whichMessage = {
 
@@ -84,6 +97,13 @@ const whichMessage = {
 				message: "The main purpose of this training mission is to get you, our newest recruit, used to our system.  Now first things first, before every mission you will be encouraged to send in your location. This enables us to tailor our missions to your location, perhaps even assign you missions that require interactions with other agents.  Most smartphones have the ability to send or share your current location through text.  Please send your current location to The Agency now."
 			}
 		}
+
+		else{
+
+			return{
+				message: "We did not recognize your answer, please respond 'yes' or 'no'."
+			}
+		}
 	},
 
 	TUTORIAL_MISSION_2: (username, message) => {
@@ -145,6 +165,12 @@ const whichMessage = {
 				message: "Ah, Agent "+username+", good of you to call in! Before we assign you a new mission, please send in your location."
 			}
 		}
+		else {
+				console.log("coordinates is not an array")
+				return {
+					message: "We did not recognize your request."
+				}
+			}
 	},
 
 	SOLO_YN: (username, message) => {
@@ -310,6 +336,12 @@ const whichMessage = {
 					}
 				}
 			})
+		}
+
+		else{
+			return{
+				message: "We did not recognize your response. Please respond with 'lone wolf' or 'eager beaver'."
+			}
 		}
 	},
 

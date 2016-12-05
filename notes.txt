@@ -67,5 +67,13 @@ missionChooser
 
 - if getlocation calls function but doesn't find address, return "text in address directly"
 
+- fic challenge card
+- target answers not mandatory
+- all mission and challenge attributes required
+- make type a dropdown
+
+- make sure mission is not required for challenge model
+- make drop down arrow show
+
 
 

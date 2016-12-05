@@ -45,6 +45,7 @@ export default class MissionForm extends Component {
   }
 
   submitAlert(e) {
+    console.log("SUBMITTING")
     e.preventDefault()
     let title = e.target.title.value
     let description = e.target.description.value
@@ -65,7 +66,6 @@ export default class MissionForm extends Component {
   render() {
     return (
       <Card 
-        id="new-mission-form" 
         style={styles.card} >
         <CardHeader 
           style={styles.cardHeader} 
@@ -81,35 +81,40 @@ export default class MissionForm extends Component {
           </IconButton>
         </CardHeader>
         <CardText>
-          <form 
-            id="mission-form" 
+          <form
+            id="mission-form"
+            className="form-style"
             onSubmit={this.submitAlert} 
             autoComplete="off"> 
             <label>Title:</label>
             <br/>
             <input 
-              style={{color: 'black'}} 
+              style={{color: 'black', width: '340px'}} 
               type="text" 
-              name="title" />
+              name="title"
+              required />
             <br/>
             <label>Description: </label><br/>
             <textArea 
               style={{color: 'black'}} 
               type="text" 
-              name="description"/>
+              name="description"
+              required/>
             <br/>
             <label>Place: </label>
             <br/>
             <input 
               style={{color: 'black'}} 
               type="text" 
-              name="place" />
+              name="place"
+              required />
             <br/>
             <label>Location: </label><br/>
             <input 
               style={{color: 'black'}} 
               type="text" 
-              name="location" />
+              name="location"
+              required />
             <br/>
           </form>
         </CardText>

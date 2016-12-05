@@ -24,12 +24,6 @@ let sendSimpleText = (phoneNumber, message) => {
 	})
 }
 
-// comment out for live, leave in for testing
-// sendSimpleText = (phoneNumber, message) => {
-// 	console.log(`${phoneNumber}------sending text: ${message}`)
-// 	return Promise.resolve('sending')
-// };
-
 module.exports = {sendSimpleText}
 
 
