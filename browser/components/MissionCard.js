@@ -195,18 +195,37 @@ export default class MissionCard extends Component {
         <Card 
           id={`mission-${this.props.mission.id}`} 
           style={styles.card} >
-          <CardHeader 
+          <CardHeader
+            style={{marginLeft: "10px"}}
             actAsExpander={true} 
             showExpandableButton={true} 
             title={this.props.mission.title}
-            titleStyle={{fontWeight: "bold"}}>
+            titleStyle={{fontWeight: "bold", fontSize:'22px'}}>
             <div className="card-header"> 
               {this.props.mission.description} 
             </div>
           </CardHeader>
           <CardText expandable={true}>
+            <div style={{marginLeft: "10px"}}>
+              <h3>
+              Place
+              </h3>
+              {this.props.mission.place ? this.props.mission.place : "None Listed"} 
+              <h3>
+              Meeting Place
+              </h3>
+              {this.props.mission.meetingPlace ? this.props.mission.meetingPlace : "None Listed"}
+              <h3>
+              Location
+              </h3>
+              {this.props.mission.location ? this.props.mission.location.coordinates : "None Listed"}
+              <h3>
+              Number of Challenges
+              </h3>
+              {this.props.mission.numChallenges}
+            </div>
             {this.props.mission.challenges && this.props.mission.challenges.length ? (
-          <div style={{marginLeft: "10px"}}> 
+          <div style={{marginLeft: "10px", marginTop: "20px"}}> 
             Challenges 
           </div> ) : (
           null
@@ -245,6 +264,7 @@ export default class MissionCard extends Component {
                 type="button" 
                 className="mission-button" 
                 label="ADD CHALLENGE" 
+                style={{marginTop: '10px'}}
                 onClick={this.toggleAdd} />
             )}
           </CardText>

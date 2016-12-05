@@ -67,7 +67,7 @@ export default class Admin extends Component {
             <Row center="xs">
               {this.props.user && this.props.user.isAdmin ? (
                 <div>
-                  <h3>Admin Page</h3>
+                  <h4>ADMIN PAGE</h4>
                   <Paper style={styles.paper} zDepth={5}>
                     <div className="adminContainer">
                       <Tabs
