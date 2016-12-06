@@ -117,10 +117,6 @@ router.delete('/:id', function(req, res, next){
 		challenge.getUsers()
 		.then(() => {
 			console.log("DON'T FORGET TO ALERT USERS")
-			// challenge.getMission()
-			// .then(mission => {
-			// 	mission.removeChallenge(challenge.id)
-			// })
 			return challenge.destroy({force: true})
 		})
 		.then(() => res.sendStatus(200))
@@ -131,6 +127,7 @@ router.delete('/:id', function(req, res, next){
 function updateHasNext(mission){
 	console.log("IN UPDATE HAS NEXT")
 	let numChallenges = mission.numChallenges
+	console.log("NUM CHALLENGES: ", numChallenges)
 	return Challenge.update({
 			hasNext: true
 		},

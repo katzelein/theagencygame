@@ -18,6 +18,7 @@ const Challenge = db.define('challenges', {
 }, {
   hooks: {
     beforeDestroy: function(challenge, options) {
+      let challengeOrder = challenge.order
       challenge.getMission()
         .then(mission => {
           console.log("MISSION BEFORE DESTORY: ", mission)
@@ -26,12 +27,20 @@ const Challenge = db.define('challenges', {
               .then(() => {
                 mission.decrement("numChallenges")
                   .then(() => {
-                    mission.getChallenges({where: {
-                      order: {$gt: challenge.order}
-                    }})
+                    mission.getChallenges()
+                      // {where: {
+                      // order: {$gt: challenge.order}}}
+                  
                     .then(challenges => {
+                      console.log("CHALLENGES: ", challenges)
+                      console.log("numChallenges: ", challenges.length - 1)
                       let promiseArr = []
-                      challenges.forEach(challenge => {promiseArr.push(challenge.decrement('order'))})
+                      challenges.forEach(challenge => {
+                        if(challenge.order > challengeOrder){
+                          promiseArr.push(challenge.decrement('order'))
+                        }
+                      })
+                      promiseArr.push(challenges[challenges.length - 1].update({hasNext: false}))
                       return Promise.all(promiseArr)
                     })
                     .then(() => console.log("UPDATED MISSION BEFORE DESTROY"))
@@ -44,5 +53,6 @@ const Challenge = db.define('challenges', {
     }
   }
 })
+
 
 module.exports = Challenge
