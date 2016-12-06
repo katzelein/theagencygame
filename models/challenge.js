@@ -11,10 +11,14 @@ const Challenge = db.define('challenges', {
   conclusion: Sequelize.TEXT,
   category: Sequelize.ENUM('text', 'image', 'voice'),
   order: Sequelize.INTEGER,
-  hasNext: Sequelize.BOOLEAN
+  hasNext: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  }
 }, {
   hooks: {
     beforeDestroy: function(challenge, options) {
+      let challengeOrder = challenge.order
       challenge.getMission()
         .then(mission => {
           console.log("MISSION BEFORE DESTORY: ", mission)
@@ -22,7 +26,25 @@ const Challenge = db.define('challenges', {
             mission.removeChallenge(challenge.id)
               .then(() => {
                 mission.decrement("numChallenges")
-                  .then(() => console.log("UPDATED MISSION BEFORE DESTROY"))
+                  .then(() => {
+                    mission.getChallenges()
+                      // {where: {
+                      // order: {$gt: challenge.order}}}
+                  
+                    .then(challenges => {
+                      console.log("CHALLENGES: ", challenges)
+                      console.log("numChallenges: ", challenges.length - 1)
+                      let promiseArr = []
+                      challenges.forEach(challenge => {
+                        if(challenge.order > challengeOrder){
+                          promiseArr.push(challenge.decrement('order'))
+                        }
+                      })
+                      promiseArr.push(challenges[challenges.length - 1].update({hasNext: false}))
+                      return Promise.all(promiseArr)
+                    })
+                    .then(() => console.log("UPDATED MISSION BEFORE DESTROY"))
+                  })
               })
           } else {
             console.log("NO MISSION")
@@ -31,5 +53,6 @@ const Challenge = db.define('challenges', {
     }
   }
 })
+
 
 module.exports = Challenge

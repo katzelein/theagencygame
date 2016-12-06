@@ -239,7 +239,8 @@ export default class MissionCard extends Component {
                   mission={this.props.mission} 
                   refreshCards={this.props.findMissions}
                   missionSpecific={true}
-                  editingMission={false}/>
+                  editingMission={false}
+                  deleteFromMission={true}/>
               )
             })}
 

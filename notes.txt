@@ -103,6 +103,21 @@ add self only to routes
 
 context.stop is not stopping
 
+don't update user until message is sent
+don't delete user
+
+make sure all the permissions are stated on back end and front end
+make sure you can't edit challenge from edit mission form x
+deleting and adding challenge should update hasNext field
+
+updating hasNext when challenge deleted from mission page
+updating hasNext when challenge deleted from challenge page
+updating hasNext when challenge assigned to mission
+updating hasNext when challenge reassigned to mission
+
+make if(challenge) in line 58 of challenge routes not necessary
+
+
 
 
 

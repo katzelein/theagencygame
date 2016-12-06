@@ -7,8 +7,7 @@ var Challenge = require('../models/challenge')
 const {mustBeAdmin, mustBeLoggedIn, selfOnly} = require('./permissions')
 
 router.post('/setMission/:missionId', function(req, res, next){
-	console.log("posting challenge")
-	console.log("REQ BODY FROM FORM: ", req.body)
+	console.log("posting challenge mission specific")
 	if(mustBeAdmin()(req, res, next) === "continue"){
 	let {objective, summary, targetTags, targetText, conclusion, category, order} = req.body
 	Challenge.create({
@@ -17,12 +16,25 @@ router.post('/setMission/:missionId', function(req, res, next){
 	.then(challenge => {
 		return challenge.setMission(req.params.missionId)
 		.then((challenge) => {
-			Mission.findById(req.params.missionId)
+			Mission.findOne({
+				where: {id: req.params.missionId},
+				include: [
+     				{ model: Challenge, order: order}
+  				]
+			})
 			.then(mission => {
 				mission.increment('numChallenges')
 				.then((mission) => {
 					console.log("NUM CHALLENGES: ", mission.numChallenges)
 					challenge.update({order: mission.numChallenges})
+					.then(() => {
+						let missionChallenges = mission.challenges
+						console.log("MISSION CHALLENGES: ", missionChallenges)
+						console.log("SECOND TO LAST CHALLENGES S: ", missionChallenges[missionChallenges.length - 2])
+						missionChallenges[missionChallenges.length - 2].update({
+							hasNext: true
+						})
+					})
 				})
 			})
 		})
@@ -34,7 +46,6 @@ router.post('/setMission/:missionId', function(req, res, next){
 
 router.post('/', function(req, res, next){
 	console.log("posting challenge")
-	console.log("REQ BODY FROM FORM: ", req.body)
 	if(mustBeAdmin()(req, res, next) === "continue"){
 	let {objective, summary, targetTags, targetText, conclusion, category, order} = req.body
 	Challenge.create({
@@ -55,20 +66,20 @@ router.put('/:id/update', function(req, res, next){
 	if(mustBeAdmin()(req, res, next) === "continue"){
 	Challenge.findById(req.params.id)
 	.then(challenge => {
-		challenge.getMission()
+		if(challenge){
+		return challenge.getMission()
 		.then(mission => {
-			console.log("MISSION BEFORE UPDATE: ", mission)
 			let prevMission = mission ? mission.id : null
-			console.log("PREV MISSION: ", prevMission, " type: ", typeof prevMission)
-			console.log("NEW MISSION: ", missionId, " type ", typeof missionId)
 			//if(prevMission === missionId){
 				console.log("MISSION WAS UNCHANGED")
 				challenge.update({
 					missionId, objective, summary, targetTags, targetText, conclusion, category, order
 				})
-				.then(challenge => res.status(200).json(challenge))
+				
 		})
+	}
 	})
+	.then(challenge => res.status(200).json(challenge))
 	}
 })
 
@@ -96,16 +107,17 @@ router.delete('/:id/mission/:missionId', function(req, res, next){
 		.then(mission => {
 			mission.removeChallenge(challenge.id)
 		
-		.then(() => {
-			console.log("MISSION after remove challenge: ", mission)
-			mission.decrement('numChallenges')
-			.then((mission) => {
-				challenge.getUsers()
-				.then(() => {
-					res.status(200).json(mission)
+			.then(() => {
+				console.log("MISSION after remove challenge: ", mission)
+				mission.decrement('numChallenges')
+				.then((mission) => {
+					console.log("MISSION IN DELETE: ", mission)
+					updateHasNext(mission)
+					.then(() => challenge.getUsers())
+					.then(() => {
+						res.status(200).json(mission)
+					})
 				})
-				
-})
 	})})})}})
 
 // delete challenge from database
@@ -116,10 +128,6 @@ router.delete('/:id', function(req, res, next){
 		challenge.getUsers()
 		.then(() => {
 			console.log("DON'T FORGET TO ALERT USERS")
-			// challenge.getMission()
-			// .then(mission => {
-			// 	mission.removeChallenge(challenge.id)
-			// })
 			return challenge.destroy({force: true})
 		})
 		.then(() => res.sendStatus(200))
@@ -127,4 +135,38 @@ router.delete('/:id', function(req, res, next){
 }
 })
 
+function updateHasNext(mission){
+	console.log("IN UPDATE HAS NEXT")
+	let numChallenges = mission.numChallenges
+	console.log("NUM CHALLENGES: ", numChallenges)
+	return Challenge.update({
+			hasNext: true
+		},
+		{ where: {
+			missionId: mission.id,
+			order: {$lt: numChallenges}
+		}
+	})
+	.then(() => {
+		return Challenge.update({
+			hasNext: false},
+			{where: {
+				missionId: mission.id,
+				order: numChallenges
+			}
+	})})
+
+
+	// mission.getChallenges({where: {
+	// 	order: {$lt: numChallenges}
+	// }})
+	// .then(challenges => {
+	// 	if(challenges.length){
+
+	// 	}
+	// })
+
+}
+
 module.exports = router;
+
