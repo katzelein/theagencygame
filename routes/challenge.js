@@ -8,7 +8,6 @@ const {mustBeAdmin, mustBeLoggedIn, selfOnly} = require('./permissions')
 
 router.post('/setMission/:missionId', function(req, res, next){
 	console.log("posting challenge")
-	console.log("REQ BODY FROM FORM: ", req.body)
 	if(mustBeAdmin()(req, res, next) === "continue"){
 	let {objective, summary, targetTags, targetText, conclusion, category, order} = req.body
 	Challenge.create({
@@ -17,12 +16,22 @@ router.post('/setMission/:missionId', function(req, res, next){
 	.then(challenge => {
 		return challenge.setMission(req.params.missionId)
 		.then((challenge) => {
-			Mission.findById(req.params.missionId)
+			Mission.findOne({
+				where: {id: req.params.missionId},
+				include: [
+     				{ model: Challenge, order: order}
+  				]
+			})
 			.then(mission => {
 				mission.increment('numChallenges')
 				.then((mission) => {
-					console.log("NUM CHALLENGES: ", mission.numChallenges)
 					challenge.update({order: mission.numChallenges})
+					.then(() => {
+						let missionChallenges = mission.challenges
+						missionChallenges[missionChallenges.length - 2].update({
+							hasNext: true
+						})
+					})
 				})
 			})
 		})
@@ -34,7 +43,6 @@ router.post('/setMission/:missionId', function(req, res, next){
 
 router.post('/', function(req, res, next){
 	console.log("posting challenge")
-	console.log("REQ BODY FROM FORM: ", req.body)
 	if(mustBeAdmin()(req, res, next) === "continue"){
 	let {objective, summary, targetTags, targetText, conclusion, category, order} = req.body
 	Challenge.create({
