@@ -50,6 +50,8 @@ export default class Admin extends Component {
   }
 
   handleChange(value) {
+    this.props.findMissions()
+    this.props.findChallenges()
     this.setState({
       value: value,
     });

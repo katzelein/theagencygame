@@ -69,7 +69,8 @@ export default class EditChallenges extends Component {
                 missionSpecific={false} 
                 missions={this.props.missions}
                 deleteFromMission={false} 
-                refreshCards={this.props.findChallenges}/>  
+                refreshCards={this.props.findChallenges}
+                findMissions={this.props.findMissions}/>  
             )
           })}
           

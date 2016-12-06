@@ -55,7 +55,8 @@ router.put('/:id/update', function(req, res, next){
 	if(mustBeAdmin()(req, res, next) === "continue"){
 	Challenge.findById(req.params.id)
 	.then(challenge => {
-		challenge.getMission()
+		if(challenge){
+		return challenge.getMission()
 		.then(mission => {
 			console.log("MISSION BEFORE UPDATE: ", mission)
 			let prevMission = mission ? mission.id : null
@@ -66,9 +67,11 @@ router.put('/:id/update', function(req, res, next){
 				challenge.update({
 					missionId, objective, summary, targetTags, targetText, conclusion, category, order
 				})
-				.then(challenge => res.status(200).json(challenge))
+				
 		})
+	}
 	})
+	.then(challenge => res.status(200).json(challenge))
 	}
 })
 

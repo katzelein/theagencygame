@@ -115,6 +115,8 @@ updating hasNext when challenge deleted from challenge page
 updating hasNext when challenge assigned to mission
 updating hasNext when challenge reassigned to mission
 
+make if(challenge) in line 58 of challenge routes not necessary
+
 
 
 

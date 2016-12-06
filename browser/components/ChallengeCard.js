@@ -73,6 +73,7 @@ export default class ChallengeCard extends Component {
       let missionId = this.props.mission.id;
       axios.delete(`/api/challenge/${id}/mission/${missionId}`)
         .then(() => {
+          this.props.findMissions()
           this.props.refreshCards();
           this.setState({ refresh: bool });
         })
@@ -82,6 +83,7 @@ export default class ChallengeCard extends Component {
     else {
       axios.delete(`/api/challenge/${id}`)
         .then(() => {
+          this.props.findMissions();
           this.props.refreshCards();
           this.setState({ refresh: bool });
         })
