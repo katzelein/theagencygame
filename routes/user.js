@@ -22,7 +22,7 @@ router.get('/:id', function(req, res, next){
 router.get('/exists/:number', function(req, res, next){
 	console.log("Req: ", req.session)
 	console.log("getting user")
-  console.log("This is the number we're searching for: [" + req.params.number + "]")
+  	console.log("This is the number we're searching for: [" + req.params.number + "]")
 	User.findOne({
 		where: { phoneNumber: req.params.number}
 	})

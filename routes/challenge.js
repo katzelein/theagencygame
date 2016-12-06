@@ -7,7 +7,7 @@ var Challenge = require('../models/challenge')
 const {mustBeAdmin, mustBeLoggedIn, selfOnly} = require('./permissions')
 
 router.post('/setMission/:missionId', function(req, res, next){
-	console.log("posting challenge")
+	console.log("posting challenge mission specific")
 	if(mustBeAdmin()(req, res, next) === "continue"){
 	let {objective, summary, targetTags, targetText, conclusion, category, order} = req.body
 	Challenge.create({
@@ -25,9 +25,12 @@ router.post('/setMission/:missionId', function(req, res, next){
 			.then(mission => {
 				mission.increment('numChallenges')
 				.then((mission) => {
+					console.log("NUM CHALLENGES: ", mission.numChallenges)
 					challenge.update({order: mission.numChallenges})
 					.then(() => {
 						let missionChallenges = mission.challenges
+						console.log("MISSION CHALLENGES: ", missionChallenges)
+						console.log("SECOND TO LAST CHALLENGES S: ", missionChallenges[missionChallenges.length - 2])
 						missionChallenges[missionChallenges.length - 2].update({
 							hasNext: true
 						})
@@ -66,10 +69,7 @@ router.put('/:id/update', function(req, res, next){
 		if(challenge){
 		return challenge.getMission()
 		.then(mission => {
-			console.log("MISSION BEFORE UPDATE: ", mission)
 			let prevMission = mission ? mission.id : null
-			console.log("PREV MISSION: ", prevMission, " type: ", typeof prevMission)
-			console.log("NEW MISSION: ", missionId, " type ", typeof missionId)
 			//if(prevMission === missionId){
 				console.log("MISSION WAS UNCHANGED")
 				challenge.update({
