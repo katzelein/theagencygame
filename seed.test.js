@@ -19,7 +19,7 @@ const seed = require('./models/seed')
     it('has missions', () =>
       Mission.findAll()
       .then(missions => {
-      	return expect(missions.length).to.equal(3)
+      	return expect(missions.length).to.equal(4)
       })
       .catch(err => console.log(err))
     )
