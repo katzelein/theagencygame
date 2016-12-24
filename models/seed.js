@@ -384,9 +384,24 @@ const UserChallenge = db.models.userChallenges
     .then(() => {
       let challengeMission = data.challengeMission(missions);
       let challengeKeys = Object.keys(challenges);
-      challengeKeys.forEach(key => {
+      return challengeKeys.forEach(key => {
         return challengeMission[key].addChallenge(challenges[key]);
       })
+    })
+    .then(() => {
+      return Challenge.findAll({
+        where: {
+          missionId: 4
+        }
+      })
+    })
+    .then(challenges => {
+        return Mission.findById(4)
+        .then(mission => {
+          return challenges.forEach(challenge => {
+            return mission.addChallenge(challenge)
+          })
+        })
     })
 })
 }
