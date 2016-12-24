@@ -25,7 +25,7 @@ User.hasMany(UserMissions)
 // sync the db, creating it if necessary
 function sync(force=appEnv) { //appEnv
 	console.log("DB.DIDSYNC")
-  return db.sync({force: true})
+  return db.sync()
    .then(ok => console.log(`Synced models to db ${name}`))
 }
 
