@@ -126,7 +126,7 @@ const data = {
     },
     { summary: "Ah! Interesting. She has book club on Tuesday nights. The present must have been taken while she was out that night. Phoebe would have been home then. See if there are any clues on the canine. And send a picture of what you find.",
       category: 'image',
-      targetTags: ['key'],
+      targetTags: ['key', 'security'],
       conclusion: '',
       order:2,
       hasNext: true,
