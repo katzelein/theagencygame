@@ -51,8 +51,6 @@ export default class ChallengeForm extends Component {
     let category = e.target.category.value
     //let order = e.target.order.value
 
-
-
     if (this.props.missionSpecific || (e.target.mission && e.target.mission.value !== "null")) {
       let missionId = (this.props.missionSpecific ? this.props.mission.id : e.target.mission.value)
       axios.post(`/api/challenge/setMission/${missionId}`, { objective, summary, targetTags, targetText, conclusion, category})

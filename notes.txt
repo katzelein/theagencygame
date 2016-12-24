@@ -121,3 +121,66 @@ make if(challenge) in line 58 of challenge routes not necessary
 
 
 
+
+
+every 5 minutes:
+
+1. for each user create array (potentialPartners) of other players within m miles
+2. create array potentialMissions of all missions within m miles
+2. eliminate any players that have no overlapping uncompleted missions
+3. for each potentialPartner assign value based on:
+	a. preference: 
+		- 0 to 10 would like to pair with again
+		- 0 low, 10 high, 5 neutral
+		- 8, 9, 10 take pref over new partner
+		- new partner ranks higher than 0-7
+	a. alternative: number of times partnered
+	b. number of overlapping uncompleted missions
+
+confirmation for username
+
+Every time message is sent, update most recent message sent time
+Every time message is recieved, update most recent message is recieved time
+
+if user does not respond for 4 hours and last message was expecting response --> remind them of last message
+
+request partner number
+send request to partner
+get confirmation 
+send number or apology to user
+
+	ALTERNATIVE
+
+request communication with partner
+get confirmation from partner
+send confirmation or apology
+"Agent says: ..."
+
+LOOK UP HOW TO SEND TEXT WITHOUT BEING PROMPTED
+
+how to deal with no shows?
+storing photos in postgres?
+
+
+we tell them to text in "new mission" but are never handling that
+
+
+FOR DEMO NIGHT:
+
+1. demo database
+	a. have user with completed challenges/missions
+2. approved branch
+3. user pairing
+4. format admin page
+
+WHAT DID I DO?
+1. admin page
+2. authy set up
+3. location parsing
+4. persistent login
+
+
+
+talk to ashi about "missions not defined"
+
+
