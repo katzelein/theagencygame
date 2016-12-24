@@ -150,7 +150,7 @@ const data = {
       targetText: 'no',
       conclusion: ' ',
       order:5
-    }
+    },
     { objective: 'Fishy Fruit', // mission 3
       summary: "What?! Where could it be? Did you find something else unusual in the goose bowl? Send a picture of what you found.",
       category: 'image',
