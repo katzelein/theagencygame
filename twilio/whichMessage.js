@@ -490,12 +490,13 @@ const whichMessage = {
 				})
 				.then(newUserChallenge => {
 					// console.log(newUserChallenge)
+					let objective = newChallenge.objective ? newChallenge.objective +": " : '';
 					return {
 						state:{
 							messageState: 'CHALLENGE_ANSWER',
 							currentChallenge: newChallenge.id
 						},
-						message: newChallenge.objective+": "+newChallenge.summary,
+						message: objective +newChallenge.summary,
 					}
 				})
 

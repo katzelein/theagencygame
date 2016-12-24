@@ -450,8 +450,8 @@ return db.sync({force: true})
     }})
     .then(user => {
       return user.update({
-        currentMission: 3,
-        currentChallenge: 7
+        currentMission: 0,
+        currentChallenge: 0
       })
     })
     .then(user => {
