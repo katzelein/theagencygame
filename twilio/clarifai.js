@@ -9,6 +9,7 @@ var clarifaiAPI = new Clarifai.App(
 
 var customModelId = 'bd006c0d75564935a8419ea5ba6a5a07'
 var generalModelId = Clarifai.GENERAL_MODEL;
+var foodModelId = Clarifai.FOOD_MODEL;
 
 
 /*
@@ -23,10 +24,12 @@ let getPhotoTags = function (message){
       //Make calls to Clarifai for custom model and general model
       let custom = analyzePhoto(customModelId, message.MediaUrl0)
       let general = analyzePhoto(generalModelId, message.MediaUrl0)
-      return Promise.all([custom, general])
+      let food = analyzePhoto(foodModelId, message.MediaUrl0)
+      return Promise.all([custom, general, food])
       .then(results => {
         tags = tags.concat(results[0]);
         tags = tags.concat(results[1]);
+        tags = tags.concat(results[2]);
         return tags;
       })
     } else {

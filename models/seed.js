@@ -47,6 +47,13 @@ const data = {
       meetingPlace: '5 Hanover Square by the elevators on the 11th floor',
       numChallenges: 5,
       location: {type: 'Point', coordinates: [40.705691, -74.009342]}
+    },
+    { title: 'The Case of the Missing Present', // mission 3
+      description: 'Oh no! One of your presents has been taken! It should be easy for you to solve this mission. I\'ve heard you are both very smart. You will have to collect some information and solve some clues in order to figure out where the missing present is.',
+      place: 'Bronxville',
+      meetingPlace: 'By the tree in the middle of Willow Rd',
+      numChallenges: 17,
+      location: {type: 'Point', coordinates: [40.9396494, -73.8286284]}
     }
   ],
 
@@ -108,6 +115,125 @@ const data = {
       targetText: 'count chocula',
       conclusion: 'We have a match. David Yang is the thief of the missing bone. It is a dark day for Grace Hopper, but a proud day for the Agency. Well done, agent. Your country, and Ben, thanks you.',
       order:5
+    },
+    { objective: 'The Day it Disappeared', // mission 3
+      summary: "Ask Aunt Susan when she remembers last seeing the missing present. Maybe that will give us some idea of what happened to it and when! Text us back with the day of the week she saw it last.",
+      category: 'text',
+      targetText: 'tuesday',
+      conclusion: ' ',
+      order:1
+    },
+    { objective: 'Canine Clues', // mission 3
+      summary: "Ah! Interesting. She has book club on Tuesday nights. The present must have been taken while she was out that night. Phoebe would have been home then. See if there are any clues on the canine. And send a picture of what you find.",
+      category: 'image'
+      targetTags: ['key'],
+      conclusion: ' ',
+      order:2
+    },
+    { objective: 'Car Color', // mission 3
+      summary: "A key! That doesn't look much like the key to a house or lock. Maybe it is a car key! Ask Gwen if she knows what car that key belongs to and text us back with the color of the car.",
+      category: 'text',
+      targetText: 'blue',
+      conclusion: ' ',
+      order:3
+    },
+    { objective: 'Cars Have Homes Too', // mission 3
+      summary: "Well, where does the blue car live?",
+      category: 'text',
+      targetText: 'garage',
+      conclusion: ' ',
+      order:4
+    },
+    { objective: 'Open Sesame 1', // mission 3
+      summary: "Ok, I guess we have to find the garage opener so we can get inside and figure out why the robber is leading us to the car. Maybe they left something there. The garage opener is usually kept in the goose bowl by the front door. Did you find it?",
+      category: 'text',
+      targetText: 'no',
+      conclusion: ' ',
+      order:5
+    }
+    { objective: 'Fishy Fruit', // mission 3
+      summary: "What?! Where could it be? Did you find something else unusual in the goose bowl? Send a picture of what you found.",
+      category: 'image',
+      targetTags: ['orange'],
+      conclusion: ' ',
+      order:6
+    },
+    { objective: 'Find Fruit', // mission 3
+      summary: "A clementine? That's odd. Well maybe the garage opener is wherever the clementines usually are. Try to find the other clementines, but ask for help if you need it. Text back 'found it' if you find the garage opener or 'not found' if you don't.",
+      category: 'text',
+      targetText: 'found it',
+      conclusion: ' ',
+      order:7
+    },
+    { objective: 'Open Sesame 2', // mission 3
+      summary: "Great! So let's go to the garage and see what\'s there. Send in a picture of what you find.",
+      category: 'image',
+      targetTags: ['paper'], //what will the image tags be?
+      conclusion: ' ',
+      order:8
+    },
+    { objective: 'That is Greek to Me', // mission 3
+      summary: "A note! That definitely is not english. I think we are going to need a language specialist to translate this note. I think I know where to find one, but I'll need your help. The language specialist lives at an 2-digit address, but we need to find out what the numbers are. What is 2*4 - 7?",
+      category: 'text',
+      targetText: '1',
+      conclusion: ' ',
+      order:9
+    },
+    { objective: 'Math Madness', // mission 3
+      summary: "You are smart! Ok and what is (16 - 10)/ 2?",
+      category: 'text',
+      targetText: '3',
+      conclusion: ' ',
+      order:10
+    },
+    { objective: 'To the Translator', // mission 3
+      summary: " Man, that was fast! Ok so we have 1 and 3. That means we have to go to 13 Field Court to find the language specialist. Let me know what the note says once you figure it out.",
+      category: 'text',
+      targetText: 'map',
+      conclusion: ' ',
+      order:11
+    },
+    { objective: 'X Marks the Spot', // mission 3
+      summary: "Ok, so we need to find a map. Have you ever seen a map at the Cody's house? Do you remember where it is? Text in the place that is marked on the map.",
+      category: 'text',
+      targetText: 'Scotland',
+      conclusion: ' ',
+      order:12
+    },
+    { objective: 'Grandfather Knows All', // mission 3
+      summary: "Scotland, huh? What Scottish things do the Cody's have in their house? Maybe Grampy knows. Text in the item he says.",
+      category: 'text',
+      targetText: 'curling stone',
+      conclusion: ' ',
+      order:13
+    },
+    { objective: 'Scottish Sports', // mission 3
+      summary: "Well I guess we better go see what's near the curling stone, or underneath it... they are heavy though, so be safe! Send a picture of what you find!",
+      category: 'image',
+      targetText: ['paper'],
+      conclusion: ' ',
+      order:14
+    },
+    { objective: 'Letter Puzzle', // mission 3
+      summary: "Another note? We actually found a note at The Ageny Headquarters, but it's missing a bunch of letters. Maybe if you can solve the puzzle in your note, we can figure out what our note says. Send us the missing letters without spaces between them.",
+      category: 'text',
+      targetText: 'bcpt',
+      conclusion: ' ',
+      order:15
+    },
+    { objective: 'The Final Riddle', // mission 3
+      summary: "Ok we filled in the note with the letters you gave us. This is what our note says:\n\nThis thing I speak of\nholds you up off the floor\nSome people can't help it\nbut try not to snore\n\nyou go to this place\nwhen the moon comes out\neyes closed, dreams flow\nI wonder what they're about\n\nYou lay on top of this\nto rest your tired head\nbut when was the last time\nyou checked under the _____",
+      category: 'text',
+      targetText: 'bed',
+      conclusion: ' ',
+      order:16
+    },
+    { objective: 'Lost and Found', // mission 3
+      summary: "You figured it out! We better go look under the beds then! Did you find anything? Respond with a 'yes' or 'no'",
+      category: 'text',
+      targetText: 'yes',
+      conclusion: 'Way to go, guys! You cracked the case and proved that you are incredible agents. We are lucky to have you and you deserve your present after all your hard work! Enjoy it and Merry Christmas!',
+      order:17
     }
   ],
 
@@ -139,7 +265,24 @@ const data = {
       'Putting Out Kitchen Fires': missions['Grace Hopper and the Missing Bone'],
       'Tracking the Teacher': missions['Grace Hopper and the Missing Bone'],
       'Grace Hopper Academy\'s Secret Storage': missions['Grace Hopper and the Missing Bone'],
-      'The Voice of Ultimate Betrayal': missions['Grace Hopper and the Missing Bone']
+      'The Voice of Ultimate Betrayal': missions['Grace Hopper and the Missing Bone'],
+      'The Day it Disappeared': missions['The Case of the Missing Present'],
+      'Canine Clues': missions['The Case of the Missing Present'],
+      'Car Color': missions['The Case of the Missing Present'],
+      'Cars Have Homes Too': missions['The Case of the Missing Present'],
+      'Open Sesame 1': missions['The Case of the Missing Present'],
+      'Fishy Fruit': missions['The Case of the Missing Present'],
+      'Find Fruit': missions['The Case of the Missing Present'],
+      'Open Sesame 2': missions['The Case of the Missing Present'],
+      'Math Madness': missions['The Case of the Missing Present'],
+      'To the Translator': missions['The Case of the Missing Present'],
+      'That is Greek to Me': missions['The Case of the Missing Present'],
+      'X Marks the Spot': missions['The Case of the Missing Present'],
+      'Grandfather Knows All': missions['The Case of the Missing Present'],
+      'Scottish Sports': missions['The Case of the Missing Present'],
+      'Letter Puzzle': missions['The Case of the Missing Present'],
+      'The Final Riddle': missions['The Case of the Missing Present'],
+      'Lost and Found': missions['The Case of the Missing Present']
     }
   }
 
