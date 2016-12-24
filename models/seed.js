@@ -494,7 +494,7 @@ return db.sync({force: true})
     .then(() => {
       return Challenge.findAll({
         where: {
-          missionId: 4
+          id: {$gt: 8}
         }
       })
     })

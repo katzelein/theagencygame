@@ -767,6 +767,7 @@ const checkTags = (expectedTags, actualTags) => {
 
 	let tagExists = false;
 	expectedTags.forEach(element => {
+		console.log("TAGS FOUND: ", actualTags)
 		if(actualTags.includes(element)) tagExists = true;
 	})
 
