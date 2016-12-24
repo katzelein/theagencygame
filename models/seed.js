@@ -391,7 +391,7 @@ const UserChallenge = db.models.userChallenges
     .then(() => {
       return Challenge.findAll({
         where: {
-          missionId: 4
+          id: {$gt: 8}
         }
       })
     })
