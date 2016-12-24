@@ -120,7 +120,7 @@ const data = {
       summary: "Ask Aunt Susan when she remembers last seeing the missing present. Maybe that will give us some idea of what happened to it and when! Text us back with the day of the week she saw it last.",
       category: 'text',
       targetText: 'tuesday',
-      conclusion: ' ',
+      conclusion: '',
       order:1,
       hasNext: true
     },
@@ -128,7 +128,7 @@ const data = {
       summary: "Ah! Interesting. She has book club on Tuesday nights. The present must have been taken while she was out that night. Phoebe would have been home then. See if there are any clues on the canine. And send a picture of what you find.",
       category: 'image',
       targetTags: ['key'],
-      conclusion: ' ',
+      conclusion: '',
       order:2,
       hasNext: true
     },
@@ -136,7 +136,7 @@ const data = {
       summary: "A key! That doesn't look much like the key to a house or lock. Maybe it is a car key! Ask Gwen if she knows what car that key belongs to and text us back with the color of the car.",
       category: 'text',
       targetText: 'blue',
-      conclusion: ' ',
+      conclusion: '',
       order:3,
       hasNext: true
     },
@@ -144,7 +144,7 @@ const data = {
       summary: "Well, where does the blue car live?",
       category: 'text',
       targetText: 'garage',
-      conclusion: ' ',
+      conclusion: '',
       order:4,
       hasNext: true
     },
@@ -152,7 +152,7 @@ const data = {
       summary: "Ok, I guess we have to find the garage opener so we can get inside and figure out why the robber is leading us to the car. Maybe they left something there. The garage opener is usually kept in the goose bowl by the front door. Did you find it?",
       category: 'text',
       targetText: 'no',
-      conclusion: ' ',
+      conclusion: '',
       order:5,
       hasNext: true
     },
@@ -160,7 +160,7 @@ const data = {
       summary: "What?! Where could it be? Did you find something else unusual in the goose bowl? Send a picture of what you found.",
       category: 'image',
       targetTags: ['orange'],
-      conclusion: ' ',
+      conclusion: '',
       order:6,
       hasNext: true
     },
@@ -168,7 +168,7 @@ const data = {
       summary: "A clementine? That's odd. Well maybe the garage opener is wherever the clementines usually are. Try to find the other clementines, but ask for help if you need it. Text back 'found it' if you find the garage opener or 'not found' if you don't.",
       category: 'text',
       targetText: 'found it',
-      conclusion: ' ',
+      conclusion: '',
       order:7,
       hasNext: true
     },
@@ -176,7 +176,7 @@ const data = {
       summary: "Great! So let's go to the garage and see what\'s there. Send in a picture of what you find.",
       category: 'image',
       targetTags: ['paper'], //what will the image tags be?
-      conclusion: ' ',
+      conclusion: '',
       order:8,
       hasNext: true
     },
@@ -184,7 +184,7 @@ const data = {
       summary: "A note! That definitely is not english. I think we are going to need a language specialist to translate this note. I think I know where to find one, but I'll need your help. The language specialist lives at an 2-digit address, but we need to find out what the numbers are. What is 2*4 - 7?",
       category: 'text',
       targetText: '1',
-      conclusion: ' ',
+      conclusion: '',
       order:9,
       hasNext: true
     },
@@ -192,7 +192,7 @@ const data = {
       summary: "You are smart! Ok and what is (16 - 10)/ 2?",
       category: 'text',
       targetText: '3',
-      conclusion: ' ',
+      conclusion: '',
       order:10,
       hasNext: true
     },
@@ -200,7 +200,7 @@ const data = {
       summary: " Man, that was fast! Ok so we have 1 and 3. That means we have to go to 13 Field Court to find the language specialist. Let me know what the note says once you figure it out.",
       category: 'text',
       targetText: 'map',
-      conclusion: ' ',
+      conclusion: '',
       order:11,
       hasNext: true
     },
@@ -208,7 +208,7 @@ const data = {
       summary: "Ok, so we need to find a map. Have you ever seen a map at the Cody's house? Do you remember where it is? Text in the place that is marked on the map.",
       category: 'text',
       targetText: 'Scotland',
-      conclusion: ' ',
+      conclusion: '',
       order:12,
       hasNext: true
     },
@@ -216,7 +216,7 @@ const data = {
       summary: "Scotland, huh? What Scottish things do the Cody's have in their house? Maybe Grampy knows. Text in the item he says.",
       category: 'text',
       targetText: 'curling stone',
-      conclusion: ' ',
+      conclusion: '',
       order:13,
       hasNext: true
     },
@@ -224,7 +224,7 @@ const data = {
       summary: "Well I guess we better go see what's near the curling stone, or underneath it... they are heavy though, so be safe! Send a picture of what you find!",
       category: 'image',
       targetText: ['paper'],
-      conclusion: ' ',
+      conclusion: '',
       order:14,
       hasNext: true
     },
@@ -232,7 +232,7 @@ const data = {
       summary: "Another note? We actually found a note at The Ageny Headquarters, but it's missing a bunch of letters. Maybe if you can solve the puzzle in your note, we can figure out what our note says. Send us the missing letters without spaces between them.",
       category: 'text',
       targetText: 'bcpt',
-      conclusion: ' ',
+      conclusion: '',
       order:15,
       hasNext: true
     },
@@ -240,7 +240,7 @@ const data = {
       summary: "Ok we filled in the note with the letters you gave us. This is what our note says:\n\nThis thing I speak of\nholds you up off the floor\nSome people can't help it\nbut try not to snore\n\nyou go to this place\nwhen the moon comes out\neyes closed, dreams flow\nI wonder what they're about\n\nYou lay on top of this\nto rest your tired head\nbut when was the last time\nyou checked under the _____",
       category: 'text',
       targetText: 'bed',
-      conclusion: ' ',
+      conclusion: '',
       order:16,
       hasNext: true
     },

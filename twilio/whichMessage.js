@@ -607,14 +607,20 @@ const whichMessage = {
 			let returnObj, partnerObj;
 
 			if(currentChallenge.hasNext) {
-				returnObj = {
-					state: {messageState: 'FETCH_CHALLENGE'},
-					message: currentChallenge.conclusion + "\n\nAre you ready for your next challenge?"
+				if(currentChallenge.conclusion === ''){
+					return whichMessage.FETCH_CHALLENGE(user, 'yes')
+		
 				}
+				else{
+					returnObj = {
+						state: {messageState: 'FETCH_CHALLENGE'},
+						message: currentChallenge.conclusion + "\n\nAre you ready for your next challenge?"
+					}
 
-				partnerObj = {
-					user: {messageState: 'FETCH_CHALLENGE'},
-					userChallenge: {status: 'complete'}
+					partnerObj = {
+						user: {messageState: 'FETCH_CHALLENGE'},
+						userChallenge: {status: 'complete'}
+					}
 				}
 			} else {
 				// finished last challenge of mission, set mission to complete
