@@ -461,7 +461,8 @@ const whichMessage = {
 	 */
 	FETCH_CHALLENGE: (user, userInput) => {
 		// still need to adjust based on userInput
-		if (userInput !== 'yes' || userInput !== 'ready') return {
+		console.log('THE USER INPUT IS', userInput)
+		if (userInput !== 'yes' && userInput !== 'ready') return {
 			message: "Please text in 'ready' or 'yes' to advance to next challenge."
 		}
 		console.log('FETCH_CHALLENGE')
