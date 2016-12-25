@@ -230,7 +230,7 @@ const data = {
     },
     { summary: "Another note? We actually found a note at The Ageny Headquarters, but it's missing a bunch of letters. Maybe if you can solve the puzzle in your note, we can figure out what our note says. Send us the missing letters without spaces between them.",
       category: 'text',
-      targetText: 'bcipt',
+      targetText: 'bicp',
       conclusion: '',
       order:15,
       hasNext: true,
