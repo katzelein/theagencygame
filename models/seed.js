@@ -212,7 +212,7 @@ const data = {
       hasNext: true,
       missionId: 4
     },
-    { summary: "Scotland, huh? What Scottish things do the Cody's have in their house? Maybe Grampy knows. Text in the item he says.",
+    { summary: "Scotland, huh? What Scottish things do the Cody's have in their house? Maybe your mom knows. Text in the item she says.",
       category: 'text',
       targetText: 'curling stone',
       conclusion: '',
